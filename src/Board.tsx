@@ -289,9 +289,10 @@ export const Board = (props: BcgPocProps) => {
                 borderRadius: 0,
                 border: 0,
                 height: '17.5px',
+                minWidth: 95
               }}
             >
-              End Turn
+              End Turn {Math.round(ctx.turn / 2)}/{G.numberOfSingleTurns}
             </button>
           </div>
         </div>

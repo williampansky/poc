@@ -48,6 +48,8 @@ export interface GameState {
   zone1: Zone;
   zone2: Zone;
   zone3: Zone;
+
+  numberOfSingleTurns: number;
 }
 
 export const BcgPoc: Game<GameState> = {
@@ -102,6 +104,7 @@ export const BcgPoc: Game<GameState> = {
       disabledForOpponent: false,
       disabledForPlayer: false,
     },
+    numberOfSingleTurns: 10
   }),
   phases: {
     draw: {
@@ -384,7 +387,7 @@ export const BcgPoc: Game<GameState> = {
     },
   },
   endIf: (G: GameState, ctx: Ctx) => {
-    if (ctx.turn === 18) {
+    if (ctx.turn === Math.abs(G.numberOfSingleTurns * 2)) {
       switch (isVictory(G.zone1, G.zone2, G.zone3)) {
         case '1':
           return { winner: '1' };
