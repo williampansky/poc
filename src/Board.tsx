@@ -14,7 +14,7 @@ export const Board = (props: BcgPocProps) => {
     ctx,
     moves,
     events,
-    reset
+    reset,
   } = props;
 
   const onClick = () => {
@@ -27,7 +27,7 @@ export const Board = (props: BcgPocProps) => {
   const resetGame = () => {
     reset();
     setTimeout(() => window.location.reload());
-  }
+  };
 
   const getWinner = (ctx: Ctx): string | null => {
     if (!ctx.gameover) return null;
@@ -54,17 +54,26 @@ export const Board = (props: BcgPocProps) => {
         }}
       >
         <h2>{getWinner(ctx)}</h2>
-        <div style={{
-          display: 'flex',
-          flexFlow: 'column nowrap',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-          <h3><button onClick={() => resetGame()}>Replay?</button></h3>
+        <div
+          style={{
+            display: 'flex',
+            flexFlow: 'column nowrap',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <h3>
+            <button onClick={() => resetGame()}>Replay?</button>
+          </h3>
         </div>
       </div>
 
-      <main style={{ maxWidth: '100vw', filter: ctx.gameover ? 'blur(2px)' : 'none' }}>
+      <main
+        style={{
+          maxWidth: '100vw',
+          filter: ctx.gameover ? 'blur(2px)' : 'none',
+        }}
+      >
         <div
           style={{
             display: 'flex',
@@ -72,6 +81,7 @@ export const Board = (props: BcgPocProps) => {
             alignItems: 'center',
             justifyContent: 'flex-start',
             width: '100%',
+            height: '22px',
             position: 'absolute',
             top: 0,
             bottom: 'auto',
@@ -81,9 +91,45 @@ export const Board = (props: BcgPocProps) => {
             background: 'gray',
           }}
         >
-          {/* <div>{G.opponentName}</div> */}
-          <div style={{ fontSize: '0.75rem' }}>
-            AP: {G.opponentActionPoints}/{G.opponentActionPointsTotal}
+          <div
+            style={{
+              paddingRight: '0.25em',
+              marginRight: 'auto',
+              fontSize: '11px'
+            }}
+          >{G.opponentName}</div>
+          <div style={{ width: '100%' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(8, 1fr)',
+                gridGap: '0.15em',
+                width: '100%',
+              }}
+            >
+              {Array.from(Array(G.opponentActionPointsTotal)).map((_, idx) => {
+                idx = idx + 1;
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      display: 'flex',
+                      flexFlow: 'column nowrap',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      pointerEvents: 'none',
+                      userSelect: 'none',
+                      background:
+                        G.opponentActionPoints >= idx
+                          ? 'lightgreen'
+                          : 'lightgray',
+                    }}
+                  >
+                    &nbsp;
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
         <div
@@ -124,7 +170,7 @@ export const Board = (props: BcgPocProps) => {
                     background: 'white',
                     height: '4em',
                     width: '2.95em',
-                    transform: 'scale(80%)'
+                    transform: 'scale(80%)',
                   }}
                 ></div>
               );
@@ -273,6 +319,7 @@ export const Board = (props: BcgPocProps) => {
             alignItems: 'center',
             justifyContent: 'flex-start',
             width: '100%',
+            height: '22px',
             position: 'absolute',
             top: 'auto',
             bottom: 0,
@@ -334,7 +381,7 @@ export const Board = (props: BcgPocProps) => {
                 borderRadius: 0,
                 border: 0,
                 height: '17.5px',
-                minWidth: 95
+                minWidth: 95,
               }}
             >
               End Turn {Math.round(ctx.turn / 2)}/{G.numberOfSingleTurns}
