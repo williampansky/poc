@@ -10,7 +10,7 @@ export interface BcgPocProps extends BoardProps<GameState> {}
 export const Board = (props: BcgPocProps) => {
   const {
     G,
-    G: { playerHand },
+    G: { playerHand, opponentHand },
     ctx,
     moves,
     events,
@@ -84,6 +84,51 @@ export const Board = (props: BcgPocProps) => {
           {/* <div>{G.opponentName}</div> */}
           <div style={{ fontSize: '0.75rem' }}>
             AP: {G.opponentActionPoints}/{G.opponentActionPointsTotal}
+          </div>
+        </div>
+        <div
+          style={{
+            width: '100%',
+            position: 'absolute',
+            top: '40px',
+            bottom: 'auto',
+            left: 0,
+            right: 0,
+            maxWidth: '100%',
+            padding: '0 0.5em',
+          }}
+        >
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(7, 1fr)',
+              gridGap: '0.25em',
+              width: '100%',
+            }}
+          >
+            {[...Array.from(opponentHand)]?.map((_, idx) => {
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    flexFlow: 'column nowrap',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0.25em',
+                    textAlign: 'center',
+                    position: 'relative',
+                    border: '1px solid',
+                    borderColor: 'gray',
+                    borderRadius: '0.25em',
+                    background: 'white',
+                    height: '4em',
+                    width: '2.95em',
+                    transform: 'scale(80%)'
+                  }}
+                ></div>
+              );
+            })}
           </div>
         </div>
         <div
