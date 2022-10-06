@@ -63,9 +63,11 @@ export const Zone = ({
           flexFlow: 'column nowrap',
           alignItems: 'center',
           justifyContent: 'center',
+          textAlign: 'center',
+          padding: '1em',
         }}
       >
-        Zone {zoneNumber}
+        {zone.zoneName}
         <div
           style={{
             fontSize: '1em',

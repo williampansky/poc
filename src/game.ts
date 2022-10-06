@@ -1,6 +1,7 @@
 import { Ctx, Game } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import CARD_DATABASE from './tempCardsDatabase';
+import ZONE_DATABASE from './tempZonesDatabase';
 import { v4 as uuid } from 'uuid';
 
 export interface Card {
@@ -20,6 +21,8 @@ export interface Zone {
   disabled: boolean;
   disabledForOpponent: boolean;
   disabledForPlayer: boolean;
+  zoneName: string;
+  zonePowerText?: string;
 }
 
 export interface GameState {
@@ -85,6 +88,8 @@ export const BcgPoc: Game<GameState> = {
       disabled: false,
       disabledForOpponent: false,
       disabledForPlayer: false,
+      zoneName: 'Zone',
+      zonePowerText: undefined,
     },
     zone2: {
       opponentSide: [],
@@ -94,6 +99,8 @@ export const BcgPoc: Game<GameState> = {
       disabled: false,
       disabledForOpponent: false,
       disabledForPlayer: false,
+      zoneName: 'Zone',
+      zonePowerText: undefined,
     },
     zone3: {
       opponentSide: [],
@@ -103,12 +110,35 @@ export const BcgPoc: Game<GameState> = {
       disabled: false,
       disabledForOpponent: false,
       disabledForPlayer: false,
+      zoneName: 'Zone',
+      zonePowerText: undefined,
     },
     numberOfSingleTurns: 12,
   }),
   phases: {
-    draw: {
+    initZones: {
       start: true,
+      next: 'draw',
+      onBegin: (G: GameState, ctx: Ctx) => {
+        const { random } = ctx;
+        const randomZonesArray = random?.Shuffle(ZONE_DATABASE);
+        const randomZone1 = randomZonesArray![0];
+        const randomZone2 = randomZonesArray![1];
+        const randomZone3 = randomZonesArray![2];
+
+        G.zone1.zoneName = randomZone1!.name;
+        G.zone2.zoneName = randomZone2!.name;
+        G.zone3.zoneName = randomZone3!.name;
+      },
+      endIf(G, ctx) {
+        return (
+          G.zone1.zoneName !== 'Zone' &&
+          G.zone2.zoneName !== 'Zone' &&
+          G.zone3.zoneName !== 'Zone'
+        );
+      },
+    },
+    draw: {
       next: 'play',
       onBegin: (G: GameState, ctx: Ctx) => {
         const { random } = ctx;
@@ -349,12 +379,11 @@ export const BcgPoc: Game<GameState> = {
     enumerate: (G, ctx) => {
       let moves = [];
 
+      // avoids onslaught of INVALID_MOVE errors
       if (ctx.currentPlayer === '1') {
-        // avoids onslaught of INVALID_MOVE errors
         if (G.opponentHand.length >= 1) {
           let cardsThanCanBePlayed: Card[] = []; // find playable cards
           G.opponentHand.forEach((c: Card) => {
-            // if (G.opponentActionPoints >= c.cost) cardsThanCanBePlayed.push(c);
             if (c.canPlay) cardsThanCanBePlayed.push(c);
           });
 
