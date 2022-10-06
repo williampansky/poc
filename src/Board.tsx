@@ -4,6 +4,7 @@ import { Ctx } from 'boardgame.io';
 import { Card, GameState } from './game';
 import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
+import { Card as CardInHand } from './components/Card/Card';
 
 export interface BcgPocProps extends BoardProps<GameState> {}
 
@@ -34,6 +35,10 @@ export const Board = (props: BcgPocProps) => {
     if (ctx.gameover.draw) return 'Draw...';
     if (ctx.gameover.winner === '0') return 'Victory!';
     else return 'Defeat...';
+  };
+
+  const onCardClick = (uuid: string) => {
+    return moves.selectCard('0', uuid);
   };
 
   return (
@@ -95,9 +100,11 @@ export const Board = (props: BcgPocProps) => {
             style={{
               paddingRight: '0.25em',
               marginRight: 'auto',
-              fontSize: '11px'
+              fontSize: '11px',
             }}
-          >{G.opponentName}</div>
+          >
+            {G.opponentName}
+          </div>
           <div style={{ width: '100%' }}>
             <div
               style={{
@@ -238,78 +245,14 @@ export const Board = (props: BcgPocProps) => {
               width: '100%',
             }}
           >
-            {playerHand?.map((card: Card) => {
-              return (
-                <div
-                  key={card.uuid}
-                  onClick={() => moves.selectCard('0', card.uuid)}
-                  style={{
-                    display: 'flex',
-                    flexFlow: 'column nowrap',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '0.25em',
-                    textAlign: 'center',
-                    position: 'relative',
-                    border: '1px solid',
-                    borderColor: card.canPlay ? 'violet' : 'gray',
-                    borderRadius: '0.25em',
-                    background: 'white',
-                    height: '4em',
-                    width: '2.95em',
-                    transform:
-                      G.playerSelectedCard?.uuid === card.uuid
-                        ? 'scale(120%)'
-                        : 'scale(80%)',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: '0.85em',
-                      fontWeight: 'bold',
-                      display: 'flex',
-                      flexFlow: 'column nowrap',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      height: '1.195em',
-                      width: '1.15em',
-                      position: 'absolute',
-                      top: '-0.35em',
-                      right: 'auto',
-                      bottom: 'auto',
-                      left: '-0.35em',
-                      background: 'lightgreen',
-                      borderRadius: '50%',
-                    }}
-                  >
-                    {card.cost}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: '0.85em',
-                      fontWeight: 'bold',
-                      display: 'flex',
-                      flexFlow: 'column nowrap',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      height: '1.195em',
-                      width: '1.15em',
-                      position: 'absolute',
-                      top: '-0.35em',
-                      right: '-0.35em',
-                      bottom: 'auto',
-                      left: 'auto',
-                      color: 'white',
-                      background: 'red',
-                      borderRadius: '50%',
-                    }}
-                  >
-                    {card.power}
-                  </div>
-                  <div style={{ fontSize: '0.5em' }}>{card.name}</div>
-                </div>
-              );
-            })}
+            {playerHand?.map((card: Card) => (
+              <CardInHand
+                {...card}
+                key={card.uuid}
+                onClick={onCardClick}
+                isSelected={G.playerSelectedCard?.uuid === card.uuid}
+              />
+            ))}
           </div>
         </div>
         <div
