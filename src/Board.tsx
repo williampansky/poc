@@ -92,6 +92,7 @@ export const Board = (props: BcgPocProps) => {
             bottom: 'auto',
             left: 0,
             right: 0,
+            zIndex: 1,
             padding: '0.15em',
             background: 'gray',
           }}
@@ -109,7 +110,7 @@ export const Board = (props: BcgPocProps) => {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(8, 1fr)',
+                gridTemplateColumns: 'repeat(10, 1fr)',
                 gridGap: '0.15em',
                 width: '100%',
               }}
@@ -143,19 +144,20 @@ export const Board = (props: BcgPocProps) => {
           style={{
             width: '100%',
             position: 'absolute',
-            top: '40px',
+            top: '10px',
             bottom: 'auto',
             left: 0,
             right: 0,
+            zIndex: 0,
             maxWidth: '100%',
-            padding: '0 0.5em',
+            padding: '0',
           }}
         >
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(7, 1fr)',
-              gridGap: '0.25em',
+              gridTemplateColumns: 'repeat(8, 1fr)',
+              gridGap: '0',
               width: '100%',
             }}
           >
@@ -230,18 +232,18 @@ export const Board = (props: BcgPocProps) => {
             width: '100%',
             position: 'absolute',
             top: 'auto',
-            bottom: '40px',
+            bottom: '10px',
             left: 0,
             right: 0,
             maxWidth: '100%',
-            padding: '0 0.5em',
+            padding: '0',
           }}
         >
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(7, 1fr)',
-              gridGap: '0.25em',
+              gridTemplateColumns: 'repeat(8, 1fr)',
+              gridGap: '0',
               width: '100%',
             }}
           >
@@ -276,7 +278,7 @@ export const Board = (props: BcgPocProps) => {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(8, 1fr)',
+                gridTemplateColumns: 'repeat(10, 1fr)',
                 gridGap: '0.15em',
                 width: '100%',
               }}

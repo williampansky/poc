@@ -51,6 +51,7 @@ button:not(disabled) {
 
 .opponentZone {
   grid-template-areas:
+    'slot6 slot5' 
     'slot4 slot3' 
     'slot1 slot2';
 }
@@ -60,3 +61,5 @@ button:not(disabled) {
 .opponentZone > *:nth-child(2) { grid-area: slot2; }
 .opponentZone > *:nth-child(3) { grid-area: slot3; }
 .opponentZone > *:nth-child(4) { grid-area: slot4; }
+.opponentZone > *:nth-child(5) { grid-area: slot5; }
+.opponentZone > *:nth-child(6) { grid-area: slot6; }

@@ -45,7 +45,7 @@ export const Zone = ({
         {zone.opponentSide.map((card: Card, idx: number) => {
           return <ZoneSlot key={idx} card={card} />;
         })}
-        {[...Array.from(Array(4 - zone.opponentSide.length))].map(
+        {[...Array.from(Array(6 - zone.opponentSide.length))].map(
           (_, idx: number) => {
             return <div key={idx} />;
           }
@@ -133,7 +133,7 @@ export const Zone = ({
           isActive={
             ctx.currentPlayer === '0' &&
             G.playerSelectedCard !== undefined &&
-            zone.playerSide.length !== 4 &&
+            zone.playerSide.length !== 6 &&
             !zone.disabled &&
             !zone.disabledForPlayer &&
             G.playerActionPoints >= G.playerSelectedCard?.cost
@@ -144,7 +144,7 @@ export const Zone = ({
         <div
           style={{
             display: 'grid',
-            gridTemplate: `repeat(2, 3.5em) / repeat(${
+            gridTemplate: `repeat(3, 3.5em) / repeat(${
               zone.playerSide.length === 1 ? '2' : '2'
             }, 2.75em)`,
             gridGap: '0.3em',

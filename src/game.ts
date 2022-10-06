@@ -104,7 +104,7 @@ export const BcgPoc: Game<GameState> = {
       disabledForOpponent: false,
       disabledForPlayer: false,
     },
-    numberOfSingleTurns: 10
+    numberOfSingleTurns: 10,
   }),
   phases: {
     draw: {
@@ -156,7 +156,7 @@ export const BcgPoc: Game<GameState> = {
           switch (ctx.currentPlayer) {
             case '1':
               // incremement action points
-              if (G.opponentActionPointsTotal !== 8) {
+              if (G.opponentActionPointsTotal !== 10) {
                 G.opponentActionPointsTotal = Math.abs(G.opponentActionPointsTotal + 1);
               }
   
@@ -164,7 +164,7 @@ export const BcgPoc: Game<GameState> = {
               G.opponentActionPoints = G.opponentActionPointsTotal;
   
               // add card to hand
-              if (G.opponentHand.length !== 7) { // ..... canDraw
+              if (G.opponentHand.length !== 8) { // ..... canDraw
                 G.opponentHand.push( // ................ pushes to hand
                   G.opponentDeck.splice(0, 1)[0] // .... splices from deck
                 );
@@ -180,7 +180,7 @@ export const BcgPoc: Game<GameState> = {
             case '0':
             default:
               // incremement action points
-              if (G.playerActionPointsTotal !== 8) {
+              if (G.playerActionPointsTotal !== 10) {
                 G.playerActionPointsTotal = Math.abs(G.playerActionPointsTotal + 1);
               }
   
@@ -188,7 +188,7 @@ export const BcgPoc: Game<GameState> = {
               G.playerActionPoints = G.playerActionPointsTotal;
   
               // add card to hand
-              if (G.playerHand.length !== 7) { // ..... canDraw
+              if (G.playerHand.length !== 8) { // ..... canDraw
                 G.playerHand.push( // ................ pushes to hand
                   G.playerDeck.splice(0, 1)[0] // .... splices from deck
                 );
@@ -211,9 +211,11 @@ export const BcgPoc: Game<GameState> = {
       moves: {
         selectCard: (G, ctx, playerId: string, cardUuid: string) => {
           const cardMatch = G.playerHand.find((c) => c.uuid === cardUuid);
-          if (G.playerSelectedCard?.uuid === cardMatch?.uuid)
+          if (G.playerSelectedCard?.uuid === cardMatch?.uuid) {
             G.playerSelectedCard = undefined;
-          else G.playerSelectedCard = cardMatch;
+          } else {
+            G.playerSelectedCard = cardMatch;
+          }
         },
         playCard: (G, ctx, playerId: string, zone: number) => {
           // add card to playedCards
@@ -242,7 +244,7 @@ export const BcgPoc: Game<GameState> = {
           // play card to zone
           switch (zone) {
             case 3:
-              if (G.zone3.playerSide.length !== 4) {
+              if (G.zone3.playerSide.length !== 6) {
                 G.zone3.playerSide.push(G.playerSelectedCard as Card);
                 G.zone3.playerPower = Math.abs(
                   G.zone3.playerPower + G.playerSelectedCard!.power
@@ -254,7 +256,7 @@ export const BcgPoc: Game<GameState> = {
               break;
 
             case 2:
-              if (G.zone2.playerSide.length !== 4) {
+              if (G.zone2.playerSide.length !== 6) {
                 G.zone2.playerSide.push(G.playerSelectedCard as Card);
                 G.zone2.playerPower = Math.abs(
                   G.zone2.playerPower + G.playerSelectedCard!.power
@@ -266,7 +268,7 @@ export const BcgPoc: Game<GameState> = {
               break;
 
             case 1:
-              if (G.zone1.playerSide.length !== 4) {
+              if (G.zone1.playerSide.length !== 6) {
                 G.zone1.playerSide.push(G.playerSelectedCard as Card);
                 G.zone1.playerPower = Math.abs(
                   G.zone1.playerPower + G.playerSelectedCard!.power
@@ -301,7 +303,7 @@ export const BcgPoc: Game<GameState> = {
           // play card to zone
           switch (zone) {
             case 3:
-              if (G.zone3.opponentSide.length !== 4) {
+              if (G.zone3.opponentSide.length !== 6) {
                 G.zone3.opponentSide.push(card);
                 G.zone3.opponentPower = Math.abs(
                   G.zone3.opponentPower + card?.power
@@ -312,7 +314,7 @@ export const BcgPoc: Game<GameState> = {
               break;
 
             case 2:
-              if (G.zone2.opponentSide.length !== 4) {
+              if (G.zone2.opponentSide.length !== 6) {
                 G.zone2.opponentSide.push(card);
                 G.zone2.opponentPower = Math.abs(
                   G.zone2.opponentPower + card?.power
@@ -323,7 +325,7 @@ export const BcgPoc: Game<GameState> = {
               break;
 
             case 1:
-              if (G.zone1.opponentSide.length !== 4) {
+              if (G.zone1.opponentSide.length !== 6) {
                 G.zone1.opponentSide.push(card);
                 G.zone1.opponentPower = Math.abs(
                   G.zone1.opponentPower + card?.power
@@ -357,21 +359,21 @@ export const BcgPoc: Game<GameState> = {
           });
 
           for (let i = 0; i < cardsThanCanBePlayed.length; i++) {
-            for (let i = 0; i < 4 - G.zone1.opponentSide.length; i++) {
+            for (let i = 0; i < 6 - G.zone1.opponentSide.length; i++) {
               moves.push({
                 move: 'aiPlayCard',
                 args: [1, cardsThanCanBePlayed[0]],
               });
             }
 
-            for (let i = 0; i < 4 - G.zone2.opponentSide.length; i++) {
+            for (let i = 0; i < 6 - G.zone2.opponentSide.length; i++) {
               moves.push({
                 move: 'aiPlayCard',
                 args: [2, cardsThanCanBePlayed[0]],
               });
             }
 
-            for (let i = 0; i < 4 - G.zone3.opponentSide.length; i++) {
+            for (let i = 0; i < 6 - G.zone3.opponentSide.length; i++) {
               moves.push({
                 move: 'aiPlayCard',
                 args: [3, cardsThanCanBePlayed[0]],

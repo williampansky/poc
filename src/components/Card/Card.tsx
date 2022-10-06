@@ -32,7 +32,7 @@ export const Card = ({
         height: '4em',
         width: '2.95em',
         transition: '100ms ease-in',
-        transform: isSelected ? 'scale(160%) translateY(-0.65em)' : 'scale(80%)',
+        transform: isSelected ? 'scale(160%) translateY(-24px)' : 'scale(80%)',
         zIndex: isSelected ? '1' : 'auto'
       }}
     >
