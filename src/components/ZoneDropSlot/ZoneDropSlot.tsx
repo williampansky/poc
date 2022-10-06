@@ -21,12 +21,13 @@ export const ZoneDropSlot = ({
       onClick={() => moves.playCard(playerId, zone)}
       style={{
         position: 'absolute',
-        top: 0, right: 0, bottom: 0, left: 0, zIndex: 100,
+        top: 'auto', right: 0, bottom: 0, left: 0,
         width: '100%',
-        height: '100%',
+        height: isActive ? '95%' : '0%',
         border: '2px dotted green',
         opacity: isActive ? 1 : 0,
-        pointerEvents: isActive ? 'auto' : 'none'
+        pointerEvents: isActive ? 'auto' : 'none',
+        transition: '100ms ease-in'
       }}
     />
   );
