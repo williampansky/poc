@@ -45,9 +45,11 @@ export const Zone = ({
         {zone.opponentSide.map((card: Card, idx: number) => {
           return <ZoneSlot key={idx} card={card} />;
         })}
-        {[...Array.from(Array(4 - zone.opponentSide.length))].map((_, idx: number) => {
-          return <div key={idx} />;
-        })}
+        {[...Array.from(Array(4 - zone.opponentSide.length))].map(
+          (_, idx: number) => {
+            return <div key={idx} />;
+          }
+        )}
       </div>
       <div
         style={{
@@ -64,30 +66,56 @@ export const Zone = ({
         }}
       >
         Zone {zoneNumber}
-        <div style={{
-          position: 'absolute',
-          top: -6, right: 'auto', bottom: 'auto', left: 'auto',
-          display: 'flex',
-          flexFlow: 'column nowrap',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: zone.opponentPower > zone.playerPower ? 'yellow' : 'black',
-          color: zone.opponentPower > zone.playerPower ? 'black' : 'white',
-          borderRadius: '50%',
-          height: '1.5em', width: '1.5em',
-        }}>{zone.opponentPower}</div>
-        <div style={{
-          position: 'absolute',
-          top: 'auto', right: 'auto', bottom: -6, left: 'auto',
-          display: 'flex',
-          flexFlow: 'column nowrap',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: zone.playerPower > zone.opponentPower ? 'yellow' : 'black',
-          color: zone.playerPower > zone.opponentPower ? 'black' : 'white',
-          borderRadius: '50%',
-          height: '1.5em', width: '1.5em',
-        }}>{zone.playerPower}</div>
+        <div
+          style={{
+            fontSize: '1em',
+            fontWeight: 'bold',
+            position: 'absolute',
+            top: -8,
+            right: 'auto',
+            bottom: 'auto',
+            left: 'auto',
+            display: 'flex',
+            flexFlow: 'column nowrap',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background:
+              zone.opponentPower > zone.playerPower ? 'yellow' : 'black',
+            color: zone.opponentPower > zone.playerPower ? 'black' : 'white',
+            borderRadius: '50%',
+            height: '1.5em',
+            width: '1.5em',
+            border: '2px solid white',
+            boxSizing: 'content-box',
+          }}
+        >
+          {zone.opponentPower}
+        </div>
+        <div
+          style={{
+            fontSize: '1em',
+            fontWeight: 'bold',
+            position: 'absolute',
+            top: 'auto',
+            right: 'auto',
+            bottom: -8,
+            left: 'auto',
+            display: 'flex',
+            flexFlow: 'column nowrap',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background:
+              zone.playerPower > zone.opponentPower ? 'yellow' : 'black',
+            color: zone.playerPower > zone.opponentPower ? 'black' : 'white',
+            borderRadius: '50%',
+            height: '1.5em',
+            width: '1.5em',
+            border: '2px solid white',
+            boxSizing: 'content-box',
+          }}
+        >
+          {zone.playerPower}
+        </div>
       </div>
       <div
         style={{
@@ -116,7 +144,9 @@ export const Zone = ({
         <div
           style={{
             display: 'grid',
-            gridTemplate: `repeat(2, 3.5em) / repeat(${zone.playerSide.length === 1 ? '2' : '2'}, 2.75em)`,
+            gridTemplate: `repeat(2, 3.5em) / repeat(${
+              zone.playerSide.length === 1 ? '2' : '2'
+            }, 2.75em)`,
             gridGap: '0.3em',
           }}
         >
