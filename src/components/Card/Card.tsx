@@ -29,9 +29,9 @@ export const Card = ({
         boxShadow: canPlay ? '0px 0px 0px 2px rgb(238, 130, 238)' : '0px 0px 0px 0px transparent',
         borderRadius: '0.25em',
         background: 'white',
-        height: '4em',
-        width: '2.95em',
-        transition: '100ms ease-in',
+        height: '3.5em',
+        width: '2.45em',
+        transition: '75ms ease-in',
         transform: isSelected ? 'scale(160%) translateY(-24px)' : 'scale(80%)',
         zIndex: isSelected ? '1' : 'auto'
       }}

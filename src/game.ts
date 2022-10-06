@@ -104,7 +104,7 @@ export const BcgPoc: Game<GameState> = {
       disabledForOpponent: false,
       disabledForPlayer: false,
     },
-    numberOfSingleTurns: 10,
+    numberOfSingleTurns: 12,
   }),
   phases: {
     draw: {

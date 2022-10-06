@@ -150,7 +150,7 @@ export const Board = (props: BcgPocProps) => {
             right: 0,
             zIndex: 0,
             maxWidth: '100%',
-            padding: '0',
+            padding: '0 1em',
           }}
         >
           <div
@@ -170,15 +170,15 @@ export const Board = (props: BcgPocProps) => {
                     flexFlow: 'column nowrap',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: '0.25em',
+                    padding: '0',
                     textAlign: 'center',
                     position: 'relative',
                     border: '1px solid',
                     borderColor: 'gray',
                     borderRadius: '0.25em',
                     background: 'white',
-                    height: '4em',
-                    width: '2.95em',
+                    height: '3.5em',
+                    width: '2.45em',
                     transform: 'scale(80%)',
                   }}
                 ></div>
@@ -236,7 +236,7 @@ export const Board = (props: BcgPocProps) => {
             left: 0,
             right: 0,
             maxWidth: '100%',
-            padding: '0',
+            padding: '0 1em',
           }}
         >
           <div
