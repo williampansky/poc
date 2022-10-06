@@ -1,8 +1,8 @@
 import { Ctx, Game } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
+import { v4 as uuid } from 'uuid';
 import CARD_DATABASE from './tempCardsDatabase';
 import ZONE_DATABASE from './tempZonesDatabase';
-import { v4 as uuid } from 'uuid';
 
 export interface Card {
   id: string;
@@ -21,8 +21,10 @@ export interface Zone {
   disabled: boolean;
   disabledForOpponent: boolean;
   disabledForPlayer: boolean;
+  zoneId: string;
   zoneName: string;
   zonePowerText?: string;
+  zoneUuid: string;
 }
 
 export interface GameState {
@@ -48,9 +50,7 @@ export interface GameState {
   playerPlayedCards: Card[];
   opponentPlayedCards: Card[];
 
-  zone1: Zone;
-  zone2: Zone;
-  zone3: Zone;
+  zones: Zone[];
 
   numberOfSingleTurns: number;
 }
@@ -80,39 +80,48 @@ export const BcgPoc: Game<GameState> = {
     playerPlayedCards: [],
     opponentPlayedCards: [],
 
-    zone1: {
-      opponentSide: [],
-      playerSide: [],
-      opponentPower: 0,
-      playerPower: 0,
-      disabled: false,
-      disabledForOpponent: false,
-      disabledForPlayer: false,
-      zoneName: 'Zone',
-      zonePowerText: undefined,
-    },
-    zone2: {
-      opponentSide: [],
-      playerSide: [],
-      opponentPower: 0,
-      playerPower: 0,
-      disabled: false,
-      disabledForOpponent: false,
-      disabledForPlayer: false,
-      zoneName: 'Zone',
-      zonePowerText: undefined,
-    },
-    zone3: {
-      opponentSide: [],
-      playerSide: [],
-      opponentPower: 0,
-      playerPower: 0,
-      disabled: false,
-      disabledForOpponent: false,
-      disabledForPlayer: false,
-      zoneName: 'Zone',
-      zonePowerText: undefined,
-    },
+    zones: [
+      {
+        opponentSide: [],
+        playerSide: [],
+        opponentPower: 0,
+        playerPower: 0,
+        disabled: false,
+        disabledForOpponent: false,
+        disabledForPlayer: false,
+        zoneId: '',
+        zoneName: 'Zone',
+        zonePowerText: undefined,
+        zoneUuid: '',
+      },
+      {
+        opponentSide: [],
+        playerSide: [],
+        opponentPower: 0,
+        playerPower: 0,
+        disabled: false,
+        disabledForOpponent: false,
+        disabledForPlayer: false,
+        zoneId: '',
+        zoneName: 'Zone',
+        zonePowerText: undefined,
+        zoneUuid: '',
+      },
+      {
+        opponentSide: [],
+        playerSide: [],
+        opponentPower: 0,
+        playerPower: 0,
+        disabled: false,
+        disabledForOpponent: false,
+        disabledForPlayer: false,
+        zoneId: '',
+        zoneName: 'Zone',
+        zonePowerText: undefined,
+        zoneUuid: '',
+      },
+    ],
+
     numberOfSingleTurns: 12,
   }),
   phases: {
@@ -122,19 +131,27 @@ export const BcgPoc: Game<GameState> = {
       onBegin: (G: GameState, ctx: Ctx) => {
         const { random } = ctx;
         const randomZonesArray = random?.Shuffle(ZONE_DATABASE);
-        const randomZone1 = randomZonesArray![0];
-        const randomZone2 = randomZonesArray![1];
-        const randomZone3 = randomZonesArray![2];
+        let newZones: Zone[] = [];
 
-        G.zone1.zoneName = randomZone1!.name;
-        G.zone2.zoneName = randomZone2!.name;
-        G.zone3.zoneName = randomZone3!.name;
+        for (let index = 0; index < 3; index++) {
+          let newZone = {
+            ...G.zones[0],
+            zoneId: randomZonesArray![index].id,
+            zoneName: randomZonesArray![index].name,
+            zonePowerText: randomZonesArray![index]?.text,
+            zoneUuid: uuid(),
+          } as Zone;
+
+          newZones.push(newZone);
+        }
+
+        G.zones = newZones;
       },
-      endIf(G, ctx) {
+      endIf(G: GameState) {
         return (
-          G.zone1.zoneName !== 'Zone' &&
-          G.zone2.zoneName !== 'Zone' &&
-          G.zone3.zoneName !== 'Zone'
+          G.zones[0].zoneUuid !== '' &&
+          G.zones[1].zoneUuid !== '' &&
+          G.zones[2].zoneUuid !== ''
         );
       },
     },
@@ -247,7 +264,7 @@ export const BcgPoc: Game<GameState> = {
             G.playerSelectedCard = cardMatch;
           }
         },
-        playCard: (G, ctx, playerId: string, zone: number) => {
+        playCard: (G, ctx, playerId: string, zoneNumber: number) => {
           // add card to playedCards
           const cardFromHand = G.playerHand.find(
             (c) => c.uuid === G.playerSelectedCard?.uuid
@@ -272,24 +289,12 @@ export const BcgPoc: Game<GameState> = {
           });
 
           // play card to zone
-          switch (zone) {
-            case 3:
-              if (G.zone3.playerSide.length !== 6) {
-                G.zone3.playerSide.push(G.playerSelectedCard as Card);
-                G.zone3.playerPower = Math.abs(
-                  G.zone3.playerPower + G.playerSelectedCard!.power
-                );
-                G.playerSelectedCard = undefined;
-              } else {
-                return INVALID_MOVE;
-              }
-              break;
-
+          switch (zoneNumber) {
             case 2:
-              if (G.zone2.playerSide.length !== 6) {
-                G.zone2.playerSide.push(G.playerSelectedCard as Card);
-                G.zone2.playerPower = Math.abs(
-                  G.zone2.playerPower + G.playerSelectedCard!.power
+              if (G.zones[2].playerSide.length !== 6) {
+                G.zones[2].playerSide.push(G.playerSelectedCard as Card);
+                G.zones[2].playerPower = Math.abs(
+                  G.zones[2].playerPower + G.playerSelectedCard!.power
                 );
                 G.playerSelectedCard = undefined;
               } else {
@@ -298,10 +303,22 @@ export const BcgPoc: Game<GameState> = {
               break;
 
             case 1:
-              if (G.zone1.playerSide.length !== 6) {
-                G.zone1.playerSide.push(G.playerSelectedCard as Card);
-                G.zone1.playerPower = Math.abs(
-                  G.zone1.playerPower + G.playerSelectedCard!.power
+              if (G.zones[1].playerSide.length !== 6) {
+                G.zones[1].playerSide.push(G.playerSelectedCard as Card);
+                G.zones[1].playerPower = Math.abs(
+                  G.zones[1].playerPower + G.playerSelectedCard!.power
+                );
+                G.playerSelectedCard = undefined;
+              } else {
+                return INVALID_MOVE;
+              }
+              break;
+
+            case 0:
+              if (G.zones[0].playerSide.length !== 6) {
+                G.zones[0].playerSide.push(G.playerSelectedCard as Card);
+                G.zones[0].playerPower = Math.abs(
+                  G.zones[0].playerPower + G.playerSelectedCard!.power
                 );
                 G.playerSelectedCard = undefined;
               } else {
@@ -313,7 +330,7 @@ export const BcgPoc: Game<GameState> = {
               break;
           }
         },
-        aiPlayCard: (G, ctx, zone: number, card: Card) => {
+        aiPlayCard: (G, ctx, zoneNumber: number, card: Card) => {
           // add card to playedCards
           G.opponentPlayedCards.push(card);
 
@@ -331,23 +348,12 @@ export const BcgPoc: Game<GameState> = {
           });
 
           // play card to zone
-          switch (zone) {
-            case 3:
-              if (G.zone3.opponentSide.length !== 6) {
-                G.zone3.opponentSide.push(card);
-                G.zone3.opponentPower = Math.abs(
-                  G.zone3.opponentPower + card?.power
-                );
-              } else {
-                return INVALID_MOVE;
-              }
-              break;
-
+          switch (zoneNumber) {
             case 2:
-              if (G.zone2.opponentSide.length !== 6) {
-                G.zone2.opponentSide.push(card);
-                G.zone2.opponentPower = Math.abs(
-                  G.zone2.opponentPower + card?.power
+              if (G.zones[2].opponentSide.length !== 6) {
+                G.zones[2].opponentSide.push(card);
+                G.zones[2].opponentPower = Math.abs(
+                  G.zones[2].opponentPower + card?.power
                 );
               } else {
                 return INVALID_MOVE;
@@ -355,10 +361,21 @@ export const BcgPoc: Game<GameState> = {
               break;
 
             case 1:
-              if (G.zone1.opponentSide.length !== 6) {
-                G.zone1.opponentSide.push(card);
-                G.zone1.opponentPower = Math.abs(
-                  G.zone1.opponentPower + card?.power
+              if (G.zones[1].opponentSide.length !== 6) {
+                G.zones[1].opponentSide.push(card);
+                G.zones[1].opponentPower = Math.abs(
+                  G.zones[1].opponentPower + card?.power
+                );
+              } else {
+                return INVALID_MOVE;
+              }
+              break;
+
+            case 0:
+              if (G.zones[0].opponentSide.length !== 6) {
+                G.zones[0].opponentSide.push(card);
+                G.zones[0].opponentPower = Math.abs(
+                  G.zones[0].opponentPower + card?.power
                 );
               } else {
                 return INVALID_MOVE;
@@ -388,24 +405,24 @@ export const BcgPoc: Game<GameState> = {
           });
 
           for (let i = 0; i < cardsThanCanBePlayed.length; i++) {
-            for (let i = 0; i < 6 - G.zone1.opponentSide.length; i++) {
+            for (let i = 0; i < 6 - G.zones[0].opponentSide.length; i++) {
+              moves.push({
+                move: 'aiPlayCard',
+                args: [0, cardsThanCanBePlayed[0]],
+              });
+            }
+
+            for (let i = 0; i < 6 - G.zones[1].opponentSide.length; i++) {
               moves.push({
                 move: 'aiPlayCard',
                 args: [1, cardsThanCanBePlayed[0]],
               });
             }
 
-            for (let i = 0; i < 6 - G.zone2.opponentSide.length; i++) {
+            for (let i = 0; i < 6 - G.zones[2].opponentSide.length; i++) {
               moves.push({
                 move: 'aiPlayCard',
                 args: [2, cardsThanCanBePlayed[0]],
-              });
-            }
-
-            for (let i = 0; i < 6 - G.zone3.opponentSide.length; i++) {
-              moves.push({
-                move: 'aiPlayCard',
-                args: [3, cardsThanCanBePlayed[0]],
               });
             }
           }
@@ -419,7 +436,7 @@ export const BcgPoc: Game<GameState> = {
   },
   endIf: (G: GameState, ctx: Ctx) => {
     if (ctx.turn === Math.abs(G.numberOfSingleTurns * 2)) {
-      switch (isVictory(G.zone1, G.zone2, G.zone3)) {
+      switch (isVictory(G.zones[0], G.zones[1], G.zones[2])) {
         case '1':
           return { winner: '1' };
 

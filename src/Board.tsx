@@ -1,7 +1,7 @@
 import React from 'react';
 import { BoardProps, Client } from 'boardgame.io/react';
 import { Ctx } from 'boardgame.io';
-import { Card, GameState } from './game';
+import { Card, GameState, Zone as IZone } from './game';
 import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
 import { Card as CardInHand } from './components/Card/Card';
@@ -199,33 +199,19 @@ export const Board = (props: BcgPocProps) => {
             width: '100%',
           }}
         >
-          <Zone
-            G={G}
-            ctx={ctx}
-            moves={moves}
-            disabled={false}
-            zone={G.zone1}
-            zoneNumber={1}
-            key={1}
-          />
-          <Zone
-            G={G}
-            ctx={ctx}
-            moves={moves}
-            disabled={false}
-            zone={G.zone2}
-            zoneNumber={2}
-            key={2}
-          />
-          <Zone
-            G={G}
-            ctx={ctx}
-            moves={moves}
-            disabled={false}
-            zone={G.zone3}
-            zoneNumber={3}
-            key={3}
-          />
+          {G.zones.map((zone: IZone, idx: number) => {
+            return (
+              <Zone
+                G={G}
+                ctx={ctx}
+                moves={moves}
+                disabled={zone.disabled}
+                zone={zone}
+                zoneNumber={idx}
+                key={idx}
+              />
+            );
+          })}
         </div>
         <div
           style={{

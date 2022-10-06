@@ -42,10 +42,10 @@ export const Zone = ({
           justifyContent: 'center',
         }}
       >
-        {zone.opponentSide.map((card: Card, idx: number) => {
+        {zone?.opponentSide.map((card: Card, idx: number) => {
           return <ZoneSlot key={idx} card={card} />;
         })}
-        {[...Array.from(Array(6 - zone.opponentSide.length))].map(
+        {[...Array.from(Array(6 - zone?.opponentSide.length))].map(
           (_, idx: number) => {
             return <div key={idx} />;
           }
@@ -64,10 +64,28 @@ export const Zone = ({
           alignItems: 'center',
           justifyContent: 'center',
           textAlign: 'center',
-          padding: '1em',
+          padding: '0.5em',
         }}
       >
-        {zone.zoneName}
+        <div
+          style={{
+            fontSize: '9px',
+            fontStyle: 'italic',
+            letterSpacing: '-0.15px'
+          }}
+        >
+          {zone?.zoneName}
+        </div>
+        <div
+          style={{
+            marginTop: '0.25em',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            lineHeight: '0.875'
+          }}
+        >
+          {zone?.zonePowerText}
+        </div>
         <div
           style={{
             fontSize: '1em',
@@ -82,8 +100,8 @@ export const Zone = ({
             alignItems: 'center',
             justifyContent: 'center',
             background:
-              zone.opponentPower > zone.playerPower ? 'yellow' : 'black',
-            color: zone.opponentPower > zone.playerPower ? 'black' : 'white',
+              zone?.opponentPower > zone?.playerPower ? 'yellow' : 'black',
+            color: zone?.opponentPower > zone?.playerPower ? 'black' : 'white',
             borderRadius: '50%',
             height: '1.5em',
             width: '1.5em',
@@ -91,7 +109,7 @@ export const Zone = ({
             boxSizing: 'content-box',
           }}
         >
-          {zone.opponentPower}
+          {zone?.opponentPower}
         </div>
         <div
           style={{
@@ -107,8 +125,8 @@ export const Zone = ({
             alignItems: 'center',
             justifyContent: 'center',
             background:
-              zone.playerPower > zone.opponentPower ? 'yellow' : 'black',
-            color: zone.playerPower > zone.opponentPower ? 'black' : 'white',
+              zone?.playerPower > zone?.opponentPower ? 'yellow' : 'black',
+            color: zone?.playerPower > zone?.opponentPower ? 'black' : 'white',
             borderRadius: '50%',
             height: '1.5em',
             width: '1.5em',
@@ -116,7 +134,7 @@ export const Zone = ({
             boxSizing: 'content-box',
           }}
         >
-          {zone.playerPower}
+          {zone?.playerPower}
         </div>
       </div>
       <div
@@ -135,9 +153,9 @@ export const Zone = ({
           isActive={
             ctx.currentPlayer === '0' &&
             G.playerSelectedCard !== undefined &&
-            zone.playerSide.length !== 6 &&
-            !zone.disabled &&
-            !zone.disabledForPlayer &&
+            zone?.playerSide.length !== 6 &&
+            !zone?.disabled &&
+            !zone?.disabledForPlayer &&
             G.playerActionPoints >= G.playerSelectedCard?.cost
           }
           playerId='0'
@@ -147,12 +165,12 @@ export const Zone = ({
           style={{
             display: 'grid',
             gridTemplate: `repeat(3, 3.5em) / repeat(${
-              zone.playerSide.length === 1 ? '2' : '2'
+              zone?.playerSide.length === 1 ? '2' : '2'
             }, 2.75em)`,
             gridGap: '0.3em',
           }}
         >
-          {zone.playerSide.map((card: Card, idx: number) => {
+          {zone?.playerSide.map((card: Card, idx: number) => {
             return <ZoneSlot key={idx} card={card} />;
           })}
         </div>
