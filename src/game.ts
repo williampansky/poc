@@ -224,7 +224,7 @@ export const BcgPoc: Game<GameState> = {
               break;
           }
         },
-        onEnd(G, ctx) {
+        onEnd(G: GameState, ctx: Ctx) {
           G.players[1].hand.forEach((c: Card) => {
             return (c.canPlay = false);
           });
@@ -234,7 +234,12 @@ export const BcgPoc: Game<GameState> = {
         },
       },
       moves: {
-        selectCard: (G, ctx, playerId: string, cardUuid: string) => {
+        selectCard: (
+          G: GameState,
+          ctx: Ctx,
+          playerId: string,
+          cardUuid: string
+        ) => {
           const playerID = Number(playerId);
           const cardMatch = G.players[playerID].hand.find(
             (c: Card) => c.uuid === cardUuid
@@ -242,17 +247,22 @@ export const BcgPoc: Game<GameState> = {
           const cardMatchIndex = G.players[playerID].hand.findIndex(
             (c: Card) => c.uuid === cardUuid
           );
-          
+
           if (G.selectedCard[playerID]?.data?.uuid === cardMatch?.uuid) {
             G.selectedCard[playerID] = {};
           } else {
             G.selectedCard[playerID] = {
               index: cardMatchIndex,
-              data: cardMatch
+              data: cardMatch,
             };
           }
         },
-        playCard: (G, ctx, playerId: string, zoneNumber: number) => {
+        playCard: (
+          G: GameState,
+          ctx: Ctx,
+          playerId: string,
+          zoneNumber: number
+        ) => {
           const playerID = Number(playerId);
 
           // add card to playedCards
@@ -279,16 +289,24 @@ export const BcgPoc: Game<GameState> = {
           });
 
           if (G.zones[zoneNumber].playerSide.length !== 6) {
-            G.zones[zoneNumber].playerSide.push(G.selectedCard[playerID]?.data as Card);
+            G.zones[zoneNumber].playerSide.push(
+              G.selectedCard[playerID]?.data as Card
+            );
             G.zones[zoneNumber].playerPower = Math.abs(
-              G.zones[zoneNumber].playerPower + G.selectedCard[playerID]?.data!.power
+              G.zones[zoneNumber].playerPower +
+                G.selectedCard[playerID]?.data!.power
             );
             G.selectedCard[playerID] = {};
           } else {
             return INVALID_MOVE;
           }
         },
-        aiPlayCard: (G, ctx, zoneNumber: number, card: Card) => {
+        aiPlayCard: (
+          G: GameState,
+          ctx: Ctx,
+          zoneNumber: number,
+          card: Card
+        ) => {
           // add card to playedCards
           G.playedCards[1].push(card);
 
@@ -317,14 +335,14 @@ export const BcgPoc: Game<GameState> = {
             return INVALID_MOVE;
           }
         },
-        endTurn: (G, ctx) => {
+        endTurn: (G: GameState, ctx) => {
           ctx.events?.endTurn();
         },
       },
     },
   },
   ai: {
-    enumerate: (G, ctx) => {
+    enumerate: (G: GameState, ctx: Ctx) => {
       let moves = [];
 
       // avoids onslaught of INVALID_MOVE errors
@@ -383,21 +401,19 @@ export const BcgPoc: Game<GameState> = {
 };
 
 const isVictory = (zone1: Zone, zone2: Zone, zone3: Zone): string => {
-  let opponentWonZones = [];
-  let playerWonZones = [];
+  let player0TotalPower = 0;
+  let player1TotalPower = 0;
   let winner = '';
 
-  if (zone1.opponentPower > zone1.playerPower) opponentWonZones.push(true);
-  else if (zone1.playerPower > zone1.opponentPower) playerWonZones.push(true);
+  player0TotalPower = Math.round(
+    zone1.playerPower + zone2.playerPower + zone3.playerPower
+  );
+  player1TotalPower = Math.round(
+    zone1.opponentPower + zone2.opponentPower + zone3.opponentPower
+  );
 
-  if (zone2.opponentPower > zone2.playerPower) opponentWonZones.push(true);
-  else if (zone2.playerPower > zone2.opponentPower) playerWonZones.push(true);
-
-  if (zone3.opponentPower > zone3.playerPower) opponentWonZones.push(true);
-  else if (zone3.playerPower > zone3.opponentPower) playerWonZones.push(true);
-
-  if (opponentWonZones > playerWonZones) winner = '1';
-  else if (playerWonZones > opponentWonZones) winner = '0';
+  if (player1TotalPower > player0TotalPower) winner = '1';
+  else if (player0TotalPower > player1TotalPower) winner = '0';
 
   return winner;
 };
