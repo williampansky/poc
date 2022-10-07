@@ -14,24 +14,29 @@ export interface Card {
 }
 
 export interface Zone {
-  opponentSide: Card[];
-  playerSide: Card[];
-  opponentPower: number;
-  playerPower: number;
   disabled: boolean;
   disabledForOpponent: boolean;
   disabledForPlayer: boolean;
+  opponentPower: number;
+  opponentSide: Card[];
+  playerPower: number;
+  playerSide: Card[];
   zoneId: string;
   zoneName: string;
+  zonePowerAdjustment: number;
   zonePowerText?: string;
   zoneUuid: string;
 }
 
+export interface Player {
+  id: string;
+  name: string;
+  deck: Card[];
+  hand: Card[];
+}
+
 export interface GameState {
-  playerId: string;
-  playerName: string;
-  opponentId: string;
-  opponentName: string;
+  players: Player[];
 
   playerActionPoints: number;
   playerActionPointsTotal: number;
@@ -40,12 +45,6 @@ export interface GameState {
 
   opponentSelectedCard?: Card;
   playerSelectedCard?: Card;
-
-  opponentHand: Card[];
-  playerHand: Card[];
-
-  playerDeck: Card[];
-  opponentDeck: Card[];
 
   playerPlayedCards: Card[];
   opponentPlayedCards: Card[];
@@ -58,10 +57,16 @@ export interface GameState {
 export const BcgPoc: Game<GameState> = {
   name: 'BcgPoc',
   setup: () => ({
-    playerId: '0',
-    playerName: 'Player',
-    opponentId: '1',
-    opponentName: 'Opponent',
+    players: [
+      ...Array.from(Array(2)).map((_, idx: number) => {
+        return {
+          id: idx.toString(),
+          name: idx === 0 ? 'Player' : 'Opponent',
+          deck: [],
+          hand: [],
+        };
+      }),
+    ],
 
     playerActionPoints: 0,
     playerActionPointsTotal: 0,
@@ -71,55 +76,26 @@ export const BcgPoc: Game<GameState> = {
     opponentSelectedCard: undefined,
     playerSelectedCard: undefined,
 
-    opponentHand: [],
-    playerHand: [],
-
-    playerDeck: [],
-    opponentDeck: [],
-
     playerPlayedCards: [],
     opponentPlayedCards: [],
 
     zones: [
-      {
-        opponentSide: [],
-        playerSide: [],
-        opponentPower: 0,
-        playerPower: 0,
-        disabled: false,
-        disabledForOpponent: false,
-        disabledForPlayer: false,
-        zoneId: '',
-        zoneName: 'Zone',
-        zonePowerText: undefined,
-        zoneUuid: '',
-      },
-      {
-        opponentSide: [],
-        playerSide: [],
-        opponentPower: 0,
-        playerPower: 0,
-        disabled: false,
-        disabledForOpponent: false,
-        disabledForPlayer: false,
-        zoneId: '',
-        zoneName: 'Zone',
-        zonePowerText: undefined,
-        zoneUuid: '',
-      },
-      {
-        opponentSide: [],
-        playerSide: [],
-        opponentPower: 0,
-        playerPower: 0,
-        disabled: false,
-        disabledForOpponent: false,
-        disabledForPlayer: false,
-        zoneId: '',
-        zoneName: 'Zone',
-        zonePowerText: undefined,
-        zoneUuid: '',
-      },
+      ...Array.from(Array(3)).map(() => {
+        return {
+          disabled: false,
+          disabledForOpponent: false,
+          disabledForPlayer: false,
+          opponentPower: 0,
+          opponentSide: [],
+          playerPower: 0,
+          playerSide: [],
+          zoneId: '',
+          zoneName: 'Zone',
+          zonePowerAdjustment: 0,
+          zonePowerText: undefined,
+          zoneUuid: ''
+        };
+      }),
     ],
 
     numberOfSingleTurns: 12,
@@ -180,20 +156,20 @@ export const BcgPoc: Game<GameState> = {
         });
 
         // set decks
-        G.opponentDeck = tempOpponentArray;
-        G.playerDeck = tempPlayerArray;
+        G.players[1].deck = tempOpponentArray;
+        G.players[0].deck = tempPlayerArray;
 
         // init hands
         [...Array(3)].forEach((_, i) => {
-          G.opponentHand.push(G.opponentDeck.splice(0, 1)[0]);
-          G.playerHand.push(G.playerDeck.splice(0, 1)[0]);
+          G.players[1].hand.push(G.players[1].deck.splice(0, 1)[0]);
+          G.players[0].hand.push(G.players[0].deck.splice(0, 1)[0]);
         });
       },
       // End phase when both player's decks are full (20 cards)
       // prettier-ignore
       endIf: (G: GameState) => (
-        G.opponentDeck.length === 17 && G.playerDeck.length === 17 &&
-        G.opponentHand.length === 3 && G.playerHand.length === 3
+        G.players[1].deck.length === 17 && G.players[0].deck.length === 17 &&
+        G.players[1].hand.length === 3 && G.players[0].hand.length === 3
       ),
     },
     play: {
@@ -211,14 +187,14 @@ export const BcgPoc: Game<GameState> = {
               G.opponentActionPoints = G.opponentActionPointsTotal;
   
               // add card to hand
-              if (G.opponentHand.length !== 8) { // ..... canDraw
-                G.opponentHand.push( // ................ pushes to hand
-                  G.opponentDeck.splice(0, 1)[0] // .... splices from deck
+              if (G.players[1].hand.length !== 8) { // .... canDraw
+                G.players[1].hand.push( // ................ pushes to hand
+                  G.players[1].deck.splice(0, 1)[0] // .... splices from deck
                 );
               }
 
               // set playable cards
-              G.opponentHand.forEach((c: Card) => {
+              G.players[1].hand.forEach((c: Card) => {
                 if (G.opponentActionPoints >= c.cost) return c.canPlay = true;
                 else return c.canPlay = false;
               });
@@ -235,14 +211,14 @@ export const BcgPoc: Game<GameState> = {
               G.playerActionPoints = G.playerActionPointsTotal;
   
               // add card to hand
-              if (G.playerHand.length !== 8) { // ..... canDraw
-                G.playerHand.push( // ................ pushes to hand
-                  G.playerDeck.splice(0, 1)[0] // .... splices from deck
+              if (G.players[0].hand.length !== 8) { // .... canDraw
+                G.players[0].hand.push( // ................ pushes to hand
+                  G.players[0].deck.splice(0, 1)[0] // .... splices from deck
                 );
               }
 
               // set playable cards
-              G.playerHand.forEach((c: Card) => {
+              G.players[0].hand.forEach((c: Card) => {
                 if (G.playerActionPoints >= c.cost) return c.canPlay = true;
                 else return c.canPlay = false;
               });
@@ -250,14 +226,17 @@ export const BcgPoc: Game<GameState> = {
           }
         },
         onEnd(G, ctx) {
-          G.playerHand.forEach((c: Card) => {
+          G.players[1].hand.forEach((c: Card) => {
+            return (c.canPlay = false);
+          });
+          G.players[0].hand.forEach((c: Card) => {
             return (c.canPlay = false);
           });
         },
       },
       moves: {
         selectCard: (G, ctx, playerId: string, cardUuid: string) => {
-          const cardMatch = G.playerHand.find((c) => c.uuid === cardUuid);
+          const cardMatch = G.players[Number(playerId)].hand.find((c: Card) => c.uuid === cardUuid);
           if (G.playerSelectedCard?.uuid === cardMatch?.uuid) {
             G.playerSelectedCard = undefined;
           } else {
@@ -266,16 +245,16 @@ export const BcgPoc: Game<GameState> = {
         },
         playCard: (G, ctx, playerId: string, zoneNumber: number) => {
           // add card to playedCards
-          const cardFromHand = G.playerHand.find(
-            (c) => c.uuid === G.playerSelectedCard?.uuid
+          const cardFromHand = G.players[Number(playerId)].hand.find(
+            (c: Card) => c.uuid === G.playerSelectedCard?.uuid
           ) as Card;
           G.playerPlayedCards.push(cardFromHand);
 
           // remove from hand
-          const newHand = G.playerHand.filter(
-            (c) => c.uuid !== G.playerSelectedCard?.uuid
+          const newHand = G.players[Number(playerId)].hand.filter(
+            (c: Card) => c.uuid !== G.playerSelectedCard?.uuid
           );
-          G.playerHand = newHand;
+          G.players[Number(playerId)].hand = newHand;
 
           // remove cost from current action points
           G.playerActionPoints = Math.abs(
@@ -283,7 +262,7 @@ export const BcgPoc: Game<GameState> = {
           );
 
           // re-evaluate cards in hand
-          G.playerHand.forEach((c: Card) => {
+          G.players[Number(playerId)].hand.forEach((c: Card) => {
             if (G.playerActionPoints >= c.cost) return (c.canPlay = true);
             else return (c.canPlay = false);
           });
@@ -335,14 +314,14 @@ export const BcgPoc: Game<GameState> = {
           G.opponentPlayedCards.push(card);
 
           // remove from hand
-          const newHand = G.opponentHand.filter((c) => c.uuid !== card?.uuid);
-          G.opponentHand = newHand;
+          const newHand = G.players[1].hand.filter((c: Card) => c.uuid !== card?.uuid);
+          G.players[1].hand = newHand;
 
           // remove cost from current action points
           G.opponentActionPoints = Math.abs(G.opponentActionPoints - card.cost);
 
           // re-evaluate cards in hand
-          G.opponentHand.forEach((c: Card) => {
+          G.players[1].hand.forEach((c: Card) => {
             if (G.opponentActionPoints >= c.cost) return (c.canPlay = true);
             else return (c.canPlay = false);
           });
@@ -398,9 +377,9 @@ export const BcgPoc: Game<GameState> = {
 
       // avoids onslaught of INVALID_MOVE errors
       if (ctx.currentPlayer === '1') {
-        if (G.opponentHand.length >= 1) {
+        if (G.players[1].hand.length >= 1) {
           let cardsThanCanBePlayed: Card[] = []; // find playable cards
-          G.opponentHand.forEach((c: Card) => {
+          G.players[1].hand.forEach((c: Card) => {
             if (c.canPlay) cardsThanCanBePlayed.push(c);
           });
 

@@ -11,7 +11,7 @@ export interface BcgPocProps extends BoardProps<GameState> {}
 export const Board = (props: BcgPocProps) => {
   const {
     G,
-    G: { playerHand, opponentHand },
+    G: { players },
     ctx,
     moves,
     events,
@@ -104,7 +104,7 @@ export const Board = (props: BcgPocProps) => {
               fontSize: '11px',
             }}
           >
-            {G.opponentName}
+            {G.players[1].name}
           </div>
           <div style={{ width: '100%' }}>
             <div
@@ -161,7 +161,7 @@ export const Board = (props: BcgPocProps) => {
               width: '100%',
             }}
           >
-            {[...Array.from(opponentHand)]?.map((_, idx) => {
+            {[...Array.from(players[1].hand)]?.map((_, idx) => {
               return (
                 <div
                   key={idx}
@@ -233,7 +233,7 @@ export const Board = (props: BcgPocProps) => {
               width: '100%',
             }}
           >
-            {playerHand?.map((card: Card) => (
+            {players[0].hand?.map((card: Card) => (
               <CardInHand
                 {...card}
                 key={card.uuid}
