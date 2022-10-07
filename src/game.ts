@@ -4,6 +4,21 @@ import { v4 as uuid } from 'uuid';
 import CARD_DATABASE from './tempCardsDatabase';
 import ZONE_DATABASE from './tempZonesDatabase';
 
+export const config = {
+  gameConfig: {
+    actionPointsPerTurn: 1,
+    actionPointsTotal: 10,
+    cardsPerDeck: 20,
+    cardsPerHand: 8,
+    cardsPerStartingHand: 3,
+    cardsPerTurn: 1,
+    numberOfPlayers: 2,
+    numberOfSingleTurnsPerGame: 12,
+    numberOfZones: 3,
+    numberOfSlotsPerZone: 6,
+  },
+};
+
 export interface Card {
   id: string;
   cost: number;
@@ -38,6 +53,21 @@ export interface SelectedCard {
   data?: Card;
 }
 
+export interface Config {
+  gameConfig: {
+    actionPointsPerTurn: number;
+    actionPointsTotal: number;
+    cardsPerDeck: number;
+    cardsPerHand: number;
+    cardsPerStartingHand: number;
+    cardsPerTurn: number;
+    numberOfPlayers: number;
+    numberOfSingleTurnsPerGame: number;
+    numberOfZones: number;
+    numberOfSlotsPerZone: number;
+  };
+}
+
 export interface GameState {
   players: Player[];
 
@@ -46,30 +76,32 @@ export interface GameState {
 
   zones: Zone[];
 
-  numberOfSingleTurns: number;
+  config: Config;
 }
 
 export const BcgPoc: Game<GameState> = {
   name: 'BcgPoc',
   setup: () => ({
     players: [
-      ...Array.from(Array(2)).map((_, idx: number) => {
-        return {
-          id: idx.toString(),
-          name: idx === 0 ? 'Player' : 'Opponent',
-          deck: [],
-          hand: [],
-          actionPoints: 0,
-          actionPointsTotal: 0
-        };
-      }),
+      ...Array.from(Array(config.gameConfig.numberOfPlayers)).map(
+        (_, idx: number) => {
+          return {
+            id: idx.toString(),
+            name: idx === 0 ? 'Player' : 'Opponent',
+            deck: [],
+            hand: [],
+            actionPoints: 0,
+            actionPointsTotal: 0,
+          };
+        }
+      ),
     ],
 
     selectedCard: [{}, {}],
     playedCards: [[], []],
 
     zones: [
-      ...Array.from(Array(3)).map(() => {
+      ...Array.from(Array(config.gameConfig.numberOfZones)).map(() => {
         return {
           disabled: [false, false],
           id: '',
@@ -82,8 +114,8 @@ export const BcgPoc: Game<GameState> = {
         };
       }),
     ],
-
-    numberOfSingleTurns: 12,
+    
+    config: config
   }),
   phases: {
     initZones: {
@@ -94,12 +126,12 @@ export const BcgPoc: Game<GameState> = {
         const randomZonesArray = random?.Shuffle(ZONE_DATABASE);
         let newZones: Zone[] = [];
 
-        for (let index = 0; index < 3; index++) {
+        for (let idx = 0; idx < config.gameConfig.numberOfZones; idx++) {
           let newZone = {
             ...G.zones[0],
-            id: randomZonesArray![index].id,
-            name: randomZonesArray![index].name,
-            powerText: randomZonesArray![index]?.text,
+            id: randomZonesArray![idx].id,
+            name: randomZonesArray![idx].name,
+            powerText: randomZonesArray![idx]?.text,
             uuid: uuid(),
           } as Zone;
 
@@ -124,7 +156,7 @@ export const BcgPoc: Game<GameState> = {
         let tempPlayerArray: Card[] = [];
 
         // create deck
-        [...Array(20)].forEach((_, i) => {
+        [...Array(config.gameConfig.cardsPerDeck)].forEach((_, i) => {
           let randomCard1 = random?.Shuffle(CARD_DATABASE)[0] as Card;
           let randomCard2 = random?.Shuffle(CARD_DATABASE)[0] as Card;
 
@@ -145,36 +177,47 @@ export const BcgPoc: Game<GameState> = {
         G.players[0].deck = tempPlayerArray;
 
         // init hands
-        [...Array(3)].forEach((_, i) => {
+        [...Array(config.gameConfig.cardsPerStartingHand)].forEach(() => {
           G.players[1].hand.push(G.players[1].deck.splice(0, 1)[0]);
           G.players[0].hand.push(G.players[0].deck.splice(0, 1)[0]);
         });
       },
-      // End phase when both player's decks are full (20 cards)
-      // prettier-ignore
-      endIf: (G: GameState) => (
-        G.players[1].deck.length === 17 && G.players[0].deck.length === 17 &&
-        G.players[1].hand.length === 3 && G.players[0].hand.length === 3
-      ),
+      endIf: (G: GameState) => {
+        // End phase when both player's decks are full (20 cards)
+        const perDeck = config.gameConfig.cardsPerDeck;
+        const perStartingHand = config.gameConfig.cardsPerStartingHand;
+        const startingDeckLength = Math.abs(perDeck - perStartingHand);
+
+        return (
+          G.players[1].deck.length === startingDeckLength &&
+          G.players[0].deck.length === startingDeckLength &&
+          G.players[1].hand.length === perStartingHand &&
+          G.players[0].hand.length === perStartingHand
+        );
+      },
     },
     play: {
       turn: {
         // prettier-ignore
         onBegin(G: GameState, ctx: Ctx) {
+          const apPerTurn = config.gameConfig.actionPointsPerTurn;
+          const apPerGame = config.gameConfig.actionPointsTotal;
+          const maxHandSize = config.gameConfig.cardsPerHand;
+
           switch (ctx.currentPlayer) {
             case '1':
               // incremement action points
-              if (G.players[1].actionPointsTotal !== 10) {
-                G.players[1].actionPointsTotal = Math.abs(G.players[1].actionPointsTotal + 1);
+              if (G.players[1].actionPointsTotal !== apPerGame) {
+                G.players[1].actionPointsTotal = Math.abs(G.players[1].actionPointsTotal + apPerTurn);
               }
   
               // set current action points
               G.players[1].actionPoints = G.players[1].actionPointsTotal;
   
               // add card to hand
-              if (G.players[1].hand.length !== 8) { // .... canDraw
-                G.players[1].hand.push( // ................ pushes to hand
-                  G.players[1].deck.splice(0, 1)[0] // .... splices from deck
+              if (G.players[1].hand.length !== maxHandSize) { // .... canDraw
+                G.players[1].hand.push( // .......................... pushes to hand
+                  G.players[1].deck.splice(0, 1)[0] // .............. splices from deck
                 );
               }
 
@@ -188,17 +231,17 @@ export const BcgPoc: Game<GameState> = {
             case '0':
             default:
               // incremement action points
-              if (G.players[0].actionPointsTotal !== 10) {
-                G.players[0].actionPointsTotal = Math.abs(G.players[0].actionPointsTotal + 1);
+              if (G.players[0].actionPointsTotal !== apPerGame) {
+                G.players[0].actionPointsTotal = Math.abs(G.players[0].actionPointsTotal + apPerTurn);
               }
   
               // set current action points
               G.players[0].actionPoints = G.players[0].actionPointsTotal;
   
               // add card to hand
-              if (G.players[0].hand.length !== 8) { // .... canDraw
-                G.players[0].hand.push( // ................ pushes to hand
-                  G.players[0].deck.splice(0, 1)[0] // .... splices from deck
+              if (G.players[0].hand.length !== maxHandSize) { // .... canDraw
+                G.players[0].hand.push( // .......................... pushes to hand
+                  G.players[0].deck.splice(0, 1)[0] // .............. splices from deck
                 );
               }
 
@@ -211,12 +254,8 @@ export const BcgPoc: Game<GameState> = {
           }
         },
         onEnd(G: GameState, ctx: Ctx) {
-          G.players[1].hand.forEach((c: Card) => {
-            return (c.canPlay = false);
-          });
-          G.players[0].hand.forEach((c: Card) => {
-            return (c.canPlay = false);
-          });
+          G.players[1].hand.forEach((c: Card) => c.canPlay = false);
+          G.players[0].hand.forEach((c: Card) => c.canPlay = false);
         },
       },
       moves: {
@@ -270,11 +309,12 @@ export const BcgPoc: Game<GameState> = {
 
           // re-evaluate cards in hand
           G.players[playerID].hand.forEach((c: Card) => {
-            if (G.players[playerID].actionPoints >= c.cost) return (c.canPlay = true);
+            if (G.players[playerID].actionPoints >= c.cost)
+              return (c.canPlay = true);
             else return (c.canPlay = false);
           });
 
-          if (G.zones[zoneNumber].sides[playerID].length !== 6) {
+          if (G.zones[zoneNumber].sides[playerID].length !== config.gameConfig.numberOfSlotsPerZone) {
             G.zones[zoneNumber].sides[playerID].push(
               G.selectedCard[playerID]?.data as Card
             );
@@ -303,7 +343,9 @@ export const BcgPoc: Game<GameState> = {
           G.players[1].hand = newHand;
 
           // remove cost from current action points
-          G.players[1].actionPoints = Math.abs(G.players[1].actionPoints - card.cost);
+          G.players[1].actionPoints = Math.abs(
+            G.players[1].actionPoints - card.cost
+          );
 
           // re-evaluate cards in hand
           G.players[1].hand.forEach((c: Card) => {
@@ -312,7 +354,7 @@ export const BcgPoc: Game<GameState> = {
           });
 
           // play card to zone
-          if (G.zones[zoneNumber].sides[1].length !== 6) {
+          if (G.zones[zoneNumber].sides[1].length !== config.gameConfig.numberOfSlotsPerZone) {
             G.zones[zoneNumber].sides[1].push(card);
             G.zones[zoneNumber].powers[1] = Math.abs(
               G.zones[zoneNumber].powers[1] + card!.power
@@ -370,7 +412,9 @@ export const BcgPoc: Game<GameState> = {
     },
   },
   endIf: (G: GameState, ctx: Ctx) => {
-    if (ctx.turn === Math.abs(G.numberOfSingleTurns * 2)) {
+    if (
+      ctx.turn === Math.abs(config.gameConfig.numberOfSingleTurnsPerGame * 2)
+    ) {
       switch (isVictory(G.zones[0], G.zones[1], G.zones[2])) {
         case '1':
           return { winner: '1' };

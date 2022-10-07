@@ -1,6 +1,6 @@
 import { Ctx, MoveMap } from 'boardgame.io';
 import { ReactElement } from 'react';
-import { Card, GameState, Zone as ZoneProps } from '../../game';
+import { Card, config, GameState, Zone as ZoneProps } from '../../game';
 import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
 import { ZoneDropSlot } from '../ZoneDropSlot/ZoneDropSlot';
 
@@ -45,11 +45,15 @@ export const Zone = ({
         {zone?.sides[1].map((card: Card, idx: number) => {
           return <ZoneSlot key={idx} card={card} />;
         })}
-        {[...Array.from(Array(6 - zone?.sides[1].length))].map(
-          (_, idx: number) => {
-            return <div key={idx} />;
-          }
-        )}
+        {[
+          ...Array.from(
+            Array(
+              config.gameConfig.numberOfSlotsPerZone - zone?.sides[1].length
+            )
+          ),
+        ].map((_, idx: number) => {
+          return <div key={idx} />;
+        })}
       </div>
       <div
         style={{
@@ -71,7 +75,7 @@ export const Zone = ({
           style={{
             fontSize: '9px',
             fontStyle: 'italic',
-            letterSpacing: '-0.15px'
+            letterSpacing: '-0.15px',
           }}
         >
           {zone?.name}
@@ -81,7 +85,7 @@ export const Zone = ({
             marginTop: '0.25em',
             fontSize: '12px',
             fontWeight: 'bold',
-            lineHeight: '0.875'
+            lineHeight: '0.875',
           }}
         >
           {zone?.powerText}
@@ -99,8 +103,7 @@ export const Zone = ({
             flexFlow: 'column nowrap',
             alignItems: 'center',
             justifyContent: 'center',
-            background:
-              zone?.powers[1] > zone?.powers[0] ? 'yellow' : 'black',
+            background: zone?.powers[1] > zone?.powers[0] ? 'yellow' : 'black',
             color: zone?.powers[1] > zone?.powers[0] ? 'black' : 'white',
             borderRadius: '50%',
             height: '1.5em',
@@ -124,8 +127,7 @@ export const Zone = ({
             flexFlow: 'column nowrap',
             alignItems: 'center',
             justifyContent: 'center',
-            background:
-              zone?.powers[0] > zone?.powers[1] ? 'yellow' : 'black',
+            background: zone?.powers[0] > zone?.powers[1] ? 'yellow' : 'black',
             color: zone?.powers[0] > zone?.powers[1] ? 'black' : 'white',
             borderRadius: '50%',
             height: '1.5em',
@@ -153,7 +155,7 @@ export const Zone = ({
           isActive={
             ctx.currentPlayer === '0' &&
             G.selectedCard[0]?.data !== undefined &&
-            zone?.sides[0].length !== 6 &&
+            zone?.sides[0].length !== config.gameConfig.numberOfSlotsPerZone &&
             !zone?.disabled[0] &&
             G.players[0].actionPoints >= G.selectedCard[0]?.data?.cost
           }

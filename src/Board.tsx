@@ -1,7 +1,7 @@
 import React from 'react';
 import { BoardProps, Client } from 'boardgame.io/react';
 import { Ctx } from 'boardgame.io';
-import { Card, GameState, Zone as IZone } from './game';
+import { Card, config, GameState, Zone as IZone } from './game';
 import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
 import { Card as CardInHand } from './components/Card/Card';
@@ -115,28 +115,30 @@ export const Board = (props: BcgPocProps) => {
                 width: '100%',
               }}
             >
-              {Array.from(Array(G.players[1].actionPointsTotal)).map((_, idx) => {
-                idx = idx + 1;
-                return (
-                  <div
-                    key={idx}
-                    style={{
-                      display: 'flex',
-                      flexFlow: 'column nowrap',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      pointerEvents: 'none',
-                      userSelect: 'none',
-                      background:
-                        G.players[1].actionPoints >= idx
-                          ? 'lightgreen'
-                          : 'lightgray',
-                    }}
-                  >
-                    &nbsp;
-                  </div>
-                );
-              })}
+              {Array.from(Array(G.players[1].actionPointsTotal)).map(
+                (_, idx) => {
+                  idx = idx + 1;
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        display: 'flex',
+                        flexFlow: 'column nowrap',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        pointerEvents: 'none',
+                        userSelect: 'none',
+                        background:
+                          G.players[1].actionPoints >= idx
+                            ? 'lightgreen'
+                            : 'lightgray',
+                      }}
+                    >
+                      &nbsp;
+                    </div>
+                  );
+                }
+              )}
             </div>
           </div>
         </div>
@@ -269,28 +271,30 @@ export const Board = (props: BcgPocProps) => {
                 width: '100%',
               }}
             >
-              {Array.from(Array(G.players[0].actionPointsTotal)).map((_, idx) => {
-                idx = idx + 1;
-                return (
-                  <div
-                    key={idx}
-                    style={{
-                      display: 'flex',
-                      flexFlow: 'column nowrap',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      pointerEvents: 'none',
-                      userSelect: 'none',
-                      background:
-                        G.players[0].actionPoints >= idx
-                          ? 'lightgreen'
-                          : 'lightgray',
-                    }}
-                  >
-                    &nbsp;
-                  </div>
-                );
-              })}
+              {Array.from(Array(G.players[0].actionPointsTotal)).map(
+                (_, idx) => {
+                  idx = idx + 1;
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        display: 'flex',
+                        flexFlow: 'column nowrap',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        pointerEvents: 'none',
+                        userSelect: 'none',
+                        background:
+                          G.players[0].actionPoints >= idx
+                            ? 'lightgreen'
+                            : 'lightgray',
+                      }}
+                    >
+                      &nbsp;
+                    </div>
+                  );
+                }
+              )}
             </div>
           </div>
           <div
@@ -315,7 +319,8 @@ export const Board = (props: BcgPocProps) => {
                 minWidth: 95,
               }}
             >
-              End Turn {Math.round(ctx.turn / 2)}/{G.numberOfSingleTurns}
+              End Turn {Math.round(ctx.turn / 2)}/
+              {config.gameConfig.numberOfSingleTurnsPerGame}
             </button>
           </div>
         </div>
