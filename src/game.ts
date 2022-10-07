@@ -29,6 +29,8 @@ export interface Player {
   name: string;
   deck: Card[];
   hand: Card[];
+  actionPoints: number;
+  actionPointsTotal: number;
 }
 
 export interface SelectedCard {
@@ -38,11 +40,6 @@ export interface SelectedCard {
 
 export interface GameState {
   players: Player[];
-
-  playerActionPoints: number;
-  playerActionPointsTotal: number;
-  opponentActionPoints: number;
-  opponentActionPointsTotal: number;
 
   selectedCard: [SelectedCard, SelectedCard];
   playedCards: [Card[], Card[]];
@@ -62,14 +59,11 @@ export const BcgPoc: Game<GameState> = {
           name: idx === 0 ? 'Player' : 'Opponent',
           deck: [],
           hand: [],
+          actionPoints: 0,
+          actionPointsTotal: 0
         };
       }),
     ],
-
-    playerActionPoints: 0,
-    playerActionPointsTotal: 0,
-    opponentActionPoints: 0,
-    opponentActionPointsTotal: 0,
 
     selectedCard: [{}, {}],
     playedCards: [[], []],
@@ -170,12 +164,12 @@ export const BcgPoc: Game<GameState> = {
           switch (ctx.currentPlayer) {
             case '1':
               // incremement action points
-              if (G.opponentActionPointsTotal !== 10) {
-                G.opponentActionPointsTotal = Math.abs(G.opponentActionPointsTotal + 1);
+              if (G.players[1].actionPointsTotal !== 10) {
+                G.players[1].actionPointsTotal = Math.abs(G.players[1].actionPointsTotal + 1);
               }
   
               // set current action points
-              G.opponentActionPoints = G.opponentActionPointsTotal;
+              G.players[1].actionPoints = G.players[1].actionPointsTotal;
   
               // add card to hand
               if (G.players[1].hand.length !== 8) { // .... canDraw
@@ -186,7 +180,7 @@ export const BcgPoc: Game<GameState> = {
 
               // set playable cards
               G.players[1].hand.forEach((c: Card) => {
-                if (G.opponentActionPoints >= c.cost) return c.canPlay = true;
+                if (G.players[1].actionPoints >= c.cost) return c.canPlay = true;
                 else return c.canPlay = false;
               });
               break;
@@ -194,12 +188,12 @@ export const BcgPoc: Game<GameState> = {
             case '0':
             default:
               // incremement action points
-              if (G.playerActionPointsTotal !== 10) {
-                G.playerActionPointsTotal = Math.abs(G.playerActionPointsTotal + 1);
+              if (G.players[0].actionPointsTotal !== 10) {
+                G.players[0].actionPointsTotal = Math.abs(G.players[0].actionPointsTotal + 1);
               }
   
               // set current action points
-              G.playerActionPoints = G.playerActionPointsTotal;
+              G.players[0].actionPoints = G.players[0].actionPointsTotal;
   
               // add card to hand
               if (G.players[0].hand.length !== 8) { // .... canDraw
@@ -210,7 +204,7 @@ export const BcgPoc: Game<GameState> = {
 
               // set playable cards
               G.players[0].hand.forEach((c: Card) => {
-                if (G.playerActionPoints >= c.cost) return c.canPlay = true;
+                if (G.players[0].actionPoints >= c.cost) return c.canPlay = true;
                 else return c.canPlay = false;
               });
               break;
@@ -270,13 +264,13 @@ export const BcgPoc: Game<GameState> = {
           G.players[playerID].hand = newHand;
 
           // remove cost from current action points
-          G.playerActionPoints = Math.abs(
-            G.playerActionPoints - cardFromHand.cost
+          G.players[playerID].actionPoints = Math.abs(
+            G.players[playerID].actionPoints - cardFromHand.cost
           );
 
           // re-evaluate cards in hand
           G.players[playerID].hand.forEach((c: Card) => {
-            if (G.playerActionPoints >= c.cost) return (c.canPlay = true);
+            if (G.players[playerID].actionPoints >= c.cost) return (c.canPlay = true);
             else return (c.canPlay = false);
           });
 
@@ -309,11 +303,11 @@ export const BcgPoc: Game<GameState> = {
           G.players[1].hand = newHand;
 
           // remove cost from current action points
-          G.opponentActionPoints = Math.abs(G.opponentActionPoints - card.cost);
+          G.players[1].actionPoints = Math.abs(G.players[1].actionPoints - card.cost);
 
           // re-evaluate cards in hand
           G.players[1].hand.forEach((c: Card) => {
-            if (G.opponentActionPoints >= c.cost) return (c.canPlay = true);
+            if (G.players[1].actionPoints >= c.cost) return (c.canPlay = true);
             else return (c.canPlay = false);
           });
 

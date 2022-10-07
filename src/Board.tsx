@@ -115,7 +115,7 @@ export const Board = (props: BcgPocProps) => {
                 width: '100%',
               }}
             >
-              {Array.from(Array(G.opponentActionPointsTotal)).map((_, idx) => {
+              {Array.from(Array(G.players[1].actionPointsTotal)).map((_, idx) => {
                 idx = idx + 1;
                 return (
                   <div
@@ -128,7 +128,7 @@ export const Board = (props: BcgPocProps) => {
                       pointerEvents: 'none',
                       userSelect: 'none',
                       background:
-                        G.opponentActionPoints >= idx
+                        G.players[1].actionPoints >= idx
                           ? 'lightgreen'
                           : 'lightgray',
                     }}
@@ -269,7 +269,7 @@ export const Board = (props: BcgPocProps) => {
                 width: '100%',
               }}
             >
-              {Array.from(Array(G.playerActionPointsTotal)).map((_, idx) => {
+              {Array.from(Array(G.players[0].actionPointsTotal)).map((_, idx) => {
                 idx = idx + 1;
                 return (
                   <div
@@ -282,7 +282,7 @@ export const Board = (props: BcgPocProps) => {
                       pointerEvents: 'none',
                       userSelect: 'none',
                       background:
-                        G.playerActionPoints >= idx
+                        G.players[0].actionPoints >= idx
                           ? 'lightgreen'
                           : 'lightgray',
                     }}

@@ -155,7 +155,7 @@ export const Zone = ({
             G.selectedCard[0]?.data !== undefined &&
             zone?.sides[0].length !== 6 &&
             !zone?.disabled[0] &&
-            G.playerActionPoints >= G.selectedCard[0]?.data?.cost
+            G.players[0].actionPoints >= G.selectedCard[0]?.data?.cost
           }
           playerId='0'
           zone={zoneNumber}
