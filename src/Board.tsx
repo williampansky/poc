@@ -205,7 +205,7 @@ export const Board = (props: BcgPocProps) => {
                 G={G}
                 ctx={ctx}
                 moves={moves}
-                disabled={zone.disabled}
+                disabled={zone.disabled[0]}
                 zone={zone}
                 zoneNumber={idx}
                 key={idx}
