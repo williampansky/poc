@@ -238,7 +238,7 @@ export const Board = (props: BcgPocProps) => {
                 {...card}
                 key={card.uuid}
                 onClick={onCardClick}
-                isSelected={G.playerSelectedCard?.uuid === card.uuid}
+                isSelected={G.selectedCard[0]?.data?.uuid === card.uuid}
               />
             ))}
           </div>

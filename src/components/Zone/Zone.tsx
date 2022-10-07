@@ -152,11 +152,11 @@ export const Zone = ({
           moves={moves}
           isActive={
             ctx.currentPlayer === '0' &&
-            G.playerSelectedCard !== undefined &&
+            G.selectedCard[0]?.data !== undefined &&
             zone?.playerSide.length !== 6 &&
             !zone?.disabled &&
             !zone?.disabledForPlayer &&
-            G.playerActionPoints >= G.playerSelectedCard?.cost
+            G.playerActionPoints >= G.selectedCard[0]?.data?.cost
           }
           playerId='0'
           zone={zoneNumber}
