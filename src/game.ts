@@ -21,26 +21,26 @@ export const config = {
 
 export interface Card {
   id: string;
-  cost: number;
   name: string;
-  power: number;
-  uuid: string;
   canPlay: boolean;
+  cost: number;
+  power: number;
+  powerOverride?: number;
+  uuid: string;
 }
 
 export interface Zone {
-  disabled: boolean[];
+  disabled: Record<string, boolean>;
   id: string;
   name: string;
-  powers: number[];
-  powerAdjustment: number;
+  powers: Record<string, number>;
   powerText?: string;
-  sides: Card[][];
+  powerAdjustment: number;
+  sides: Record<string, Card[]>;
   uuid: string;
 }
 
 export interface Player {
-  id: string;
   name: string;
   deck: Card[];
   hand: Card[];
@@ -69,53 +69,68 @@ export interface Config {
 }
 
 export interface GameState {
-  players: Player[];
-
-  selectedCard: [SelectedCard, SelectedCard];
-  playedCards: [Card[], Card[]];
-
+  players: Record<string, Player>;
+  selectedCard: Record<string, SelectedCard | undefined>;
+  playedCards: Record<string, Card[]>;
   zones: Zone[];
-
   config: Config;
 }
 
 export const BcgPoc: Game<GameState> = {
   name: 'BcgPoc',
   setup: () => ({
-    players: [
-      ...Array.from(Array(config.gameConfig.numberOfPlayers)).map(
-        (_, idx: number) => {
-          return {
-            id: idx.toString(),
-            name: idx === 0 ? 'Player' : 'Opponent',
-            deck: [],
-            hand: [],
-            actionPoints: 0,
-            actionPointsTotal: 0,
-          };
-        }
-      ),
-    ],
+    players: {
+      '0': {
+        name: 'Player',
+        deck: [],
+        hand: [],
+        actionPoints: 0,
+        actionPointsTotal: 0,
+      },
+      '1': {
+        name: 'Opponent',
+        deck: [],
+        hand: [],
+        actionPoints: 0,
+        actionPointsTotal: 0,
+      },
+    },
 
-    selectedCard: [{}, {}],
-    playedCards: [[], []],
+    selectedCard: {
+      '0': {},
+      '1': {},
+    },
+
+    playedCards: {
+      '0': [],
+      '1': [],
+    },
 
     zones: [
       ...Array.from(Array(config.gameConfig.numberOfZones)).map(() => {
         return {
-          disabled: [false, false],
+          disabled: {
+            '0': false,
+            '1': false,
+          },
           id: '',
           name: 'Zone',
-          powers: [0, 0],
+          powers: {
+            '0': 0,
+            '1': 0,
+          },
           powerAdjustment: 0,
           powerText: undefined,
-          sides: [[], []],
+          sides: {
+            '0': [],
+            '1': [],
+          },
           uuid: '',
         };
       }),
     ],
-    
-    config: config
+
+    config: config,
   }),
   phases: {
     initZones: {
@@ -174,13 +189,13 @@ export const BcgPoc: Game<GameState> = {
         });
 
         // set decks
-        G.players[1].deck = tempOpponentArray;
-        G.players[0].deck = tempPlayerArray;
+        G.players['0'].deck = tempPlayerArray;
+        G.players['1'].deck = tempOpponentArray;
 
         // init hands
         [...Array(config.gameConfig.cardsPerStartingHand)].forEach(() => {
-          G.players[1].hand.push(G.players[1].deck.splice(0, 1)[0]);
-          G.players[0].hand.push(G.players[0].deck.splice(0, 1)[0]);
+          G.players['0'].hand.push(G.players['0'].deck.splice(0, 1)[0]);
+          G.players['1'].hand.push(G.players['1'].deck.splice(0, 1)[0]);
         });
       },
       endIf: (G: GameState) => {
@@ -190,10 +205,10 @@ export const BcgPoc: Game<GameState> = {
         const startingDeckLength = Math.abs(perDeck - perStartingHand);
 
         return (
-          G.players[1].deck.length === startingDeckLength &&
-          G.players[0].deck.length === startingDeckLength &&
-          G.players[1].hand.length === perStartingHand &&
-          G.players[0].hand.length === perStartingHand
+          G.players['0'].deck.length === startingDeckLength &&
+          G.players['0'].hand.length === perStartingHand && 
+          G.players['1'].deck.length === startingDeckLength &&
+          G.players['1'].hand.length === perStartingHand
         );
       },
     },
@@ -255,8 +270,8 @@ export const BcgPoc: Game<GameState> = {
           }
         },
         onEnd(G: GameState, ctx: Ctx) {
-          G.players[1].hand.forEach((c: Card) => c.canPlay = false);
-          G.players[0].hand.forEach((c: Card) => c.canPlay = false);
+          G.players[1].hand.forEach((c: Card) => (c.canPlay = false));
+          G.players[0].hand.forEach((c: Card) => (c.canPlay = false));
         },
       },
       moves: {
@@ -267,18 +282,17 @@ export const BcgPoc: Game<GameState> = {
           playerId: string,
           cardUuid: string
         ) => {
-          const playerID = Number(playerId);
-          const cardMatch = G.players[playerID].hand.find(
+          const cardMatch = G.players[playerId].hand.find(
             (c: Card) => c.uuid === cardUuid
           );
-          const cardMatchIndex = G.players[playerID].hand.findIndex(
+          const cardMatchIndex = G.players[playerId].hand.findIndex(
             (c: Card) => c.uuid === cardUuid
           );
 
-          if (G.selectedCard[playerID]?.data?.uuid === cardMatch?.uuid) {
-            G.selectedCard[playerID] = {};
+          if (G.selectedCard[playerId]?.data?.uuid === cardMatch?.uuid) {
+            G.selectedCard[playerId] = undefined;
           } else {
-            G.selectedCard[playerID] = {
+            G.selectedCard[playerId] = {
               index: cardMatchIndex,
               data: cardMatch,
             };
@@ -291,37 +305,35 @@ export const BcgPoc: Game<GameState> = {
           playerId: string,
           zoneNumber: number
         ) => {
-          const playerID = Number(playerId);
-
           // add card to playedCards
-          const cardFromHand = G.players[playerID].hand.find(
-            (c: Card) => c.uuid === G.selectedCard[playerID]?.data?.uuid
+          const cardFromHand = G.players[playerId].hand.find(
+            (c: Card) => c.uuid === G.selectedCard[playerId]?.data?.uuid
           ) as Card;
-          G.playedCards[playerID].push(cardFromHand);
+          G.playedCards[playerId].push(cardFromHand);
 
           // remove from hand
-          const newHand = G.players[playerID].hand.filter(
-            (c: Card) => c.uuid !== G.selectedCard[playerID]?.data?.uuid
+          const newHand = G.players[playerId].hand.filter(
+            (c: Card) => c.uuid !== G.selectedCard[playerId]?.data?.uuid
           );
-          G.players[playerID].hand = newHand;
+          G.players[playerId].hand = newHand;
 
           // remove cost from current action points
-          G.players[playerID].actionPoints = Math.abs(
-            G.players[playerID].actionPoints - cardFromHand.cost
+          G.players[playerId].actionPoints = Math.abs(
+            G.players[playerId].actionPoints - cardFromHand.cost
           );
 
           // re-evaluate cards in hand
-          G.players[playerID].hand.forEach((c: Card) => {
-            if (G.players[playerID].actionPoints >= c.cost) return (c.canPlay = true);
+          G.players[playerId].hand.forEach((c: Card) => {
+            if (G.players[playerId].actionPoints >= c.cost) return (c.canPlay = true);
             else return (c.canPlay = false);
           });
 
-          if (G.zones[zoneNumber].sides[playerID].length !== config.gameConfig.numberOfSlotsPerZone) {
-            G.zones[zoneNumber].sides[playerID].push(G.selectedCard[playerID]?.data as Card);
-            G.zones[zoneNumber].powers[playerID] = Math.abs(
-              G.zones[zoneNumber].powers[playerID] + G.selectedCard[playerID]?.data!.power
+          if (G.zones[zoneNumber].sides[playerId].length !== config.gameConfig.numberOfSlotsPerZone) {
+            G.zones[zoneNumber].sides[playerId].push(G.selectedCard[playerId]?.data as Card);
+            G.zones[zoneNumber].powers[playerId] = Math.abs(
+              G.zones[zoneNumber].powers[playerId] + G.selectedCard[playerId]!.data!.power
             );
-            G.selectedCard[playerID] = {};
+            G.selectedCard[playerId] = undefined;
           } else {
             return INVALID_MOVE;
           }
@@ -444,4 +456,32 @@ const isVictory = (zone1: Zone, zone2: Zone, zone3: Zone): string => {
   else if (player0TotalPower > player1TotalPower) winner = '0';
 
   return winner;
+};
+
+const playCard = (
+  G: GameState,
+  ctx: Ctx,
+  playerId: string,
+  zoneNumber: number,
+  card: Card
+) => {
+  const { currentPlayer } = ctx;
+  const {
+    players,
+    zones,
+    config: {
+      gameConfig: { numberOfSlotsPerZone },
+    },
+  } = G;
+  const zone = zones[zoneNumber];
+
+  // validate cost playability
+  // validate zone playability
+  // add card to playedCards array
+  // remove cost from current action points
+  // handle zone interactions
+  // calculate and set zone power
+  // remove card from hand & re-evaluate cards in hand
+  // push card to zone side array
+  // unset selected card
 };
