@@ -114,8 +114,8 @@ export const BcgPoc: Game<GameState> = {
         };
       }),
     ],
-    
-    config: config
+
+    config: config,
   }),
   phases: {
     initZones: {
@@ -129,9 +129,14 @@ export const BcgPoc: Game<GameState> = {
         for (let idx = 0; idx < config.gameConfig.numberOfZones; idx++) {
           let newZone = {
             ...G.zones[0],
+            disabled:
+              randomZonesArray![idx].id === 'ZONE_003'
+                ? [true, true]
+                : [false, false],
             id: randomZonesArray![idx].id,
             name: randomZonesArray![idx].name,
-            powerText: randomZonesArray![idx]?.text,
+            powerText: randomZonesArray![idx]?.powerText,
+            powerAdjustment: randomZonesArray![idx]?.powerAdjustment,
             uuid: uuid(),
           } as Zone;
 
@@ -254,8 +259,8 @@ export const BcgPoc: Game<GameState> = {
           }
         },
         onEnd(G: GameState, ctx: Ctx) {
-          G.players[1].hand.forEach((c: Card) => c.canPlay = false);
-          G.players[0].hand.forEach((c: Card) => c.canPlay = false);
+          G.players[1].hand.forEach((c: Card) => (c.canPlay = false));
+          G.players[0].hand.forEach((c: Card) => (c.canPlay = false));
         },
       },
       moves: {
@@ -263,21 +268,19 @@ export const BcgPoc: Game<GameState> = {
           G: GameState,
           ctx: Ctx,
           playerId: string,
-          cardUuid: string
+          uuid: string
         ) => {
           const playerID = Number(playerId);
-          const cardMatch = G.players[playerID].hand.find(
-            (c: Card) => c.uuid === cardUuid
-          );
-          const cardMatchIndex = G.players[playerID].hand.findIndex(
-            (c: Card) => c.uuid === cardUuid
-          );
+          const player = G.players[playerID];
+          const hand = player.hand;
+          const cardMatch = hand.find((c: Card) => c.uuid === uuid);
+          const cardMatchIdx = hand.findIndex((c: Card) => c.uuid === uuid);
 
           if (G.selectedCard[playerID]?.data?.uuid === cardMatch?.uuid) {
             G.selectedCard[playerID] = {};
           } else {
             G.selectedCard[playerID] = {
-              index: cardMatchIndex,
+              index: cardMatchIdx,
               data: cardMatch,
             };
           }
@@ -286,79 +289,61 @@ export const BcgPoc: Game<GameState> = {
           G: GameState,
           ctx: Ctx,
           playerId: string,
-          zoneNumber: number
+          zoneNumber: number,
+          card?: Card
         ) => {
           const playerID = Number(playerId);
 
-          // add card to playedCards
-          const cardFromHand = G.players[playerID].hand.find(
-            (c: Card) => c.uuid === G.selectedCard[playerID]?.data?.uuid
-          ) as Card;
-          G.playedCards[playerID].push(cardFromHand);
-
-          // remove from hand
-          const newHand = G.players[playerID].hand.filter(
-            (c: Card) => c.uuid !== G.selectedCard[playerID]?.data?.uuid
-          );
-          G.players[playerID].hand = newHand;
-
-          // remove cost from current action points
-          G.players[playerID].actionPoints = Math.abs(
-            G.players[playerID].actionPoints - cardFromHand.cost
-          );
-
-          // re-evaluate cards in hand
-          G.players[playerID].hand.forEach((c: Card) => {
-            if (G.players[playerID].actionPoints >= c.cost)
-              return (c.canPlay = true);
-            else return (c.canPlay = false);
-          });
-
-          if (G.zones[zoneNumber].sides[playerID].length !== config.gameConfig.numberOfSlotsPerZone) {
-            G.zones[zoneNumber].sides[playerID].push(
-              G.selectedCard[playerID]?.data as Card
-            );
-            G.zones[zoneNumber].powers[playerID] = Math.abs(
-              G.zones[zoneNumber].powers[playerID] +
-                G.selectedCard[playerID]?.data!.power
-            );
-            G.selectedCard[playerID] = {};
-          } else {
-            return INVALID_MOVE;
+          if (card) {
+            G.selectedCard[playerID] = {
+              data: card,
+              index: 0,
+            };
           }
-        },
-        aiPlayCard: (
-          G: GameState,
-          ctx: Ctx,
-          zoneNumber: number,
-          card: Card
-        ) => {
-          // add card to playedCards
-          G.playedCards[1].push(card);
 
-          // remove from hand
-          const newHand = G.players[1].hand.filter(
-            (c: Card) => c.uuid !== card?.uuid
-          );
-          G.players[1].hand = newHand;
+          const player = G.players[playerID];
+          const ap = player.actionPoints;
+          const hand = player.hand;
+          const zone = G.zones[zoneNumber];
+          const zoneSide = zone.sides[playerID];
+          const zonePower = zone.powers[playerID];
+          let selectedCard = G.selectedCard[playerID];
+          let selectedCardData = selectedCard?.data as Card;
+          let uuid = selectedCardData?.uuid;
+          let cardFromHand = hand.find((c: Card) => c.uuid === uuid) as Card;
+          let newHand = hand.filter((c: Card) => c.uuid !== uuid);
+          const {
+            config: {
+              gameConfig: { numberOfSlotsPerZone },
+            },
+          } = G;
 
-          // remove cost from current action points
-          G.players[1].actionPoints = Math.abs(
-            G.players[1].actionPoints - card.cost
-          );
+          // if card is playable
+          if (zoneSide.length !== numberOfSlotsPerZone) {
+            // remove cost from current action points
+            player.actionPoints = Math.abs(ap - cardFromHand.cost);
 
-          // re-evaluate cards in hand
-          G.players[1].hand.forEach((c: Card) => {
-            if (G.players[1].actionPoints >= c.cost) return (c.canPlay = true);
-            else return (c.canPlay = false);
-          });
+            // re-evaluate cards in hand
+            hand.forEach((c: Card) => {
+              if (ap >= c.cost) return (c.canPlay = true);
+              else return (c.canPlay = false);
+            });
 
-          // play card to zone
-          if (G.zones[zoneNumber].sides[1].length !== config.gameConfig.numberOfSlotsPerZone) {
-            G.zones[zoneNumber].sides[1].push(card);
-            G.zones[zoneNumber].powers[1] = Math.abs(
-              G.zones[zoneNumber].powers[1] + card!.power
-            );
+            // set the new zone power
+            const newZonePower = Math.abs(zonePower + selectedCardData!.power);
+            zone.powers[playerID] = newZonePower;
+
+            // add card to zone's side
+            zoneSide.push(selectedCardData);
+
+            // add card to playedCards
+            G.playedCards[playerID].push(cardFromHand);
+
+            // remove from hand
+            player.hand = newHand;
+
+            // unset selected card
+            G.selectedCard[playerID] = {};
           } else {
             return INVALID_MOVE;
           }
@@ -371,42 +356,46 @@ export const BcgPoc: Game<GameState> = {
   },
   ai: {
     enumerate: (G: GameState, ctx: Ctx) => {
+      const playerID = Number(ctx.currentPlayer);
       let moves = [];
 
-      // avoids onslaught of INVALID_MOVE errors
-      if (ctx.currentPlayer === '1') {
-        if (G.players[1].hand.length >= 1) {
-          let cardsThanCanBePlayed: Card[] = []; // find playable cards
-          G.players[1].hand.forEach((c: Card) => {
-            if (c.canPlay) cardsThanCanBePlayed.push(c);
-          });
+      const { config: { gameConfig: { numberOfSlotsPerZone }}} = G;
+      const perZone = numberOfSlotsPerZone;
 
-          for (let i = 0; i < cardsThanCanBePlayed.length; i++) {
-            for (let i = 0; i < 6 - G.zones[0].sides[1].length; i++) {
-              moves.push({
-                move: 'aiPlayCard',
-                args: [0, cardsThanCanBePlayed[0]],
-              });
-            }
+      if (G.players[playerID].hand.length >= 1) {
+        let cardsThanCanBePlayed: Card[] = []; // find playable cards
+        G.players[playerID].hand.forEach((c: Card) => {
+          if (c.canPlay) cardsThanCanBePlayed.push(c);
+        });
 
-            for (let i = 0; i < 6 - G.zones[1].sides[1].length; i++) {
+        for (let i = 0; i < cardsThanCanBePlayed.length; i++) {
+          for (let i = 0; i < perZone - G.zones[0].sides[playerID].length; i++) {
+            if (!G.zones[0].disabled[playerID])
               moves.push({
-                move: 'aiPlayCard',
-                args: [1, cardsThanCanBePlayed[0]],
+                move: 'playCard',
+                args: [ctx.currentPlayer, 0, cardsThanCanBePlayed[0]],
               });
-            }
+          }
 
-            for (let i = 0; i < 6 - G.zones[2].sides[1].length; i++) {
+          for (let i = 0; i < perZone - G.zones[1].sides[playerID].length; i++) {
+            if (!G.zones[1].disabled[playerID])
               moves.push({
-                move: 'aiPlayCard',
-                args: [2, cardsThanCanBePlayed[0]],
+                move: 'playCard',
+                args: [ctx.currentPlayer, 1, cardsThanCanBePlayed[0]],
               });
-            }
+          }
+
+          for (let i = 0; i < perZone - G.zones[2].sides[playerID].length; i++) {
+            if (!G.zones[2].disabled[playerID])
+              moves.push({
+                move: 'playCard',
+                args: [ctx.currentPlayer, 2, cardsThanCanBePlayed[0]],
+              });
           }
         }
-
-        moves.push({ event: 'endTurn' });
       }
+
+      moves.push({ event: 'endTurn' });
 
       return moves;
     },
