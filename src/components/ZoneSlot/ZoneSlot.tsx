@@ -11,8 +11,8 @@ export const ZoneSlot = ({ card }: ReactZoneSlot): ReactElement => {
 
   React.useEffect(() => {
     setTimeout(() => setCardData(card), 50);
-  }, [card])
-  
+  }, [card]);
+
   return (
     <div
       style={{
@@ -81,7 +81,9 @@ export const ZoneSlot = ({ card }: ReactZoneSlot): ReactElement => {
             borderRadius: '50%',
           }}
         >
-          {cardData?.power}
+          {cardData?.temporaryPower || cardData?.temporaryPower === 0
+            ? cardData?.temporaryPower
+            : cardData?.power}
         </div>
         <div style={{ fontSize: '0.5em' }}>{cardData?.name}</div>
       </div>
