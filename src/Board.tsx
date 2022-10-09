@@ -110,7 +110,7 @@ export const Board = (props: BcgPocProps) => {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(10, 1fr)',
+                gridTemplateColumns: `repeat(${G.players['1'].actionPointsTotal}, 1fr)`,
                 gridGap: '0.15em',
                 width: '100%',
               }}
@@ -266,7 +266,7 @@ export const Board = (props: BcgPocProps) => {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(10, 1fr)',
+                gridTemplateColumns: `repeat(${G.players['0'].actionPointsTotal}, 1fr)`,
                 gridGap: '0.15em',
                 width: '100%',
               }}

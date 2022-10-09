@@ -30,6 +30,8 @@ export interface Card {
   powerOverride?: number;
   powerAdjustment?: number;
   temporaryPower?: number;
+  mechanic?: string;
+  description?: string;
   uuid: string;
 }
 
@@ -308,83 +310,9 @@ export const BcgPoc: Game<GameState> = {
         },
         playCard: {
           // move: playCard(G, ctx, playerId, zoneNumber, card)
-          move: (G, ctx, playerId, zoneNumber) =>
-            playCard(G, ctx, playerId, zoneNumber),
-        },
-        // prettier-ignore
-        // playCard: (
-        //   G: GameState,
-        //   ctx: Ctx,
-        //   playerId: string,
-        //   zoneNumber: number
-        // ) => {
-        //   // add card to playedCards
-        //   const cardFromHand = G.players[playerId].hand.find(
-        //     (c: Card) => c.uuid === G.selectedCard[playerId]?.data?.uuid
-        //   ) as Card;
-        //   G.playedCards[playerId].push(cardFromHand);
-
-        //   // remove from hand
-        //   const newHand = G.players[playerId].hand.filter(
-        //     (c: Card) => c.uuid !== G.selectedCard[playerId]?.data?.uuid
-        //   );
-        //   G.players[playerId].hand = newHand;
-
-        //   // remove cost from current action points
-        //   G.players[playerId].actionPoints = Math.abs(
-        //     G.players[playerId].actionPoints - cardFromHand.cost
-        //   );
-
-        //   // re-evaluate cards in hand
-        //   G.players[playerId].hand.forEach((c: Card) => {
-        //     if (G.players[playerId].actionPoints >= c.cost) return (c.canPlay = true);
-        //     else return (c.canPlay = false);
-        //   });
-
-        //   if (G.zones[zoneNumber].sides[playerId].length !== config.gameConfig.numberOfSlotsPerZone) {
-        //     G.zones[zoneNumber].sides[playerId].push(G.selectedCard[playerId]?.data as Card);
-        //     G.zones[zoneNumber].powers[playerId] = Math.abs(
-        //       G.zones[zoneNumber].powers[playerId] + G.selectedCard[playerId]!.data!.power
-        //     );
-        //     G.selectedCard[playerId] = undefined;
-        //   } else {
-        //     return INVALID_MOVE;
-        //   }
-        // },
-        // prettier-ignore
-        aiPlayCard: (
-          G: GameState,
-          ctx: Ctx,
-          zoneNumber: number,
-          card: Card
-        ) => {
-          // add card to playedCards
-          G.playedCards[1].push(card);
-
-          // remove from hand
-          const newHand = G.players[1].hand.filter((c: Card) => c.uuid !== card?.uuid);
-          G.players[1].hand = newHand;
-
-          // remove cost from current action points
-          G.players[1].actionPoints = Math.abs(
-            G.players[1].actionPoints - card.cost
-          );
-
-          // re-evaluate cards in hand
-          G.players[1].hand.forEach((c: Card) => {
-            if (G.players[1].actionPoints >= c.cost) return (c.canPlay = true);
-            else return (c.canPlay = false);
-          });
-
-          // play card to zone
-          if (G.zones[zoneNumber].sides[1].length !== config.gameConfig.numberOfSlotsPerZone) {
-            G.zones[zoneNumber].sides[1].push(card);
-            G.zones[zoneNumber].powers[1] = Math.abs(
-              G.zones[zoneNumber].powers[1] + card!.power
-            );
-          } else {
-            return INVALID_MOVE;
-          }
+          move: (G, ctx, playerId, zoneNumber) => {
+            return playCard(G, ctx, playerId, zoneNumber);
+          },
         },
         playAiCard: (
           G: GameState,
@@ -478,28 +406,28 @@ export const BcgPoc: Game<GameState> = {
 
           for (let i = 0; i < cardsThanCanBePlayed.length; i++) {
             if (!G.zones[0].disabled['1'])
-            for (let i = 0; i < 6 - G.zones[0].sides[1].length; i++) {
-              moves.push({
-                move: 'playAiCard',
-                args: [0, cardsThanCanBePlayed[0], 0],
-              });
-            }
+              for (let i = 0; i < 6 - G.zones[0].sides[1].length; i++) {
+                moves.push({
+                  move: 'playAiCard',
+                  args: [0, cardsThanCanBePlayed[0], 0],
+                });
+              }
 
             if (!G.zones[1].disabled['1'])
-            for (let i = 0; i < 6 - G.zones[1].sides[1].length; i++) {
-              moves.push({
-                move: 'playAiCard',
-                args: [1, cardsThanCanBePlayed[0], 0],
-              });
-            }
+              for (let i = 0; i < 6 - G.zones[1].sides[1].length; i++) {
+                moves.push({
+                  move: 'playAiCard',
+                  args: [1, cardsThanCanBePlayed[0], 0],
+                });
+              }
 
             if (!G.zones[2].disabled['1'])
-            for (let i = 0; i < 6 - G.zones[2].sides[1].length; i++) {
-              moves.push({
-                move: 'playAiCard',
-                args: [2, cardsThanCanBePlayed[0], 0],
-              });
-            }
+              for (let i = 0; i < 6 - G.zones[2].sides[1].length; i++) {
+                moves.push({
+                  move: 'playAiCard',
+                  args: [2, cardsThanCanBePlayed[0], 0],
+                });
+              }
           }
         }
 
@@ -582,6 +510,9 @@ const playCard = (
   // push card to zone side array
   zone.sides[playerId].push(card);
 
+  // handle card mechanics
+  handleCardInteraction(G, ctx, playerId, zoneNumber, card);
+
   // if zone has interaction text
   if (zone?.powerAdjustment) {
     // handle zone interactions
@@ -612,6 +543,22 @@ const playCard = (
 
   // unset selected card
   G.selectedCard[playerId] = undefined;
+};
+
+const handleCardInteraction = (
+  G: GameState,
+  ctx: Ctx,
+  playerId: string,
+  zoneNumber: number,
+  card: Card,
+) => {
+  switch (card?.mechanic) {
+    case '%ON_PLAY%':
+      G.players[playerId].actionPointsTotal = add(G.players[playerId].actionPointsTotal, 1)
+      break;
+    default:
+      break;
+  }
 };
 
 const handleZoneInteraction = (
