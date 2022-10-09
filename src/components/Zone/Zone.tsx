@@ -11,6 +11,7 @@ interface ReactZone {
   disabled: boolean;
   zone: ZoneProps;
   zoneNumber: number;
+  onCardClick: (card: Card) => void;
 }
 
 export const Zone = ({
@@ -20,6 +21,7 @@ export const Zone = ({
   disabled,
   zone,
   zoneNumber,
+  onCardClick
 }: ReactZone): ReactElement => {
   return (
     <div
@@ -43,7 +45,7 @@ export const Zone = ({
         }}
       >
         {zone?.sides[1].map((card: Card, idx: number) => {
-          return <ZoneSlot key={idx} card={card} />;
+          return <ZoneSlot key={idx} card={card} onClick={onCardClick} />;
         })}
         {[
           ...Array.from(
@@ -172,7 +174,7 @@ export const Zone = ({
           }}
         >
           {zone?.sides[0].map((card: Card, idx: number) => {
-            return <ZoneSlot key={idx} card={card} />;
+            return <ZoneSlot key={idx} card={card} onClick={onCardClick} />;
           })}
         </div>
       </div>

@@ -3,7 +3,7 @@ import { Card as CardProps } from '../../game';
 
 export interface ReactCardProps extends CardProps {
   isSelected: boolean;
-  onClick: (uuid: string) => void;
+  onClick: (card: CardProps) => void;
 }
 
 export const Card = ({
@@ -15,7 +15,7 @@ export const Card = ({
 
   return (
     <div
-      onClick={() => onClick(uuid)}
+      onClick={() => onClick(card)}
       style={{
         display: 'flex',
         flexFlow: 'column nowrap',

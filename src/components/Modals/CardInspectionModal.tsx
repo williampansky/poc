@@ -2,12 +2,12 @@ import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
 import { Card, GameState } from '../../game';
 
-interface ReactZoneSlot {
+interface CardInspectionProps {
   card?: Card;
-  onClick: (card: Card) => void;
+  onClick: () => void
 }
 
-export const ZoneSlot = ({ card, onClick }: ReactZoneSlot): ReactElement => {
+export const CardInspectionModal = ({ card, onClick }: CardInspectionProps): ReactElement => {
   const [cardData, setCardData] = React.useState<Card | undefined>(undefined);
 
   React.useEffect(() => {
@@ -16,13 +16,23 @@ export const ZoneSlot = ({ card, onClick }: ReactZoneSlot): ReactElement => {
 
   return (
     <div
-      onClick={() => card && onClick(card)}
+      onClick={onClick}
       style={{
-        height: '3.5em',
-        width: '2.75em',
+        height: '100%',
+        width: '100%',
         transition: '150ms ease-in',
         opacity: cardData ? '1' : '0',
-        transform: cardData ? 'scale(100%)' : 'scale(200%)',
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        zIndex: 999,
+        display: 'flex',
+        flexFlow: 'column nowrap',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(0,0,0,0.65)'
       }}
     >
       <div
@@ -35,28 +45,33 @@ export const ZoneSlot = ({ card, onClick }: ReactZoneSlot): ReactElement => {
           textAlign: 'center',
           position: 'relative',
           border: '1px solid black',
-          borderRadius: '1.25em 1.25em 0 0',
+          borderRadius: '1.25em',
           background: 'white',
-          height: '100%',
-          width: '100%',
-          transform: 'scale(95%)',
+          height: '80vw',
+          width: '60vw',
+          maxHeight: `600px`,
+          maxWidth: `400px`,
+          transform: cardData ? 'scale(100%)' : 'scale(0%)',
+          transition: '150ms ease-in',
         }}
       >
         <div
           style={{
-            fontSize: '0.85em',
+            fontSize: '2vh',
             fontWeight: 'bold',
             display: 'flex',
             flexFlow: 'column nowrap',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '1.195em',
-            width: '1.15em',
+            height: '10vw',
+            width: '10vw',
+            maxHeight: '60px',
+            maxWidth: '60px',
             position: 'absolute',
-            top: '-0.35em',
+            top: '-5%',
             right: 'auto',
             bottom: 'auto',
-            left: '-0.35em',
+            left: '-5%',
             background: 'lightgreen',
             borderRadius: '50%',
           }}
@@ -65,29 +80,32 @@ export const ZoneSlot = ({ card, onClick }: ReactZoneSlot): ReactElement => {
         </div>
         <div
           style={{
-            fontSize: '0.85em',
+            fontSize: '2vh',
             fontWeight: 'bold',
             display: 'flex',
             flexFlow: 'column nowrap',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '1.195em',
-            width: '1.15em',
+            height: '10vw',
+            width: '10vw',
+            maxHeight: '60px',
+            maxWidth: '60px',
             position: 'absolute',
-            top: '-0.35em',
-            right: '-0.35em',
+            top: '-5%',
+            right: '-5%',
             bottom: 'auto',
             left: 'auto',
             color: 'white',
             background: 'red',
             borderRadius: '50%',
+            whiteSpace: 'nowrap'
           }}
         >
           {cardData?.temporaryPower || cardData?.temporaryPower === 0
-            ? cardData?.temporaryPower
+            ? `${cardData?.temporaryPower}(${cardData?.power})`
             : cardData?.power}
         </div>
-        <div style={{ fontSize: '0.5em' }}>{cardData?.name}</div>
+        <div style={{ fontSize: '2vh' }}>{cardData?.name}</div>
       </div>
     </div>
   );

@@ -5,10 +5,13 @@ import { Card, config, GameState, Zone as IZone } from './game';
 import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
 import { Card as CardInHand } from './components/Card/Card';
+import { CardInspectionModal } from './components/Modals/CardInspectionModal';
 
 export interface BcgPocProps extends BoardProps<GameState> {}
 
 export const Board = (props: BcgPocProps) => {
+  const [cardData, setCardData] = React.useState<Card | undefined>(undefined);
+
   const {
     G,
     G: { players },
@@ -37,8 +40,9 @@ export const Board = (props: BcgPocProps) => {
     else return 'Defeat...';
   };
 
-  const onCardClick = (uuid: string) => {
-    return moves.selectCard('0', uuid);
+  const onCardClick = (card: Card) => {
+    // return moves.selectCard('0', uuid);
+    setCardData(card)
   };
 
   return (
@@ -79,6 +83,7 @@ export const Board = (props: BcgPocProps) => {
           filter: ctx.gameover ? 'blur(2px)' : 'none',
         }}
       >
+        {cardData ? <CardInspectionModal card={cardData} onClick={() => setCardData(undefined)} /> : null}
         <div
           style={{
             display: 'flex',
@@ -211,6 +216,7 @@ export const Board = (props: BcgPocProps) => {
                 zone={zone}
                 zoneNumber={idx}
                 key={idx}
+                onCardClick={onCardClick}
               />
             );
           })}
@@ -239,7 +245,7 @@ export const Board = (props: BcgPocProps) => {
               <CardInHand
                 {...card}
                 key={card.uuid}
-                onClick={onCardClick}
+                onClick={(card: Card) => onCardClick(card)}
                 isSelected={G.selectedCard[0]?.data?.uuid === card.uuid}
               />
             ))}
