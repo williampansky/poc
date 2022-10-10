@@ -1,26 +1,15 @@
-import React from 'react';
+import { ReactElement } from 'react';
 import { Card as CardProps } from '../../game';
 
 export interface ReactCardProps extends CardProps {
   isSelected: boolean;
-  onClick?: (card: CardProps) => void;
 }
 
-export const Card = ({
-  isSelected,
-  onClick,
-  ...card
-}: ReactCardProps): React.ReactElement => {
+export const Card = ({ isSelected, ...card }: ReactCardProps): ReactElement => {
   const { canPlay, cost, name, power, uuid } = card;
-  const [cardData, setCardData] = React.useState<CardProps | undefined>(undefined);
-
-  React.useEffect(() => {
-    setTimeout(() => setCardData(card), 50);
-  }, [card]);
 
   return (
     <div
-      // onClick={() => onClick(card)}
       style={{
         display: 'flex',
         flexFlow: 'column nowrap',
@@ -31,15 +20,16 @@ export const Card = ({
         position: 'relative',
         border: '1px solid',
         borderColor: canPlay ? 'violet' : 'gray',
-        boxShadow: canPlay ? '0px 0px 0px 2px rgb(238, 130, 238)' : '0px 0px 0px 0px transparent',
+        boxShadow: canPlay
+          ? '0px 0px 0px 2px rgb(238, 130, 238)'
+          : '0px 0px 0px 0px transparent',
         borderRadius: '0.25em',
         background: 'white',
         height: '3.5em',
         width: '2.45em',
         transition: '75ms ease-in',
         pointerEvents: 'none',
-        transform: cardData ? 'translate3d(0px, 0px, 0px) scale(100%)' : 'scale(160%) translate3d(100px, -50px, 0px)',
-        // zIndex: isSelected ? '1' : 'auto'
+        animation: 'animateCardIntoHand 75ms ease-in',
       }}
     >
       <div

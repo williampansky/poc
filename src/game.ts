@@ -280,8 +280,28 @@ export const BcgPoc: Game<GameState> = {
           }
         },
         onEnd(G: GameState, ctx: Ctx) {
+          const currentTurn = Math.round(ctx.turn / 2);
           G.players[1].hand.forEach((c: Card) => (c.canPlay = false));
           G.players[0].hand.forEach((c: Card) => (c.canPlay = false));
+
+          G.zones.forEach((z: Zone) => {
+            switch (z.id) {
+              case 'ZONE_002':
+                if (currentTurn === 6) {
+                  z.sides = {
+                    '0': [],
+                    '1': []
+                  };
+                  z.powers = {
+                    '0': 0,
+                    '1': 0
+                  };
+                }
+                break;
+              default:
+                break;
+            }
+          })
         },
       },
       moves: {
@@ -591,6 +611,13 @@ const handleZoneInteraction = (
           temporaryPower: add(c.power, zone.powerAdjustment),
         } as Card;
       });
+      break;
+    case 'ZONE_002':
+      const currentTurn = Math.round(ctx.turn / 2);
+      if (currentTurn === 6) {
+        zone.sides['0'] = [];
+        zone.sides['1'] = [];
+      }
       break;
     default:
       break;
