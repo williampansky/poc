@@ -1,13 +1,14 @@
 html {
-  height: 100vh;
+  /* height: 100vh;
   min-height: 100vh;
-  max-height: 100vh;
+  max-height: 100vh; */
   perspective: 100vh;
   position: absolute;
-  top: 0;
+  overflow: hidden;
+  /* top: 0;
   right: 0;
   bottom: 0;
-  left: 0;
+  left: 0; */
 }
 
 html, body {
@@ -73,4 +74,9 @@ button:not(disabled) {
     opacity: 1;
     transform: scale(100%) translate3d(0px, 0px, 0px);
   }
+}
+
+div[data-receive]:hover {
+  opacity: 1;
+  border-style: solid;
 }

@@ -290,18 +290,18 @@ export const BcgPoc: Game<GameState> = {
                 if (currentTurn === 6) {
                   z.sides = {
                     '0': [],
-                    '1': []
+                    '1': [],
                   };
                   z.powers = {
                     '0': 0,
-                    '1': 0
+                    '1': 0,
                   };
                 }
                 break;
               default:
                 break;
             }
-          })
+          });
         },
       },
       moves: {
@@ -411,10 +411,14 @@ export const BcgPoc: Game<GameState> = {
 
           // re-evaluate cards in hand
           G.players['1'].hand.forEach((c: Card) => {
-            if (G.players['1'].actionPoints >= c.cost)
+            if (G.players['1'].actionPoints >= c.cost) {
               return (c.canPlay = true);
-            else return (c.canPlay = false);
+            } else {
+              return (c.canPlay = false);
+            }
           });
+
+          G.selectedCard['1'] = undefined;
         },
         endTurn: (G: GameState, ctx) => {
           ctx.events?.endTurn();
@@ -583,11 +587,14 @@ const handleCardInteraction = (
   ctx: Ctx,
   playerId: string,
   zoneNumber: number,
-  card: Card,
+  card: Card
 ) => {
   switch (card?.id) {
     case 'CARD_005':
-      G.players[playerId].actionPointsTotal = add(G.players[playerId].actionPointsTotal, 1);
+      G.players[playerId].actionPointsTotal = add(
+        G.players[playerId].actionPointsTotal,
+        1
+      );
       break;
     default:
       break;

@@ -29,6 +29,7 @@ export const Card = ({ isSelected, ...card }: ReactCardProps): ReactElement => {
         width: '2.45em',
         transition: '75ms ease-in',
         pointerEvents: 'none',
+        touchAction: 'none',
         animation: 'animateCardIntoHand 75ms ease-in',
       }}
     >

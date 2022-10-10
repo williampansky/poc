@@ -2,7 +2,7 @@ import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
 import { Card, config, GameState } from '../../game';
 import { Card as CardInHand } from '../Card/Card';
-import { useGesture } from '@use-gesture/react'
+import { useGesture } from '@use-gesture/react';
 import { useCallbackRef } from 'use-callback-ref';
 import { useSprings, animated, config as springConfig, to } from 'react-spring';
 
@@ -131,9 +131,11 @@ export const PlayerHand = ({
       }) => {
         const curIndex = order.current?.indexOf(originalIndex);
 
-        if (tap) return onCardClick(G.players['0'].hand[originalIndex]);
-        else if (!canPlay && y <= -150) cancel();
-        else {
+        if (tap) {
+          return onCardClick(G.players['0'].hand[originalIndex]);
+        } else if (!canPlay && y <= -150) {
+          cancel();
+        } else {
           setSprings(
             fn(down, dragging, active, curIndex, first ? 0 : x, first ? 0 : y)
           );
@@ -141,7 +143,7 @@ export const PlayerHand = ({
       },
       onDragEnd: ({ active, args: [originalIndex], down, dragging, xy }) => {
         const curIndex = order.current?.indexOf(originalIndex);
-        const elem = document.elementFromPoint(xy[0], xy[1])
+        const elem = document.elementFromPoint(xy[0], xy[1]);
         setSprings(fn(down, dragging, active, curIndex));
 
         // @ts-ignore
@@ -157,14 +159,16 @@ export const PlayerHand = ({
     },
     {
       // @ts-ignore
-      order,
+      // order,
       // domTarget: order.current,
-      preventDefault: true,
       drag: {
+        // preventDefault: true,
         enabled: true,
+        mouseOnly: false,
         from: [0, 0],
         threshold: undefined,
         rubberband: 0.915, // 0.15
+        // preventScroll: true,
         eventOptions: { passive: true },
         filterTaps: true,
         delay: 0,
@@ -173,7 +177,7 @@ export const PlayerHand = ({
     }
   );
 
-  const handleMouseDown = React.useCallback(
+  const handleSelect = React.useCallback(
     (e: MouseEvent, canPlay: boolean, i: number) => {
       e.preventDefault();
       if (canPlay) onCardSelect('0', G.players['0'].hand[i].uuid);
@@ -181,7 +185,7 @@ export const PlayerHand = ({
     [G.players['0'].hand, onCardSelect]
   );
 
-  const handleMouseUp = React.useCallback(
+  const handleDeselect = React.useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
       onCardDeselect('0');
@@ -236,7 +240,7 @@ export const PlayerHand = ({
                   {/* <animated.div
                     {...bind(i, canPlay)}
                     key={`DragSlot_${i}`}
-                    onMouseDownCapture={(e: MouseEvent) => handleMouseDown(e, canPlay, i)}
+                    onMouseDownCapture={(e: MouseEvent) => handleSelect(e, canPlay, i)}
                     onMouseUpCapture={(e: MouseEvent) => handleMouseUp(e)}
                     style={{
                       zIndex: 110 - i,
@@ -259,8 +263,18 @@ export const PlayerHand = ({
                   <animated.div
                     {...bind(i, canPlay)}
                     key={`HandSlot_${i}`}
-                    onMouseDownCapture={(e: MouseEvent) => handleMouseDown(e, canPlay, i)}
-                    onMouseUpCapture={(e: MouseEvent) => handleMouseUp(e)}
+                    onMouseDownCapture={(e: MouseEvent) => {
+                      return handleSelect(e, canPlay, i);
+                    }}
+                    onTouchStartCapture={(e: MouseEvent) => {
+                      return handleSelect(e, canPlay, i);
+                    }}
+                    onMouseUpCapture={(e: MouseEvent) => {
+                      return handleDeselect(e);
+                    }}
+                    onTouchEndCapture={(e: MouseEvent) => {
+                      return handleDeselect(e);
+                    }}
                     style={{
                       zIndex,
                       display: 'flex',
@@ -273,6 +287,7 @@ export const PlayerHand = ({
                       // opacity: G.selectedCard['0']?.index === i ? 0.795 : 1,
                       // pointerEvents: 'none',
                       position: 'relative',
+                      touchAction: 'none',
                       transform: to([x, y, rotate, scale], (x, y, rt, sc) => {
                         return `
                           translate3d(${x}px, ${y}px, 0) 

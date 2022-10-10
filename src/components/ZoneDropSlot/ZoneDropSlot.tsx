@@ -5,6 +5,7 @@ import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
 import { animated } from 'react-spring';
 
 interface ReactZone {
+  G: GameState;
   moves: any;
   isActive: boolean;
   playerId: string;
@@ -13,6 +14,7 @@ interface ReactZone {
 }
 
 export const ZoneDropSlot = ({
+  G,
   moves,
   isActive,
   playerId,
@@ -24,15 +26,16 @@ export const ZoneDropSlot = ({
 
   return (
     <div
-      onMouseUp={(e: any) => onMouseUp(e)}
-      onMouseUpCapture={(e: any) => onMouseUp(e)}
-      onTouchEnd={(e: any) => onMouseUp(e)}
-      onTouchEndCapture={(e: any) => onMouseUp(e)}
-      onMouseEnter={() => setIsOver(true)}
-      onMouseLeave={() => setIsOver(false)}
+      // onMouseUp={(e: any) => onMouseUp(e)}
+      // onMouseUpCapture={(e: any) => onMouseUp(e)}
+      // onTouchEnd={(e: any) => onMouseUp(e)}
+      // onTouchEndCapture={(e: any) => onMouseUp(e)}
+      // onMouseEnter={() => setIsOver(true)}
+      // onMouseLeave={() => setIsOver(false)}
       role="button"
       tabIndex={0}
-      data-receive={isActive && isOver ? true : false} // @todo 
+      // data-receive={isActive && isOver ? true : false} // @todo 
+      data-receive={true}
       data-index={zoneNumber}
       style={{
         boxSizing: 'border-box',
@@ -44,10 +47,11 @@ export const ZoneDropSlot = ({
         width: '100%',
         height: '100%',
         outline: 'none',
-        // borderWidth: '2px',
-        // borderStyle: isOver ? 'solid' : 'dotted',
-        // borderColor: 'red',
+        borderWidth: '2px',
+        borderStyle: 'dotted',
+        borderColor: 'red',
         // opacity: isActive ? isOver ? 1 : 0.5 : 0,
+        opacity: G.selectedCard['0'] !== undefined ? isActive ? 0.5 : 0 : 0,
         pointerEvents: isActive ? 'auto' : 'none',
         zIndex: 101,
         transition: '150ms ease-in',
@@ -57,7 +61,7 @@ export const ZoneDropSlot = ({
         alignItems: 'center',
         justifyContent: 'center',
         userSelect: 'none',
-        touchAction: 'auto',
+        touchAction: 'none',
         willChange: 'border-style, opacity, pointer-events'
       }}
     />

@@ -11,6 +11,7 @@ import { PlayerHand } from './components/Hands/PlayerHand';
 export interface GameProps extends BoardProps<GameState> {}
 
 export const Board = (props: GameProps) => {
+  const [addressBarSize, setAddressBarSize] = React.useState<number>(0);
   const [cardModal, setCardModal] = React.useState<Card | undefined>(undefined);
 
   const {
@@ -21,6 +22,24 @@ export const Board = (props: GameProps) => {
     events,
     reset,
   } = props;
+
+  /**
+   * Uses html.perspective CSS property, which is set to 100vh, to determine
+   * a mobile browser's address bar height; such as Android Chrome's URL bar.
+   * @see [StackOverflow]{@link https://stackoverflow.com/a/54796813}
+   */
+   const addressBarCallback = React.useCallback(() => {
+    if (typeof document !== 'undefined') {
+      setAddressBarSize(
+        parseFloat(getComputedStyle(document.documentElement).perspective) -
+          document.documentElement.clientHeight
+      );
+    }
+  }, []);
+
+  React.useLayoutEffect(() => {
+    addressBarCallback();
+  }, [addressBarCallback]);
 
   const onClick = () => {
     // @ts-ignore
@@ -89,10 +108,34 @@ export const Board = (props: GameProps) => {
         </div>
       </div>
 
+      {/* debug stuff */}
+      <div
+          style={{
+            display: 'flex',
+            flexFlow: 'column nowrap',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            width: '100%',
+            position: 'absolute',
+            top: 0,
+            bottom: 'auto',
+            left: 0,
+            right: 0,
+            zIndex: 9000,
+            padding: '0.15em',
+            background: 'darkgray',
+            fontSize: 10
+          }}
+        >
+          <div>addressBarSize: {addressBarSize}px</div>
+          <div>selectedCard: {G.selectedCard['0']?.data!.id}</div>
+        </div>
+
       <main
         style={{
           maxWidth: '100vw',
           filter: ctx.gameover ? 'blur(2px)' : 'none',
+          height: `calc(100vh - ${addressBarSize}px)`
         }}
       >
         <CardInspectionModal
@@ -122,6 +165,7 @@ export const Board = (props: GameProps) => {
               paddingRight: '0.25em',
               marginRight: 'auto',
               fontSize: '11px',
+              whiteSpace: 'nowrap'
             }}
           >
             {G.players[1].name}
@@ -201,7 +245,8 @@ export const Board = (props: GameProps) => {
                     background: 'white',
                     height: '3.5em',
                     width: '2.45em',
-                    transform: 'scale(80%)',
+                    transform: G.selectedCard['1']?.index === idx ? 'scale(120%)' : 'scale(80%)',
+                    transition: '200ms ease-out'
                   }}
                 ></div>
               );

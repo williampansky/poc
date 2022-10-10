@@ -172,6 +172,7 @@ export const Zone = ({
         }}
       >
         <ZoneDropSlot
+          G={G}
           moves={moves}
           isActive={
             ctx.currentPlayer === '0' &&
