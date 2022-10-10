@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import React from 'react';
 import { Card as CardProps } from '../../game';
 
 export interface ReactCardProps extends CardProps {
@@ -10,8 +10,13 @@ export const Card = ({
   isSelected,
   onClick,
   ...card
-}: ReactCardProps): ReactElement => {
+}: ReactCardProps): React.ReactElement => {
   const { canPlay, cost, name, power, uuid } = card;
+  const [cardData, setCardData] = React.useState<CardProps | undefined>(undefined);
+
+  React.useEffect(() => {
+    setTimeout(() => setCardData(card), 50);
+  }, [card]);
 
   return (
     <div
@@ -33,7 +38,7 @@ export const Card = ({
         width: '2.45em',
         transition: '75ms ease-in',
         pointerEvents: 'none',
-        // transform: isSelected ? 'scale(160%) translateY(-24px)' : 'scale(80%)',
+        transform: cardData ? 'translate3d(0px, 0px, 0px) scale(100%)' : 'scale(160%) translate3d(100px, -50px, 0px)',
         // zIndex: isSelected ? '1' : 'auto'
       }}
     >
