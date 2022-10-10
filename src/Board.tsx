@@ -128,6 +128,7 @@ export const Board = (props: GameProps) => {
           }}
         >
           <div>addressBarSize: {addressBarSize}px</div>
+          <div>ctx.turn: {ctx.turn} / singleTurn: {Math.round(ctx.turn / 2)}</div>
           <div>selectedCard: {G.selectedCard['0']?.data!.id}</div>
         </div>
 

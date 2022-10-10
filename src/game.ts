@@ -229,6 +229,7 @@ export const BcgPoc: Game<GameState> = {
           const apPerTurn = config.gameConfig.actionPointsPerTurn;
           const apPerGame = config.gameConfig.actionPointsTotal;
           const maxHandSize = config.gameConfig.cardsPerHand;
+          const currentSingleTurn = Math.round(ctx.turn / 2);
 
           switch (ctx.currentPlayer) {
             case '1':
@@ -278,16 +279,12 @@ export const BcgPoc: Game<GameState> = {
               });
               break;
           }
-        },
-        onEnd(G: GameState, ctx: Ctx) {
-          const currentTurn = Math.round(ctx.turn / 2);
-          G.players[1].hand.forEach((c: Card) => (c.canPlay = false));
-          G.players[0].hand.forEach((c: Card) => (c.canPlay = false));
 
+          // on-turn-start zone effects
           G.zones.forEach((z: Zone) => {
             switch (z.id) {
               case 'ZONE_002':
-                if (currentTurn === 6) {
+                if (currentSingleTurn === 6) {
                   z.sides = {
                     '0': [],
                     '1': [],
@@ -298,6 +295,19 @@ export const BcgPoc: Game<GameState> = {
                   };
                 }
                 break;
+              default:
+                break;
+            }
+          });
+        },
+        onEnd(G: GameState, ctx: Ctx) {
+          const currentSingleTurn = Math.round(ctx.turn / 2);
+          G.players[1].hand.forEach((c: Card) => (c.canPlay = false));
+          G.players[0].hand.forEach((c: Card) => (c.canPlay = false));
+
+          // on-turn-end zone effects
+          G.zones.forEach((z: Zone) => {
+            switch (z.id) {
               default:
                 break;
             }
