@@ -76,7 +76,7 @@ button:not(disabled) {
   }
 }
 
-div[data-receive]:hover {
+div[data-drop]:hover {
   opacity: 1;
   border-style: solid;
 }

@@ -284,7 +284,7 @@ export const BcgPoc: Game<GameState> = {
           G.zones.forEach((z: Zone) => {
             switch (z.id) {
               case 'ZONE_002':
-                if (currentSingleTurn === 6) {
+                if (ctx.turn === 11) {
                   z.sides = {
                     '0': [],
                     '1': [],
