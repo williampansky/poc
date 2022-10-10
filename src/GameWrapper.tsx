@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 const Client = BoardgameClient({
   game: BcgPoc,
   board: Board,
-  multiplayer: Local({ bots: { 1: MCTSBot }, persist: true, storageKey: 'bgio' }),
+  multiplayer: Local({ bots: { 1: MCTSBot }, persist: false, storageKey: 'bgio' }),
   numPlayers: 1,
   // loading: GameLoader,
   debug: false,

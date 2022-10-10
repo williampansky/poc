@@ -103,8 +103,8 @@ export const BcgPoc: Game<GameState> = {
     },
 
     selectedCard: {
-      '0': {},
-      '1': {},
+      '0': undefined,
+      '1': undefined,
     },
 
     playedCards: {
@@ -308,8 +308,18 @@ export const BcgPoc: Game<GameState> = {
             };
           }
         },
+        // prettier-ignore
+        deselectCard: (
+          G: GameState,
+          ctx: Ctx,
+          playerId: string
+        ) => {
+          G.selectedCard[playerId] = undefined
+        },
         playCard: {
           // move: playCard(G, ctx, playerId, zoneNumber, card)
+          client: false,
+          noLimit: true,
           move: (G, ctx, playerId, zoneNumber) => {
             return playCard(G, ctx, playerId, zoneNumber);
           },
@@ -487,6 +497,9 @@ const playCard = (
       gameConfig: { numberOfSlotsPerZone },
     },
   } = G;
+
+  // validate selected card
+  if (G.selectedCard[playerId] === undefined) return INVALID_MOVE;
 
   const player = G.players[playerId];
   const card = G.selectedCard[playerId]!.data as Card;

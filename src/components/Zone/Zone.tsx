@@ -1,5 +1,5 @@
 import { Ctx, MoveMap } from 'boardgame.io';
-import { ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import { Card, config, GameState, Zone as ZoneProps } from '../../game';
 import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
 import { ZoneDropSlot } from '../ZoneDropSlot/ZoneDropSlot';
@@ -7,7 +7,7 @@ import { ZoneDropSlot } from '../ZoneDropSlot/ZoneDropSlot';
 interface ReactZone {
   G: GameState;
   ctx: Ctx;
-  moves: MoveMap;
+  moves: any;
   disabled: boolean;
   zone: ZoneProps;
   zoneNumber: number;
@@ -23,6 +23,24 @@ export const Zone = ({
   zoneNumber,
   onCardClick
 }: ReactZone): ReactElement => {
+  const { playCard } = moves;
+
+  // const handleZoneDropEvent = React.useCallback(
+  //   (e: any) => {
+  //     e.persist();
+  //     e.preventDefault();
+  //     console.log(e)
+  //     return moves.playCard('0', zoneNumber);
+  //   },
+  //   [playCard]
+  // );
+
+  const handleZoneDropEvent = (e: any) => {
+    // e.preventDefault();
+    console.log(e)
+    return moves.playCard('0', zoneNumber);
+  }
+
   return (
     <div
       style={{
@@ -32,6 +50,7 @@ export const Zone = ({
         fontSize: '14px',
         margin: '0 0.35em',
         opacity: disabled ? 0.5 : 1,
+        position: 'relative',
       }}
     >
       <div
@@ -162,7 +181,8 @@ export const Zone = ({
             G.players[0].actionPoints >= G.selectedCard[0]?.data?.cost
           }
           playerId='0'
-          zone={zoneNumber}
+          zoneNumber={zoneNumber}
+          onMouseUp={(e: any) => handleZoneDropEvent(e)}
         />
         <div
           style={{

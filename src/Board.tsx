@@ -6,11 +6,12 @@ import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
 import { Card as CardInHand } from './components/Card/Card';
 import { CardInspectionModal } from './components/Modals/CardInspectionModal';
+import { PlayerHand } from './components/Hands/PlayerHand';
 
-export interface BcgPocProps extends BoardProps<GameState> {}
+export interface GameProps extends BoardProps<GameState> {}
 
-export const Board = (props: BcgPocProps) => {
-  const [cardData, setCardData] = React.useState<Card | undefined>(undefined);
+export const Board = (props: GameProps) => {
+  const [cardModal, setCardModal] = React.useState<Card | undefined>(undefined);
 
   const {
     G,
@@ -41,8 +42,19 @@ export const Board = (props: BcgPocProps) => {
   };
 
   const onCardClick = (card: Card) => {
-    // return moves.selectCard('0', uuid);
-    setCardData(card)
+    setCardModal(card);
+  };
+
+  const onCardSelect = (playerId: string, uuid: string) => {
+    return moves.selectCard(playerId, uuid);
+  };
+
+  const onCardDeselect = (playerId: string) => {
+    return moves.deselectCard(playerId);
+  };
+
+  const onCardSlotDrop = (playerId: string, zoneNumber: number) => {
+    return moves.playCard(playerId, zoneNumber);
   };
 
   return (
@@ -83,7 +95,10 @@ export const Board = (props: BcgPocProps) => {
           filter: ctx.gameover ? 'blur(2px)' : 'none',
         }}
       >
-        {cardData ? <CardInspectionModal card={cardData} onClick={() => setCardData(undefined)} /> : null}
+        <CardInspectionModal
+          card={cardModal}
+          onClick={() => setCardModal(undefined)}
+        />
         <div
           style={{
             display: 'flex',
@@ -221,36 +236,14 @@ export const Board = (props: BcgPocProps) => {
             );
           })}
         </div>
-        <div
-          style={{
-            width: '100%',
-            position: 'absolute',
-            top: 'auto',
-            bottom: '10px',
-            left: 0,
-            right: 0,
-            maxWidth: '100%',
-            padding: '0 1em',
-          }}
-        >
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(8, 1fr)',
-              gridGap: '0',
-              width: '100%',
-            }}
-          >
-            {players[0].hand?.map((card: Card) => (
-              <CardInHand
-                {...card}
-                key={card.uuid}
-                onClick={(card: Card) => onCardClick(card)}
-                isSelected={G.selectedCard[0]?.data?.uuid === card.uuid}
-              />
-            ))}
-          </div>
-        </div>
+        <PlayerHand
+          G={G}
+          ctx={ctx}
+          onCardClick={onCardClick}
+          onCardSelect={onCardSelect}
+          onCardDeselect={onCardDeselect}
+          onCardSlotDrop={onCardSlotDrop}
+        />
         <div
           style={{
             display: 'flex',
@@ -259,6 +252,7 @@ export const Board = (props: BcgPocProps) => {
             justifyContent: 'flex-start',
             width: '100%',
             height: '22px',
+            zIndex: 20,
             position: 'absolute',
             top: 'auto',
             bottom: 0,

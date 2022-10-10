@@ -1,33 +1,64 @@
 import { Ctx, MoveMap } from 'boardgame.io';
-import { ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import { GameState, Zone as ZoneProps } from '../../game';
 import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
+import { animated } from 'react-spring';
 
 interface ReactZone {
   moves: any;
   isActive: boolean;
   playerId: string;
-  zone: number;
+  zoneNumber: number;
+  onMouseUp: any;
 }
 
 export const ZoneDropSlot = ({
   moves,
   isActive,
   playerId,
-  zone,
+  zoneNumber,
+  onMouseUp,
 }: ReactZone): ReactElement => {
+  const { playCard } = moves;
+  const [isOver, setIsOver] = React.useState<boolean>(false);
+
   return (
     <div
-      onClick={() => moves.playCard(playerId, zone)}
+      onMouseUp={(e: any) => onMouseUp(e)}
+      onMouseUpCapture={(e: any) => onMouseUp(e)}
+      onTouchEnd={(e: any) => onMouseUp(e)}
+      onTouchEndCapture={(e: any) => onMouseUp(e)}
+      onMouseEnter={() => setIsOver(true)}
+      onMouseLeave={() => setIsOver(false)}
+      role="button"
+      tabIndex={0}
+      data-receive={isActive && isOver ? true : false} // @todo 
+      data-index={zoneNumber}
       style={{
+        boxSizing: 'border-box',
         position: 'absolute',
-        top: 'auto', right: 0, bottom: 0, left: 0,
+        top: 'auto',
+        right: 0,
+        bottom: 0,
+        left: 0,
         width: '100%',
-        height: isActive ? '95%' : '0%',
-        border: '2px dotted green',
-        opacity: isActive ? 1 : 0,
+        height: '100%',
+        outline: 'none',
+        // borderWidth: '2px',
+        // borderStyle: isOver ? 'solid' : 'dotted',
+        // borderColor: 'red',
+        // opacity: isActive ? isOver ? 1 : 0.5 : 0,
         pointerEvents: isActive ? 'auto' : 'none',
-        transition: '100ms ease-in'
+        zIndex: 101,
+        transition: '150ms ease-in',
+        overflow: 'hidden',
+        display: 'flex',
+        flexFlow: 'column nowrap',
+        alignItems: 'center',
+        justifyContent: 'center',
+        userSelect: 'none',
+        touchAction: 'auto',
+        willChange: 'border-style, opacity, pointer-events'
       }}
     />
   );
