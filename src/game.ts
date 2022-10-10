@@ -565,9 +565,9 @@ const handleCardInteraction = (
   zoneNumber: number,
   card: Card,
 ) => {
-  switch (card?.mechanic) {
-    case '%ON_PLAY%':
-      G.players[playerId].actionPointsTotal = add(G.players[playerId].actionPointsTotal, 1)
+  switch (card?.id) {
+    case 'CARD_005':
+      G.players[playerId].actionPointsTotal = add(G.players[playerId].actionPointsTotal, 1);
       break;
     default:
       break;

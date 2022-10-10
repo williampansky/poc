@@ -263,7 +263,10 @@ export const PlayerHand = ({
                     onMouseUpCapture={(e: MouseEvent) => handleMouseUp(e)}
                     style={{
                       zIndex,
-                      display: 'block',
+                      display: 'flex',
+                      flexFlow: 'column nowrap',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                       cursor: canPlay ? cursor : 'default',
                       marginLeft: marginLeft.to((mL: number) => `${mL}px`),
                       marginTop: marginTop.to((mT: number) => `${mT}px`),
