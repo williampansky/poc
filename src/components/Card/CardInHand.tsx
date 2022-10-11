@@ -5,7 +5,7 @@ export interface ReactCardProps extends CardProps {
   isSelected: boolean;
 }
 
-export const Card = ({ isSelected, ...card }: ReactCardProps): ReactElement => {
+export const CardInHand = ({ isSelected, ...card }: ReactCardProps): ReactElement => {
   const { canPlay, cost, name, power, uuid } = card;
 
   return (
@@ -24,7 +24,7 @@ export const Card = ({ isSelected, ...card }: ReactCardProps): ReactElement => {
           ? '0px 0px 0px 2px rgb(238, 130, 238)'
           : '0px 0px 0px 0px transparent',
         borderRadius: '0.25em',
-        background: 'white',
+        background: canPlay ? 'white' : 'gray',
         height: '3.5em',
         width: '2.45em',
         transition: '75ms ease-in',
@@ -48,7 +48,7 @@ export const Card = ({ isSelected, ...card }: ReactCardProps): ReactElement => {
           right: 'auto',
           bottom: 'auto',
           left: '-0.35em',
-          background: 'lightgreen',
+          background: canPlay ? 'lightgreen' : '#508850',
           borderRadius: '50%',
         }}
       >
@@ -69,8 +69,8 @@ export const Card = ({ isSelected, ...card }: ReactCardProps): ReactElement => {
           right: '-0.35em',
           bottom: 'auto',
           left: 'auto',
-          color: 'white',
-          background: 'red',
+          color: canPlay ? 'white' : 'black',
+          background: canPlay ? 'red' : '#880707',
           borderRadius: '50%',
         }}
       >

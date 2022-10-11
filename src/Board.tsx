@@ -4,7 +4,7 @@ import { Ctx } from 'boardgame.io';
 import { Card, config, GameState, Zone as IZone } from './game';
 import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
-import { Card as CardInHand } from './components/Card/Card';
+import { CardInHand } from './components/Card/CardInHand';
 import { CardInspectionModal } from './components/Modals/CardInspectionModal';
 import { PlayerHand } from './components/Hands/PlayerHand';
 
@@ -88,14 +88,14 @@ export const Board = (props: GameProps) => {
           bottom: 0,
           left: 0,
           zIndex: 999,
-          background: 'rgba(255, 255, 255, 0.825)',
+          background: 'rgba(0, 0, 0, 0.825)',
           display: ctx.gameover ? 'flex' : 'none',
           flexFlow: 'column nowrap',
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        <h2>{getWinner(ctx)}</h2>
+        <h2 style={{ color: 'white' }}>{getWinner(ctx)}</h2>
         <div
           style={{
             display: 'flex',
@@ -126,7 +126,7 @@ export const Board = (props: GameProps) => {
             right: 0,
             zIndex: 9000,
             padding: '0.15em',
-            background: 'darkgray',
+            background: 'dark#333',
             fontSize: 10,
           }}
         >
@@ -164,7 +164,7 @@ export const Board = (props: GameProps) => {
             right: 0,
             zIndex: 1,
             padding: '0.15em',
-            background: 'gray',
+            background: '#333',
           }}
         >
           <div
@@ -173,6 +173,7 @@ export const Board = (props: GameProps) => {
               marginRight: 'auto',
               fontSize: '11px',
               whiteSpace: 'nowrap',
+              color: 'white'
             }}
           >
             {G.players[1].name}
@@ -202,7 +203,7 @@ export const Board = (props: GameProps) => {
                         background:
                           G.players[1].actionPoints >= idx
                             ? 'lightgreen'
-                            : 'lightgray',
+                            : 'light#333',
                       }}
                     >
                       &nbsp;
@@ -247,9 +248,9 @@ export const Board = (props: GameProps) => {
                     textAlign: 'center',
                     position: 'relative',
                     border: '1px solid',
-                    borderColor: 'gray',
+                    borderColor: '#333',
                     borderRadius: '0.25em',
-                    background: 'white',
+                    background: ctx.currentPlayer === '1' ? 'white' : '#333',
                     height: '3.5em',
                     width: '2.45em',
                     transform:
@@ -257,6 +258,10 @@ export const Board = (props: GameProps) => {
                         ? 'scale(120%)'
                         : 'scale(80%)',
                     transition: '200ms ease-out',
+                    backgroundPosition: 'center center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover',
+                    // backgroundImage: 'url(./TCG_vol09_back.png)'
                   }}
                 ></div>
               );
@@ -314,7 +319,7 @@ export const Board = (props: GameProps) => {
             left: 0,
             right: 0,
             padding: '0.15em',
-            background: 'gray',
+            background: '#333',
           }}
         >
           <div style={{ width: '100%' }}>
@@ -342,7 +347,7 @@ export const Board = (props: GameProps) => {
                         background:
                           G.players[0].actionPoints >= idx
                             ? 'lightgreen'
-                            : 'lightgray',
+                            : 'light#333',
                       }}
                     >
                       &nbsp;

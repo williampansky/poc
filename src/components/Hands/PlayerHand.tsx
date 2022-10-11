@@ -1,7 +1,7 @@
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
 import { Card, config, GameState } from '../../game';
-import { Card as CardInHand } from '../Card/Card';
+import { CardInHand } from '../Card/CardInHand';
 import { useGesture } from '@use-gesture/react';
 import { useCallbackRef } from 'use-callback-ref';
 import { useSprings, animated, config as springConfig, to } from 'react-spring';
@@ -179,7 +179,6 @@ export const PlayerHand = ({
 
   const handleSelect = React.useCallback(
     (e: MouseEvent, canPlay: boolean, i: number) => {
-      e.preventDefault();
       if (canPlay) onCardSelect('0', G.players['0'].hand[i].uuid);
     },
     [G.players['0'].hand, onCardSelect]
@@ -187,7 +186,6 @@ export const PlayerHand = ({
 
   const handleDeselect = React.useCallback(
     (e: MouseEvent) => {
-      e.preventDefault();
       onCardDeselect('0');
     },
     [onCardDeselect]
