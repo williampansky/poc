@@ -167,6 +167,11 @@ export const BcgPoc: Game<GameState> = {
     },
     play: {
       turn: {
+        // stages: {
+        //   1: {
+
+        //   }
+        // },
         // prettier-ignore
         onBegin(G: GameState, ctx: Ctx) {
           const apPerTurn = config.gameConfig.actionPointsPerTurn;
@@ -275,121 +280,33 @@ export const BcgPoc: Game<GameState> = {
         },
       },
       moves: {
-        // prettier-ignore
-        selectCard: (
-          G: GameState,
-          ctx: Ctx,
-          playerId: string,
-          cardUuid: string
-        ) => {
-          const cardMatch = G.players[playerId].hand.find(
-            (c: Card) => c.uuid === cardUuid
-          );
-          const cardMatchIndex = G.players[playerId].hand.findIndex(
-            (c: Card) => c.uuid === cardUuid
-          );
-
-          if (G.selectedCard[playerId]?.data?.uuid === cardMatch?.uuid) {
-            G.selectedCard[playerId] = undefined;
-          } else {
-            G.selectedCard[playerId] = {
-              index: cardMatchIndex,
-              data: cardMatch,
-            };
-          }
+        selectCard: {
+          client: false,
+          noLimit: true,
+          move: (G, ctx, playerId, cardUuid) => {
+            return selectCard(G, ctx, playerId, cardUuid);
+          },
         },
-        // prettier-ignore
-        deselectCard: (
-          G: GameState,
-          ctx: Ctx,
-          playerId: string
-        ) => {
-          G.selectedCard[playerId] = undefined
+        deselectCard: {
+          client: false,
+          noLimit: true,
+          move: (G, ctx, playerId) => {
+            return deselectCard(G, ctx, playerId);
+          },
         },
         playCard: {
-          // move: playCard(G, ctx, playerId, zoneNumber, card)
           client: false,
           noLimit: true,
           move: (G, ctx, playerId, zoneNumber) => {
             return playCard(G, ctx, playerId, zoneNumber);
           },
         },
-        playAiCard: (
-          G: GameState,
-          ctx: Ctx,
-          zoneNumber: number,
-          card: Card,
-          cardIndex: number
-        ) => {
-          const {
-            zones,
-            config: {
-              gameConfig: { numberOfSlotsPerZone },
-            },
-          } = G;
-
-          // set selected card
-          G.selectedCard['1'] = {
-            data: card,
-            index: cardIndex,
-          } as SelectedCard;
-
-          const player = G.players['1'];
-          const cardUuid = card.uuid;
-          const zone = zones[zoneNumber];
-          const zoneSideLength = zone.sides['1'].length;
-          const currentAP = G.players['1'].actionPoints;
-
-          // validate cost playability
-          if (currentAP < card.currentCost) return INVALID_MOVE;
-
-          // validate zone playability
-          if (zoneSideLength > numberOfSlotsPerZone) return INVALID_MOVE;
-          if (zone.disabled['1']) return INVALID_MOVE;
-
-          // add card to playedCards array
-          G.playedCards['1'].push(card);
-
-          // remove cost from current action points
-          const newAP = subtract(G.players['1'].actionPoints, card.currentCost);
-          G.players['1'].actionPoints = newAP;
-
-          // push card to zone side array
-          zone.sides['1'].push(card);
-
-          // if zone has interaction text
-          if (zone?.powerAdjustment) {
-            // handle zone interactions
-            handleZoneInteraction(G, ctx, '1', zoneNumber);
-
-            // calculate and set zone power
-            // prettier-ignore
-            G.zones[zoneNumber].powers['1'] = Math.round(
-              G.zones[zoneNumber].powers['1'] + 
-              zone.sides['1'].find((c) => c.uuid === cardUuid)!.zonePowerAdjustment
-            );
-          } else {
-            // calculate and set zone power
-            G.zones[zoneNumber].powers['1'] = add(
-              G.zones[zoneNumber].powers['1'],
-              card.basePower
-            );
-          }
-
-          // remove card from hand
-          const newHand = player.hand.filter((c: Card) => c.uuid !== cardUuid);
-          G.players['1'].hand = newHand;
-
-          // re-evaluate cards in hand
-          G.players['1'].hand.forEach((c: Card) => {
-            if (G.players['1'].actionPoints >= c.currentCost) {
-              return (c.canPlay = true);
-            } else {
-              return (c.canPlay = false);
-            }
-          });
-
-          G.selectedCard['1'] = undefined;
+        playAiCard: {
+          client: false,
+          noLimit: true,
+          move: (G, ctx, zoneNumber, card, cardIndex) => {
+            return playAiCard(G, ctx, zoneNumber, card, cardIndex);
+          },
         },
         endTurn: (G: GameState, ctx) => {
           ctx.events?.endTurn();
@@ -479,6 +396,39 @@ const isVictory = (zone1: Zone, zone2: Zone, zone3: Zone): string => {
   return winner;
 };
 
+// prettier-ignore
+const selectCard = (
+  G: GameState,
+  ctx: Ctx,
+  playerId: string,
+  cardUuid: string
+) => {
+  const cardMatch = G.players[playerId].hand.find(
+    (c: Card) => c.uuid === cardUuid
+  );
+  const cardMatchIndex = G.players[playerId].hand.findIndex(
+    (c: Card) => c.uuid === cardUuid
+  );
+
+  if (G.selectedCard[playerId]?.data?.uuid === cardMatch?.uuid) {
+    G.selectedCard[playerId] = undefined;
+  } else {
+    G.selectedCard[playerId] = {
+      index: cardMatchIndex,
+      data: cardMatch,
+    };
+  }
+}
+
+// prettier-ignore
+const deselectCard = (
+  G: GameState,
+  ctx: Ctx,
+  playerId: string
+) => {
+  G.selectedCard[playerId] = undefined;
+}
+
 const playCard = (
   G: GameState,
   ctx: Ctx,
@@ -527,7 +477,7 @@ const playCard = (
     handleZoneInteraction(G, ctx, playerId, zoneNumber);
 
     // calculate and set zone power
-    G.zones[zoneNumber].powers[playerId] = Math.round(
+    G.zones[zoneNumber].powers[playerId] = Math.round( // @todo
       G.zones[zoneNumber].powers[playerId] + 
       zone.sides[playerId].find((c) => c.uuid === cardUuid)!.zonePowerAdjustment
     );
@@ -553,6 +503,84 @@ const playCard = (
   // unset selected card
   G.selectedCard[playerId] = undefined;
 };
+
+const playAiCard = (
+  G: GameState,
+  ctx: Ctx,
+  zoneNumber: number,
+  card: Card,
+  cardIndex: number
+) => {
+  const {
+    zones,
+    config: {
+      gameConfig: { numberOfSlotsPerZone },
+    },
+  } = G;
+
+  // set selected card
+  G.selectedCard['1'] = {
+    data: card,
+    index: cardIndex,
+  } as SelectedCard;
+
+  const player = G.players['1'];
+  const cardUuid = card.uuid;
+  const zone = zones[zoneNumber];
+  const zoneSideLength = zone.sides['1'].length;
+  const currentAP = G.players['1'].actionPoints;
+
+  // validate cost playability
+  if (currentAP < card.currentCost) return INVALID_MOVE;
+
+  // validate zone playability
+  if (zoneSideLength > numberOfSlotsPerZone) return INVALID_MOVE;
+  if (zone.disabled['1']) return INVALID_MOVE;
+
+  // add card to playedCards array
+  G.playedCards['1'].push(card);
+
+  // remove cost from current action points
+  const newAP = subtract(G.players['1'].actionPoints, card.currentCost);
+  G.players['1'].actionPoints = newAP;
+
+  // push card to zone side array
+  zone.sides['1'].push(card);
+
+  // if zone has interaction text
+  if (zone?.powerAdjustment) {
+    // handle zone interactions
+    handleZoneInteraction(G, ctx, '1', zoneNumber);
+
+    // calculate and set zone power
+    // prettier-ignore
+    G.zones[zoneNumber].powers['1'] = Math.round(
+      G.zones[zoneNumber].powers['1'] + 
+      zone.sides['1'].find((c) => c.uuid === cardUuid)!.zonePowerAdjustment
+    );
+  } else {
+    // calculate and set zone power
+    G.zones[zoneNumber].powers['1'] = add(
+      G.zones[zoneNumber].powers['1'],
+      card.basePower
+    );
+  }
+
+  // remove card from hand
+  const newHand = player.hand.filter((c: Card) => c.uuid !== cardUuid);
+  G.players['1'].hand = newHand;
+
+  // re-evaluate cards in hand
+  G.players['1'].hand.forEach((c: Card) => {
+    if (G.players['1'].actionPoints >= c.currentCost) {
+      return (c.canPlay = true);
+    } else {
+      return (c.canPlay = false);
+    }
+  });
+
+  G.selectedCard['1'] = undefined;
+}
 
 const handleCardInteraction = (
   G: GameState,
