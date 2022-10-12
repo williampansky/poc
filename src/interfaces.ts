@@ -77,6 +77,7 @@ export interface Config {
 }
 
 export interface GameState {
+  done: Record<string, boolean>;
   players: Record<string, Player>;
   selectedCard: Record<string, SelectedCard | undefined>;
   playedCards: Record<string, Card[]>;

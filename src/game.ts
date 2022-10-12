@@ -1,5 +1,5 @@
 import { Ctx, Game } from 'boardgame.io';
-import { INVALID_MOVE } from 'boardgame.io/core';
+import { ActivePlayers, INVALID_MOVE } from 'boardgame.io/core';
 import { v4 as uuid } from 'uuid';
 import { add, subtract } from 'mathjs';
 import { Card, config, GameState, SelectedCard, Zone } from './interfaces';
@@ -7,11 +7,16 @@ import { Card, config, GameState, SelectedCard, Zone } from './interfaces';
 import CARD_DATABASE from './tempCardsDatabase';
 import ZONE_DATABASE from './tempZonesDatabase';
 
-const DEBUG_CARD_ID: string = 'CARD_010';
+const DEBUG_CARD_ID: string = '';
 
 export const BcgPoc: Game<GameState> = {
   name: 'BcgPoc',
   setup: () => ({
+    done: {
+      '0': false,
+      '1': false,
+    },
+
     players: {
       '0': {
         name: 'Player',
@@ -167,184 +172,109 @@ export const BcgPoc: Game<GameState> = {
     },
     play: {
       turn: {
-        // stages: {
-        //   1: {
-
-        //   }
-        // },
-        // prettier-ignore
-        onBegin(G: GameState, ctx: Ctx) {
-          const apPerTurn = config.gameConfig.actionPointsPerTurn;
-          const apPerGame = config.gameConfig.actionPointsTotal;
-          const maxHandSize = config.gameConfig.cardsPerHand;
-          const currentSingleTurn = Math.round(ctx.turn / 2);
-
-          switch (ctx.currentPlayer) {
-            case '1':
-              // incremement action points
-              if (G.players[1].actionPointsTotal !== apPerGame) {
-                G.players[1].actionPointsTotal = Math.abs(G.players[1].actionPointsTotal + apPerTurn);
-              }
-  
-              // set current action points
-              G.players[1].actionPoints = G.players[1].actionPointsTotal;
-  
-              // add card to hand
-              if (G.players[1].hand.length !== maxHandSize) { // .... canDraw
-                G.players[1].hand.push( // .......................... pushes to hand
-                  G.players[1].deck.splice(0, 1)[0] // .............. splices from deck
-                );
-              }
-
-              // set playable cards
-              G.players[1].hand.forEach((c: Card) => {
-                if (G.players[1].actionPoints >= c.currentCost) return c.canPlay = true;
-                else return c.canPlay = false;
-              });
-              break;
-  
-            case '0':
-            default:
-              // incremement action points
-              if (G.players[0].actionPointsTotal !== apPerGame) {
-                G.players[0].actionPointsTotal = Math.abs(G.players[0].actionPointsTotal + apPerTurn);
-              }
-  
-              // set current action points
-              G.players[0].actionPoints = G.players[0].actionPointsTotal;
-  
-              // add card to hand
-              if (G.players[0].hand.length !== maxHandSize) { // .... canDraw
-                G.players[0].hand.push( // .......................... pushes to hand
-                  G.players[0].deck.splice(0, 1)[0] // .............. splices from deck
-                );
-              }
-
-              // set playable cards
-              G.players[0].hand.forEach((c: Card) => {
-                if (G.players[0].actionPoints >= c.currentCost) return c.canPlay = true;
-                else return c.canPlay = false;
-              });
-
-              if (DEBUG_CARD_ID !== '') {
-                const dCard = CARD_DATABASE.find(c => c.id === DEBUG_CARD_ID);
-                G.players[0].hand.push({
-                    __id: dCard?.id,
-                    baseCost: dCard?.cost,
-                    basePower: dCard?.power,
-                    canPlay: true,
-                    currentCost: 0,
-                    description: dCard?.description,
-                    mechanic: dCard?.mechanic,
-                    name: dCard?.name,
-                    powerStream: [],
-                    uuid: uuid(),
-                    zonePowerAdjustment: 0
-                } as Card);
-              }
-              break;
+        activePlayers: ({
+          currentPlayer: { stage: 'play_1' },
+          others: { stage: 'play_1' },
+          value: {
+            '0': { stage: 'play_1', },
+            '1': { stage: 'play_1', },
           }
-
-          // on-turn-start zone effects
-          G.zones.forEach((z: Zone) => {
-            switch (z.id) {
-              case 'ZONE_002':
-                if (ctx.turn === 11) {
-                  z.sides = {
-                    '0': [],
-                    '1': [],
-                  };
-                  z.powers = {
-                    '0': 0,
-                    '1': 0,
-                  };
-                }
-                break;
-              default:
-                break;
-            }
-          });
+        }),
+        onBegin: (G, ctx) => onTurnBegin(G, ctx),
+        onEnd: (G, ctx) => onTurnEnd(G, ctx),
+        endIf(G, ctx) {
+          return G.done['0'] === true && G.done['1'] === true;
         },
-        onEnd(G: GameState, ctx: Ctx) {
-          const currentSingleTurn = Math.round(ctx.turn / 2);
-          G.players[1].hand.forEach((c: Card) => (c.canPlay = false));
-          G.players[0].hand.forEach((c: Card) => (c.canPlay = false));
-
-          // on-turn-end zone effects
-          G.zones.forEach((z: Zone) => {
-            switch (z.id) {
-              default:
-                break;
-            }
-          });
-        },
-      },
-      moves: {
-        selectCard: {
-          client: false,
-          noLimit: true,
-          move: (G, ctx, playerId, cardUuid) => {
-            return selectCard(G, ctx, playerId, cardUuid);
-          },
-        },
-        deselectCard: {
-          client: false,
-          noLimit: true,
-          move: (G, ctx, playerId) => {
-            return deselectCard(G, ctx, playerId);
-          },
-        },
-        playCard: {
-          client: false,
-          noLimit: true,
-          move: (G, ctx, playerId, zoneNumber) => {
-            return playCard(G, ctx, playerId, zoneNumber);
-          },
-        },
-        playAiCard: {
-          client: false,
-          noLimit: true,
-          move: (G, ctx, zoneNumber, card, cardIndex) => {
-            return playAiCard(G, ctx, zoneNumber, card, cardIndex);
-          },
-        },
-        endTurn: (G: GameState, ctx) => {
-          ctx.events?.endTurn();
+        stages: {
+          // activePlayers: {},
+          'play_1': {
+            next: 'play_1',
+            moves: {
+              selectCard: {
+                client: false,
+                noLimit: true,
+                ignoreStaleStateID: true,
+                move: (G, ctx, playerId, cardUuid) => {
+                  return selectCard(G, ctx, playerId, cardUuid);
+                },
+              },
+              deselectCard: {
+                client: false,
+                noLimit: true,
+                ignoreStaleStateID: true,
+                move: (G, ctx, playerId) => {
+                  return deselectCard(G, ctx, playerId);
+                },
+              },
+              playCard: {
+                client: false,
+                noLimit: true,
+                ignoreStaleStateID: true,
+                move: (G, ctx, playerId, zoneNumber) => {
+                  return playCard(G, ctx, playerId, zoneNumber);
+                },
+              },
+              playAiCard: {
+                client: false,
+                noLimit: true,
+                ignoreStaleStateID: true,
+                move: (G, ctx, zoneNumber, card, cardIndex) => {
+                  return playAiCard(G, ctx, zoneNumber, card, cardIndex);
+                },
+              },
+              setDone: {
+                client: false,
+                noLimit: true,
+                ignoreStaleStateID: true,
+                move: (G, ctx, playerId) => {
+                  return setDone(G, ctx, playerId);
+                },
+              },
+              // endTurn: (G: GameState, ctx) => {
+              //   ctx.events?.endTurn();
+              // },
+            },
+          }
         },
       },
     },
   },
   ai: {
     enumerate: (G: GameState, ctx: Ctx) => {
+      const { players, zones, config } = G;
+      const { random } = ctx;
+      const perZone = config.gameConfig.numberOfSlotsPerZone;
+      const aiPlayer = players['1'];
+      const aiHand = aiPlayer.hand;
       let moves = [];
 
       // avoids onslaught of INVALID_MOVE errors
-      if (ctx.currentPlayer === '1') {
-        if (G.players[1].hand.length >= 1) {
+      if (G.done['1'] === false) {
+        if (aiHand.length >= 1) {
           let cardsThanCanBePlayed: Card[] = []; // find playable cards
-          G.players[1].hand.forEach((c: Card) => {
+          aiHand.forEach((c: Card) => {
             if (c.canPlay) cardsThanCanBePlayed.push(c);
           });
 
           for (let i = 0; i < cardsThanCanBePlayed.length; i++) {
-            if (!G.zones[0].disabled['1'])
-              for (let i = 0; i < 6 - G.zones[0].sides[1].length; i++) {
+            if (!zones[0].disabled['1'])
+              for (let i = 0; i < perZone - zones[0].sides[1].length; i++) {
                 moves.push({
                   move: 'playAiCard',
                   args: [0, cardsThanCanBePlayed[0], 0],
                 });
               }
 
-            if (!G.zones[1].disabled['1'])
-              for (let i = 0; i < 6 - G.zones[1].sides[1].length; i++) {
+            if (!zones[1].disabled['1'])
+              for (let i = 0; i < perZone - zones[1].sides[1].length; i++) {
                 moves.push({
                   move: 'playAiCard',
                   args: [1, cardsThanCanBePlayed[0], 0],
                 });
               }
 
-            if (!G.zones[2].disabled['1'])
-              for (let i = 0; i < 6 - G.zones[2].sides[1].length; i++) {
+            if (!zones[2].disabled['1'])
+              for (let i = 0; i < perZone - zones[2].sides[1].length; i++) {
                 moves.push({
                   move: 'playAiCard',
                   args: [2, cardsThanCanBePlayed[0], 0],
@@ -353,9 +283,11 @@ export const BcgPoc: Game<GameState> = {
           }
         }
 
-        moves.push({ event: 'endTurn' });
+        // moves.push({ event: 'endTurn' });
+        moves.push({ move: 'setDone', args: ['1'] });
       }
-
+      
+      // console.log(moves);
       return moves;
     },
   },
@@ -397,18 +329,111 @@ const isVictory = (zone1: Zone, zone2: Zone, zone3: Zone): string => {
 };
 
 // prettier-ignore
-const selectCard = (
-  G: GameState,
-  ctx: Ctx,
-  playerId: string,
-  cardUuid: string
-) => {
-  const cardMatch = G.players[playerId].hand.find(
-    (c: Card) => c.uuid === cardUuid
-  );
-  const cardMatchIndex = G.players[playerId].hand.findIndex(
-    (c: Card) => c.uuid === cardUuid
-  );
+const onTurnBegin = (G: GameState, ctx: Ctx) => {
+  const apPerTurn = config.gameConfig.actionPointsPerTurn;
+  const apPerGame = config.gameConfig.actionPointsTotal;
+  const maxHandSize = config.gameConfig.cardsPerHand;
+  const currentSingleTurn = Math.round(ctx.turn / 2);
+
+  // 
+  // PLAYER 1
+  // 1: incremement action points
+  if (G.players[1].actionPointsTotal !== apPerGame) {
+    G.players[1].actionPointsTotal = Math.abs(G.players[1].actionPointsTotal + apPerTurn);
+  }
+  // 1: set current action points
+  G.players[1].actionPoints = G.players[1].actionPointsTotal;
+  // 1: add card to hand
+  if (G.players[1].hand.length !== maxHandSize) { // .... canDraw
+    G.players[1].hand.push( // .......................... pushes to hand
+      G.players[1].deck.splice(0, 1)[0] // .............. splices from deck
+    );
+  }
+  // 1: set playable cards
+  G.players[1].hand.forEach((c: Card) => {
+    if (G.players[1].actionPoints >= c.currentCost) return c.canPlay = true;
+    else return c.canPlay = false;
+  });
+
+  // 
+  // PLAYER 0
+  // 0: incremement action points
+  if (G.players[0].actionPointsTotal !== apPerGame) {
+    G.players[0].actionPointsTotal = Math.abs(G.players[0].actionPointsTotal + apPerTurn);
+  }
+  // 0: set current action points
+  G.players[0].actionPoints = G.players[0].actionPointsTotal;
+  // 0: add card to hand
+  if (G.players[0].hand.length !== maxHandSize) { // .... canDraw
+    G.players[0].hand.push( // .......................... pushes to hand
+      G.players[0].deck.splice(0, 1)[0] // .............. splices from deck
+    );
+  }
+  // 0: set playable cards
+  G.players[0].hand.forEach((c: Card) => {
+    if (G.players[0].actionPoints >= c.currentCost) return c.canPlay = true;
+    else return c.canPlay = false;
+  });
+  // 0: handle debug card draw
+  if (DEBUG_CARD_ID !== '') {
+    const dCard = CARD_DATABASE.find(c => c.id === DEBUG_CARD_ID);
+    G.players[0].hand.push({
+        __id: dCard?.id,
+        baseCost: dCard?.cost,
+        basePower: dCard?.power,
+        canPlay: true,
+        currentCost: 0,
+        description: dCard?.description,
+        mechanic: dCard?.mechanic,
+        name: dCard?.name,
+        powerStream: [],
+        uuid: uuid(),
+        zonePowerAdjustment: 0
+    } as Card);
+  }
+
+  // both: on-turn-start zone effects
+  G.zones.forEach((z: Zone) => {
+    switch (z.id) {
+      case 'ZONE_002':
+        if (ctx.turn === 11) {
+          z.sides = {
+            '0': [],
+            '1': [],
+          };
+          z.powers = {
+            '0': 0,
+            '1': 0,
+          };
+        }
+        break;
+      default:
+        break;
+    }
+  });
+  // both: set done back to false
+  G.done['0'] = false;
+  G.done['1'] = false;
+}
+
+const onTurnEnd = (G: GameState, ctx: Ctx) => {
+  const currentSingleTurn = Math.round(ctx.turn / 2);
+  G.players[1].hand.forEach((c: Card) => (c.canPlay = false));
+  G.players[0].hand.forEach((c: Card) => (c.canPlay = false));
+
+  // on-turn-end zone effects
+  G.zones.forEach((z: Zone) => {
+    switch (z.id) {
+      default:
+        break;
+    }
+  });
+}
+
+// prettier-ignore
+const selectCard = (G: GameState, ctx: Ctx, playerId: string, cardUuid: string) => {
+  const cardMatch = G.players[playerId].hand.find((c: Card) => c.uuid === cardUuid);
+  const cardMatchIndex = G.players[playerId].hand.findIndex((c: Card) => c.uuid === cardUuid);
 
   if (G.selectedCard[playerId]?.data?.uuid === cardMatch?.uuid) {
     G.selectedCard[playerId] = undefined;
@@ -421,11 +446,7 @@ const selectCard = (
 }
 
 // prettier-ignore
-const deselectCard = (
-  G: GameState,
-  ctx: Ctx,
-  playerId: string
-) => {
+const deselectCard = (G: GameState, ctx: Ctx, playerId: string) => {
   G.selectedCard[playerId] = undefined;
 }
 
@@ -582,6 +603,10 @@ const playAiCard = (
   G.selectedCard['1'] = undefined;
 }
 
+const setDone = (G: GameState, ctx: Ctx, playerId: string) => {
+  G.done[playerId] = true;
+}
+
 const handleCardInteraction = (
   G: GameState,
   ctx: Ctx,
@@ -665,3 +690,11 @@ const handleZoneInteraction = (
       break;
   }
 };
+
+const turnMoves = () => {
+
+}
+
+function randomIntFromInterval(min: number, max: number) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}

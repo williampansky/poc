@@ -44,10 +44,11 @@ export const Board = (props: GameProps) => {
   }, [addressBarCallback]);
 
   const onClick = () => {
-    // @ts-ignore
-    if (ctx.currentPlayer === '0') return events.endTurn({ next: '1' });
-    // @ts-ignore
-    if (ctx.currentPlayer === '1') return events.endTurn({ next: '0' });
+    return moves.setDone('0');
+    // // @ts-ignore
+    // if (ctx.currentPlayer === '0') return events.endTurn({ next: '1' });
+    // // @ts-ignore
+    // if (ctx.currentPlayer === '1') return events.endTurn({ next: '0' });
   };
 
   const resetGame = () => {
