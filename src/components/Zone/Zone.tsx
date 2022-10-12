@@ -1,6 +1,6 @@
 import { Ctx, MoveMap } from 'boardgame.io';
 import React, { ReactElement } from 'react';
-import { Card, config, GameState, Zone as ZoneProps } from '../../game';
+import { Card, config, GameState, Zone as ZoneProps } from '../../interfaces';
 import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
 import { ZoneDropSlot } from '../ZoneDropSlot/ZoneDropSlot';
 
@@ -179,7 +179,7 @@ export const Zone = ({
             G.selectedCard[0]?.data !== undefined &&
             zone?.sides[0].length !== config.gameConfig.numberOfSlotsPerZone &&
             !zone?.disabled[0] &&
-            G.players[0].actionPoints >= G.selectedCard[0]?.data?.cost
+            G.players[0].actionPoints >= G.selectedCard[0]?.data?.currentCost
           }
           playerId='0'
           zoneNumber={zoneNumber}

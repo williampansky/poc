@@ -1,12 +1,25 @@
 import { ReactElement } from 'react';
-import { Card as CardProps } from '../../game';
+import { Card as CardProps } from '../../interfaces';
+import getDisplayPower from '../../utilities/get-display-power';
 
 export interface ReactCardProps extends CardProps {
   isSelected: boolean;
 }
 
-export const CardInHand = ({ isSelected, ...card }: ReactCardProps): ReactElement => {
-  const { canPlay, cost, name, power, uuid } = card;
+export const CardInHand = ({
+  isSelected,
+  ...card
+}: ReactCardProps): ReactElement => {
+  const {
+    baseCost,
+    basePower,
+    canPlay,
+    currentCost,
+    name,
+    powerOverride,
+    powerStream,
+    uuid,
+  } = card;
 
   return (
     <div
@@ -52,7 +65,7 @@ export const CardInHand = ({ isSelected, ...card }: ReactCardProps): ReactElemen
           borderRadius: '50%',
         }}
       >
-        {cost}
+        {currentCost}
       </div>
       <div
         style={{
@@ -74,7 +87,7 @@ export const CardInHand = ({ isSelected, ...card }: ReactCardProps): ReactElemen
           borderRadius: '50%',
         }}
       >
-        {power}
+        {getDisplayPower(card)}
       </div>
       <div style={{ fontSize: '0.5em' }}>{name}</div>
     </div>

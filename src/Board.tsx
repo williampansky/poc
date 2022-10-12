@@ -1,7 +1,7 @@
 import React from 'react';
 import { BoardProps, Client } from 'boardgame.io/react';
 import { Ctx } from 'boardgame.io';
-import { Card, config, GameState, Zone as IZone } from './game';
+import { Card, config, GameState, Zone as IZone } from './interfaces';
 import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
 import { CardInHand } from './components/Card/CardInHand';
@@ -134,7 +134,7 @@ export const Board = (props: GameProps) => {
           <div>
             ctx.turn: {ctx.turn} / singleTurn: {Math.round(ctx.turn / 2)}
           </div>
-          <div>selectedCard: {G.selectedCard['0']?.data!.id}</div>
+          <div>selectedCard: {G.selectedCard['0']?.data!.__id}</div>
         </div>
       )}
 
@@ -258,9 +258,9 @@ export const Board = (props: GameProps) => {
                         ? 'scale(120%)'
                         : 'scale(80%)',
                     transition: '200ms ease-out',
-                    backgroundPosition: 'center center',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'cover',
+                    // backgroundPosition: 'center center',
+                    // backgroundRepeat: 'no-repeat',
+                    // backgroundSize: 'cover',
                     // backgroundImage: 'url(./TCG_vol09_back.png)'
                   }}
                 ></div>

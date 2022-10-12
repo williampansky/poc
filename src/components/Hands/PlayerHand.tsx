@@ -1,6 +1,6 @@
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
-import { Card, config, GameState } from '../../game';
+import { Card, config, GameState } from '../../interfaces';
 import { CardInHand } from '../Card/CardInHand';
 import { useGesture } from '@use-gesture/react';
 import { useCallbackRef } from 'use-callback-ref';

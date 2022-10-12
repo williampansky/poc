@@ -2,85 +2,12 @@ import { Ctx, Game } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { v4 as uuid } from 'uuid';
 import { add, subtract } from 'mathjs';
+import { Card, config, GameState, SelectedCard, Zone } from './interfaces';
 
 import CARD_DATABASE from './tempCardsDatabase';
 import ZONE_DATABASE from './tempZonesDatabase';
 
-export const config = {
-  gameConfig: {
-    actionPointsPerTurn: 1,
-    actionPointsTotal: 10,
-    cardsPerDeck: 20,
-    cardsPerHand: 8,
-    cardsPerStartingHand: 3,
-    cardsPerTurn: 1,
-    numberOfPlayers: 2,
-    numberOfSingleTurnsPerGame: 12,
-    numberOfZones: 3,
-    numberOfSlotsPerZone: 6,
-  },
-};
-
-export interface Card {
-  id: string;
-  name: string;
-  canPlay: boolean;
-  cost: number;
-  power: number;
-  powerOverride?: number;
-  powerAdjustment?: number;
-  temporaryPower?: number;
-  mechanic?: string;
-  description?: string;
-  uuid: string;
-}
-
-export interface Zone {
-  disabled: Record<string, boolean>;
-  id: string;
-  name: string;
-  powers: Record<string, number>;
-  powerText?: string;
-  powerAdjustment: number;
-  sides: Record<string, Card[]>;
-  uuid: string;
-}
-
-export interface Player {
-  name: string;
-  deck: Card[];
-  hand: Card[];
-  actionPoints: number;
-  actionPointsTotal: number;
-}
-
-export interface SelectedCard {
-  index?: number;
-  data?: Card;
-}
-
-export interface Config {
-  gameConfig: {
-    actionPointsPerTurn: number;
-    actionPointsTotal: number;
-    cardsPerDeck: number;
-    cardsPerHand: number;
-    cardsPerStartingHand: number;
-    cardsPerTurn: number;
-    numberOfPlayers: number;
-    numberOfSingleTurnsPerGame: number;
-    numberOfZones: number;
-    numberOfSlotsPerZone: number;
-  };
-}
-
-export interface GameState {
-  players: Record<string, Player>;
-  selectedCard: Record<string, SelectedCard | undefined>;
-  playedCards: Record<string, Card[]>;
-  zones: Zone[];
-  config: Config;
-}
+const DEBUG_CARD_ID: string = 'CARD_010';
 
 export const BcgPoc: Game<GameState> = {
   name: 'BcgPoc',
@@ -183,19 +110,35 @@ export const BcgPoc: Game<GameState> = {
 
         // create deck
         [...Array(config.gameConfig.cardsPerDeck)].forEach((_, i) => {
-          let randomCard1 = random?.Shuffle(CARD_DATABASE)[0] as Card;
-          let randomCard2 = random?.Shuffle(CARD_DATABASE)[0] as Card;
+          let randomCard1 = random?.Shuffle(CARD_DATABASE)[0];
+          let randomCard2 = random?.Shuffle(CARD_DATABASE)[0];
 
           tempOpponentArray.push({
-            ...randomCard1,
+            __id: randomCard1?.id,
+            baseCost: randomCard1?.cost,
+            basePower: randomCard1?.power,
             canPlay: false,
+            currentCost: randomCard1?.cost,
+            description: randomCard1?.description,
+            mechanic: randomCard1?.mechanic,
+            name: randomCard1?.name,
+            powerStream: [],
             uuid: uuid(),
-          });
+            zonePowerAdjustment: 0,
+          } as Card);
           tempPlayerArray.push({
-            ...randomCard2,
+            __id: randomCard2?.id,
+            baseCost: randomCard2?.cost,
+            basePower: randomCard2?.power,
             canPlay: false,
+            currentCost: randomCard2?.cost,
+            description: randomCard2?.description,
+            mechanic: randomCard2?.mechanic,
+            name: randomCard2?.name,
+            powerStream: [],
             uuid: uuid(),
-          });
+            zonePowerAdjustment: 0,
+          } as Card);
         });
 
         // set decks
@@ -250,7 +193,7 @@ export const BcgPoc: Game<GameState> = {
 
               // set playable cards
               G.players[1].hand.forEach((c: Card) => {
-                if (G.players[1].actionPoints >= c.cost) return c.canPlay = true;
+                if (G.players[1].actionPoints >= c.currentCost) return c.canPlay = true;
                 else return c.canPlay = false;
               });
               break;
@@ -274,9 +217,26 @@ export const BcgPoc: Game<GameState> = {
 
               // set playable cards
               G.players[0].hand.forEach((c: Card) => {
-                if (G.players[0].actionPoints >= c.cost) return c.canPlay = true;
+                if (G.players[0].actionPoints >= c.currentCost) return c.canPlay = true;
                 else return c.canPlay = false;
               });
+
+              if (DEBUG_CARD_ID !== '') {
+                const dCard = CARD_DATABASE.find(c => c.id === DEBUG_CARD_ID);
+                G.players[0].hand.push({
+                    __id: dCard?.id,
+                    baseCost: dCard?.cost,
+                    basePower: dCard?.power,
+                    canPlay: true,
+                    currentCost: 0,
+                    description: dCard?.description,
+                    mechanic: dCard?.mechanic,
+                    name: dCard?.name,
+                    powerStream: [],
+                    uuid: uuid(),
+                    zonePowerAdjustment: 0
+                } as Card);
+              }
               break;
           }
 
@@ -377,20 +337,21 @@ export const BcgPoc: Game<GameState> = {
           const player = G.players['1'];
           const cardUuid = card.uuid;
           const zone = zones[zoneNumber];
+          const zoneSideLength = zone.sides['1'].length;
+          const currentAP = G.players['1'].actionPoints;
 
           // validate cost playability
-          if (G.players['1'].actionPoints < card.cost) return INVALID_MOVE;
+          if (currentAP < card.currentCost) return INVALID_MOVE;
 
           // validate zone playability
-          if (zone.sides['1'].length > numberOfSlotsPerZone)
-            return INVALID_MOVE;
+          if (zoneSideLength > numberOfSlotsPerZone) return INVALID_MOVE;
           if (zone.disabled['1']) return INVALID_MOVE;
 
           // add card to playedCards array
           G.playedCards['1'].push(card);
 
           // remove cost from current action points
-          const newAP = subtract(G.players['1'].actionPoints, card.cost);
+          const newAP = subtract(G.players['1'].actionPoints, card.currentCost);
           G.players['1'].actionPoints = newAP;
 
           // push card to zone side array
@@ -402,16 +363,16 @@ export const BcgPoc: Game<GameState> = {
             handleZoneInteraction(G, ctx, '1', zoneNumber);
 
             // calculate and set zone power
+            // prettier-ignore
             G.zones[zoneNumber].powers['1'] = Math.round(
-              G.zones[zoneNumber].powers['1'] +
-                zone.sides['1'].find((c) => c.uuid === cardUuid)!
-                  .temporaryPower!
+              G.zones[zoneNumber].powers['1'] + 
+              zone.sides['1'].find((c) => c.uuid === cardUuid)!.zonePowerAdjustment
             );
           } else {
             // calculate and set zone power
             G.zones[zoneNumber].powers['1'] = add(
               G.zones[zoneNumber].powers['1'],
-              card.power
+              card.basePower
             );
           }
 
@@ -421,7 +382,7 @@ export const BcgPoc: Game<GameState> = {
 
           // re-evaluate cards in hand
           G.players['1'].hand.forEach((c: Card) => {
-            if (G.players['1'].actionPoints >= c.cost) {
+            if (G.players['1'].actionPoints >= c.currentCost) {
               return (c.canPlay = true);
             } else {
               return (c.canPlay = false);
@@ -541,7 +502,7 @@ const playCard = (
   const zone = zones[zoneNumber];
 
   // validate cost playability
-  if (G.players[playerId].actionPoints < card.cost) return INVALID_MOVE;
+  if (G.players[playerId].actionPoints < card.currentCost) return INVALID_MOVE;
 
   // validate zone playability
   if (zone.sides[playerId].length > numberOfSlotsPerZone) return INVALID_MOVE;
@@ -551,7 +512,7 @@ const playCard = (
   G.playedCards[playerId].push(card);
 
   // remove cost from current action points
-  const newAP = subtract(G.players[playerId].actionPoints, card.cost);
+  const newAP = subtract(G.players[playerId].actionPoints, card.currentCost);
   G.players[playerId].actionPoints = newAP;
 
   // push card to zone side array
@@ -566,15 +527,15 @@ const playCard = (
     handleZoneInteraction(G, ctx, playerId, zoneNumber);
 
     // calculate and set zone power
-    G.zones[zoneNumber].powers[playerId] = add(
-      G.zones[zoneNumber].powers[playerId],
-      zone.sides[playerId].find((c) => c.uuid === cardUuid)!.temporaryPower!
+    G.zones[zoneNumber].powers[playerId] = Math.round(
+      G.zones[zoneNumber].powers[playerId] + 
+      zone.sides[playerId].find((c) => c.uuid === cardUuid)!.zonePowerAdjustment
     );
   } else {
     // calculate and set zone power
     G.zones[zoneNumber].powers[playerId] = add(
       G.zones[zoneNumber].powers[playerId],
-      card.power
+      card.powerOverride ? card.powerOverride : card.basePower
     );
   }
 
@@ -584,7 +545,8 @@ const playCard = (
 
   // re-evaluate cards in hand
   G.players[playerId].hand.forEach((c: Card) => {
-    if (G.players[playerId].actionPoints >= c.cost) return (c.canPlay = true);
+    if (G.players[playerId].actionPoints >= c.currentCost)
+      return (c.canPlay = true);
     else return (c.canPlay = false);
   });
 
@@ -599,12 +561,38 @@ const handleCardInteraction = (
   zoneNumber: number,
   card: Card
 ) => {
-  switch (card?.id) {
+  switch (card?.__id) {
     case 'CARD_005':
       G.players[playerId].actionPointsTotal = add(
         G.players[playerId].actionPointsTotal,
         1
       );
+      break;
+    // prettier-ignore
+    case 'CARD_010':
+      if (G.zones[zoneNumber].sides['1'].length >= 2) {
+        G.zones[zoneNumber].sides[playerId].forEach((c: Card, i: number) => {
+          if (c.uuid === card.uuid) {
+            if (G.zones[zoneNumber].sides[playerId][i].powerStream.length !== 0) {
+              const stream = G.zones[zoneNumber].sides[playerId][i].powerStream;
+              const streamLength = stream.length;
+              const latestStreamPower = stream[streamLength].currentPower;
+
+              G.zones[zoneNumber].sides[playerId][i].powerStream.push({
+                blame: card.__id,
+                adjustment: 2,
+                currentPower: add(latestStreamPower, 2),
+              });
+            } else {
+              G.zones[zoneNumber].sides[playerId][i].powerStream = [{
+                blame: card.__id,
+                adjustment: 2,
+                currentPower: add(c.basePower, 2),
+              }];
+            }
+          }
+        })
+      }
       break;
     default:
       break;
@@ -624,17 +612,26 @@ const handleZoneInteraction = (
       zone.sides[playerId].forEach((c: Card, i: number) => {
         G.zones[zoneNumber].sides[playerId][i] = {
           ...c,
-          powerAdjustment: zone.powerAdjustment,
-          temporaryPower: add(c.power, zone.powerAdjustment),
-        } as Card;
+          zonePowerAdjustment: zone.powerAdjustment,
+        };
+        // if (G.zones[zoneNumber].sides[playerId][i].powerStream) {
+        //   const stream = G.zones[zoneNumber].sides[playerId][i].powerStream!;
+        //   const streamLength = stream.length;
+        //   const lastStreamPower = stream[streamLength].currentPower;
+
+        //   G.zones[zoneNumber].sides[playerId][i].powerStream!.push({
+        //     blame: zone.id,
+        //     adjustment: zone.powerAdjustment,
+        //     currentPower: add(lastStreamPower, zone.powerAdjustment),
+        //   });
+        // } else {
+        //   G.zones[zoneNumber].sides[playerId][i].powerStream = [{
+        //     blame: zone.id,
+        //     adjustment: zone.powerAdjustment,
+        //     currentPower: add(c.basePower, zone.powerAdjustment),
+        //   }];
+        // }
       });
-      break;
-    case 'ZONE_002':
-      const currentTurn = Math.round(ctx.turn / 2);
-      if (currentTurn === 6) {
-        zone.sides['0'] = [];
-        zone.sides['1'] = [];
-      }
       break;
     default:
       break;
