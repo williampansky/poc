@@ -380,7 +380,7 @@ export const Board = (props: GameProps) => {
                 minWidth: 95,
               }}
             >
-              End Turn {Math.round(ctx.turn / 2)}/
+              End Turn {ctx.turn}/
               {config.gameConfig.numberOfSingleTurnsPerGame}
             </button>
           </div>

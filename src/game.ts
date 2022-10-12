@@ -172,22 +172,22 @@ export const BcgPoc: Game<GameState> = {
     },
     play: {
       turn: {
-        activePlayers: ({
+        activePlayers: {
           currentPlayer: { stage: 'play_1' },
           others: { stage: 'play_1' },
           value: {
-            '0': { stage: 'play_1', },
-            '1': { stage: 'play_1', },
-          }
-        }),
+            '0': { stage: 'play_1' },
+            '1': { stage: 'play_1' },
+          },
+        },
         onBegin: (G, ctx) => onTurnBegin(G, ctx),
         onEnd: (G, ctx) => onTurnEnd(G, ctx),
         endIf(G, ctx) {
           return G.done['0'] === true && G.done['1'] === true;
         },
         stages: {
-          // activePlayers: {},
-          'play_1': {
+          // loop this stage
+          play_1: {
             next: 'play_1',
             moves: {
               selectCard: {
@@ -234,7 +234,7 @@ export const BcgPoc: Game<GameState> = {
               //   ctx.events?.endTurn();
               // },
             },
-          }
+          },
         },
       },
     },
@@ -286,15 +286,13 @@ export const BcgPoc: Game<GameState> = {
         // moves.push({ event: 'endTurn' });
         moves.push({ move: 'setDone', args: ['1'] });
       }
-      
+
       // console.log(moves);
       return moves;
     },
   },
   endIf: (G: GameState, ctx: Ctx) => {
-    if (
-      ctx.turn === Math.abs(config.gameConfig.numberOfSingleTurnsPerGame * 2)
-    ) {
+    if (ctx.turn === G.config.gameConfig.numberOfSingleTurnsPerGame) {
       switch (isVictory(G.zones[0], G.zones[1], G.zones[2])) {
         case '1':
           return { winner: '1' };
@@ -428,7 +426,7 @@ const onTurnEnd = (G: GameState, ctx: Ctx) => {
         break;
     }
   });
-}
+};
 
 // prettier-ignore
 const selectCard = (G: GameState, ctx: Ctx, playerId: string, cardUuid: string) => {
@@ -498,9 +496,11 @@ const playCard = (
     handleZoneInteraction(G, ctx, playerId, zoneNumber);
 
     // calculate and set zone power
-    G.zones[zoneNumber].powers[playerId] = Math.round( // @todo
-      G.zones[zoneNumber].powers[playerId] + 
-      zone.sides[playerId].find((c) => c.uuid === cardUuid)!.zonePowerAdjustment
+    G.zones[zoneNumber].powers[playerId] = Math.round(
+      // @todo
+      G.zones[zoneNumber].powers[playerId] +
+        zone.sides[playerId].find((c) => c.uuid === cardUuid)!
+          .zonePowerAdjustment
     );
   } else {
     // calculate and set zone power
@@ -601,11 +601,11 @@ const playAiCard = (
   });
 
   G.selectedCard['1'] = undefined;
-}
+};
 
 const setDone = (G: GameState, ctx: Ctx, playerId: string) => {
   G.done[playerId] = true;
-}
+};
 
 const handleCardInteraction = (
   G: GameState,
@@ -691,10 +691,9 @@ const handleZoneInteraction = (
   }
 };
 
-const turnMoves = () => {
+const turnMoves = () => {};
 
-}
-
-function randomIntFromInterval(min: number, max: number) { // min and max included 
-  return Math.floor(Math.random() * (max - min + 1) + min)
+function randomIntFromInterval(min: number, max: number) {
+  // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
