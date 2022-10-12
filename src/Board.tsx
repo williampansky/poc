@@ -366,8 +366,9 @@ export const Board = (props: GameProps) => {
           >
             <button
               onClick={onClick}
+              disabled={G.done['0'] === true}
               style={{
-                background: ctx.currentPlayer === '0' ? 'yellow' : 'initial',
+                background: G.done['0'] === false ? 'yellow' : 'initial',
                 display: 'flex',
                 flexFlow: 'column nowrap',
                 alignItems: 'center',
