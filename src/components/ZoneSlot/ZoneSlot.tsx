@@ -15,6 +15,38 @@ export const ZoneSlot = ({ card, onClick }: ReactZoneSlot): ReactElement => {
     setTimeout(() => setCardData(card), 50);
   }, [card]);
 
+  if (cardData?.revealed === false) {
+    return (
+      <div
+        style={{
+          height: '3.5em',
+          width: '2.75em',
+          transition: '150ms ease-in',
+          opacity: cardData ? '1' : '0',
+          transform: cardData ? 'scale(100%)' : 'scale(200%)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexFlow: 'column nowrap',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0.25em',
+            textAlign: 'center',
+            position: 'relative',
+            border: '1px solid black',
+            borderRadius: '0.25em',
+            background: '#ccc',
+            height: '100%',
+            width: '100%',
+          }}
+        >
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       onClick={() => card && onClick(card)}

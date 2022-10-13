@@ -35,6 +35,7 @@ export interface Card {
   powerStream: CardPowerStream[];
   zonePowerAdjustment: number;
   uuid: string;
+  revealed: boolean;
 }
 
 export interface Zone {

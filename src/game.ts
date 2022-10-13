@@ -130,6 +130,7 @@ export const BcgPoc: Game<GameState> = {
             powerStream: [],
             uuid: uuid(),
             zonePowerAdjustment: 0,
+            revealed: false,
           } as Card);
           tempPlayerArray.push({
             __id: randomCard2?.id,
@@ -143,6 +144,7 @@ export const BcgPoc: Game<GameState> = {
             powerStream: [],
             uuid: uuid(),
             zonePowerAdjustment: 0,
+            revealed: false,
           } as Card);
         });
 
@@ -386,7 +388,8 @@ const onTurnBegin = (G: GameState, ctx: Ctx) => {
         name: dCard?.name,
         powerStream: [],
         uuid: uuid(),
-        zonePowerAdjustment: 0
+        zonePowerAdjustment: 0,
+        revealed: false,
     } as Card);
   }
 
@@ -419,12 +422,15 @@ const onTurnEnd = (G: GameState, ctx: Ctx) => {
   G.players[1].hand.forEach((c: Card) => (c.canPlay = false));
   G.players[0].hand.forEach((c: Card) => (c.canPlay = false));
 
-  // on-turn-end zone effects
-  G.zones.forEach((z: Zone) => {
-    switch (z.id) {
-      default:
-        break;
-    }
+  // reveal cards
+  G.zones.forEach((z: Zone, zoneIdx: number) => {
+    z.sides['0'].forEach((c: Card, cIdx: number) => {
+      revealCard(G, ctx, '0', zoneIdx, c, cIdx);
+    });
+
+    z.sides['1'].forEach((c: Card, cIdx: number) => {
+      revealCard(G, ctx, '1', zoneIdx, c, cIdx);
+    });
   });
 };
 
@@ -487,28 +493,28 @@ const playCard = (
   // push card to zone side array
   zone.sides[playerId].push(card);
 
-  // handle card mechanics
-  handleCardInteraction(G, ctx, playerId, zoneNumber, card);
+  // // handle card mechanics
+  // handleCardInteraction(G, ctx, playerId, zoneNumber, card);
 
-  // if zone has interaction text
-  if (zone?.powerAdjustment) {
-    // handle zone interactions
-    handleZoneInteraction(G, ctx, playerId, zoneNumber);
+  // // if zone has interaction text
+  // if (zone?.powerAdjustment) {
+  //   // handle zone interactions
+  //   handleZoneInteraction(G, ctx, playerId, zoneNumber);
 
-    // calculate and set zone power
-    G.zones[zoneNumber].powers[playerId] = Math.round(
-      // @todo
-      G.zones[zoneNumber].powers[playerId] +
-        zone.sides[playerId].find((c) => c.uuid === cardUuid)!
-          .zonePowerAdjustment
-    );
-  } else {
-    // calculate and set zone power
-    G.zones[zoneNumber].powers[playerId] = add(
-      G.zones[zoneNumber].powers[playerId],
-      card.powerOverride ? card.powerOverride : card.basePower
-    );
-  }
+  //   // calculate and set zone power
+  //   G.zones[zoneNumber].powers[playerId] = Math.round(
+  //     // @todo
+  //     G.zones[zoneNumber].powers[playerId] +
+  //       zone.sides[playerId].find((c) => c.uuid === cardUuid)!
+  //         .zonePowerAdjustment
+  //   );
+  // } else {
+  //   // calculate and set zone power
+  //   G.zones[zoneNumber].powers[playerId] = add(
+  //     G.zones[zoneNumber].powers[playerId],
+  //     card.powerOverride ? card.powerOverride : card.basePower
+  //   );
+  // }
 
   // remove card from hand
   const newHand = player.hand.filter((c: Card) => c.uuid !== cardUuid);
@@ -516,13 +522,65 @@ const playCard = (
 
   // re-evaluate cards in hand
   G.players[playerId].hand.forEach((c: Card) => {
-    if (G.players[playerId].actionPoints >= c.currentCost)
+    if (G.players[playerId].actionPoints >= c.currentCost) {
       return (c.canPlay = true);
-    else return (c.canPlay = false);
+    } else {
+      return (c.canPlay = false);
+    }
   });
 
   // unset selected card
   G.selectedCard[playerId] = undefined;
+};
+
+const revealCard = (
+  G: GameState,
+  ctx: Ctx,
+  playerId: string,
+  zoneNumber: number,
+  card: Card,
+  cardIndex: number
+) => {
+  const { uuid } = card;
+
+  // handle zone interactions
+  handleZoneInteraction(G, ctx, playerId, zoneNumber);
+
+  // reveal card
+  G.zones[zoneNumber].sides[playerId][cardIndex].revealed = true;
+
+  // run interaction
+  handleCardInteraction(G, ctx, playerId, zoneNumber, card);
+
+  // if zone has no power
+  if (G.zones[zoneNumber].powers[playerId] === 0) {
+    // if card was power adjusted
+    if (G.zones[zoneNumber].sides[playerId][cardIndex]?.zonePowerAdjustment) {
+      // calculate and set zone power
+      G.zones[zoneNumber].powers[playerId] = add(
+        card.basePower,
+        G.zones[zoneNumber].sides[playerId][cardIndex]!.zonePowerAdjustment
+      );
+    } else {
+      // calculate and set zone power
+      G.zones[zoneNumber].powers[playerId] = card.basePower;
+    }
+  } else {
+    // if card was power adjusted
+    if (G.zones[zoneNumber].sides[playerId][cardIndex]?.zonePowerAdjustment) {
+      // calculate and set zone power
+      G.zones[zoneNumber].powers[playerId] = add(
+        G.zones[zoneNumber].powers[playerId],
+        G.zones[zoneNumber].sides[playerId][cardIndex]!.zonePowerAdjustment
+      );
+    } else {
+      // calculate and set zone power
+      G.zones[zoneNumber].powers[playerId] = add(
+        G.zones[zoneNumber].powers[playerId],
+        card.basePower
+      );
+    }
+  }
 };
 
 const playAiCard = (
@@ -567,25 +625,6 @@ const playAiCard = (
 
   // push card to zone side array
   zone.sides['1'].push(card);
-
-  // if zone has interaction text
-  if (zone?.powerAdjustment) {
-    // handle zone interactions
-    handleZoneInteraction(G, ctx, '1', zoneNumber);
-
-    // calculate and set zone power
-    // prettier-ignore
-    G.zones[zoneNumber].powers['1'] = Math.round(
-      G.zones[zoneNumber].powers['1'] + 
-      zone.sides['1'].find((c) => c.uuid === cardUuid)!.zonePowerAdjustment
-    );
-  } else {
-    // calculate and set zone power
-    G.zones[zoneNumber].powers['1'] = add(
-      G.zones[zoneNumber].powers['1'],
-      card.basePower
-    );
-  }
 
   // remove card from hand
   const newHand = player.hand.filter((c: Card) => c.uuid !== cardUuid);

@@ -12,7 +12,7 @@ const Client = BoardgameClient({
   multiplayer: Local({ bots: { 1: MCTSBot }, persist: false, storageKey: 'bgio' }),
   numPlayers: 1,
   // loading: GameLoader,
-  debug: true,
+  debug: false,
 });
 
 class GameWrapper extends React.Component {
