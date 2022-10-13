@@ -338,46 +338,46 @@ const onTurnBegin = (G: GameState, ctx: Ctx) => {
   // 
   // PLAYER 1
   // 1: incremement action points
-  if (G.players[1].actionPointsTotal !== apPerGame) {
-    G.players[1].actionPointsTotal = Math.abs(G.players[1].actionPointsTotal + apPerTurn);
+  if (G.players['1'].actionPointsTotal < apPerGame) {
+    G.players['1'].actionPointsTotal++;
   }
   // 1: set current action points
-  G.players[1].actionPoints = G.players[1].actionPointsTotal;
+  G.players['1'].actionPoints = G.players['1'].actionPointsTotal;
   // 1: add card to hand
-  if (G.players[1].hand.length !== maxHandSize) { // .... canDraw
-    G.players[1].hand.push( // .......................... pushes to hand
-      G.players[1].deck.splice(0, 1)[0] // .............. splices from deck
+  if (G.players['1'].hand.length < maxHandSize) { // .... canDraw
+    G.players['1'].hand.push( // .......................... pushes to hand
+      G.players['1'].deck.splice(0, 1)[0] // .............. splices from deck
     );
   }
   // 1: set playable cards
-  G.players[1].hand.forEach((c: Card) => {
-    if (G.players[1].actionPoints >= c.currentCost) return c.canPlay = true;
+  G.players['1'].hand.forEach((c: Card) => {
+    if (G.players['1'].actionPoints >= c.currentCost) return c.canPlay = true;
     else return c.canPlay = false;
   });
 
   // 
   // PLAYER 0
   // 0: incremement action points
-  if (G.players[0].actionPointsTotal !== apPerGame) {
-    G.players[0].actionPointsTotal = Math.abs(G.players[0].actionPointsTotal + apPerTurn);
+  if (G.players['0'].actionPointsTotal < apPerGame) {
+    G.players['0'].actionPointsTotal++
   }
   // 0: set current action points
-  G.players[0].actionPoints = G.players[0].actionPointsTotal;
+  G.players['0'].actionPoints = G.players['0'].actionPointsTotal;
   // 0: add card to hand
-  if (G.players[0].hand.length !== maxHandSize) { // .... canDraw
-    G.players[0].hand.push( // .......................... pushes to hand
-      G.players[0].deck.splice(0, 1)[0] // .............. splices from deck
+  if (G.players['0'].hand.length < maxHandSize) { // .... canDraw
+    G.players['0'].hand.push( // .......................... pushes to hand
+      G.players['0'].deck.splice(0, 1)[0] // .............. splices from deck
     );
   }
   // 0: set playable cards
-  G.players[0].hand.forEach((c: Card) => {
-    if (G.players[0].actionPoints >= c.currentCost) return c.canPlay = true;
+  G.players['0'].hand.forEach((c: Card) => {
+    if (G.players['0'].actionPoints >= c.currentCost) return c.canPlay = true;
     else return c.canPlay = false;
   });
   // 0: handle debug card draw
   if (DEBUG_CARD_ID !== '') {
     const dCard = CARD_DATABASE.find(c => c.id === DEBUG_CARD_ID);
-    G.players[0].hand.push({
+    G.players['0'].hand.push({
         __id: dCard?.id,
         baseCost: dCard?.cost,
         basePower: dCard?.power,
@@ -544,13 +544,13 @@ const revealCard = (
   const { uuid } = card;
 
   // handle zone interactions
-  handleZoneInteraction(G, ctx, playerId, zoneNumber);
+  // handleZoneInteraction(G, ctx, playerId, zoneNumber);
 
   // reveal card
   G.zones[zoneNumber].sides[playerId][cardIndex].revealed = true;
 
   // run interaction
-  handleCardInteraction(G, ctx, playerId, zoneNumber, card);
+  // handleCardInteraction(G, ctx, playerId, zoneNumber, card);
 
   // if zone has no power
   if (G.zones[zoneNumber].powers[playerId] === 0) {

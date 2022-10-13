@@ -188,7 +188,7 @@ export const Board = (props: GameProps) => {
                 width: '100%',
               }}
             >
-              {Array.from(Array(G.players[1].actionPointsTotal)).map(
+              {Array.from(Array(G.players['1'].actionPointsTotal)).map(
                 (_, idx) => {
                   idx = idx + 1;
                   return (
@@ -201,13 +201,21 @@ export const Board = (props: GameProps) => {
                         justifyContent: 'center',
                         pointerEvents: 'none',
                         userSelect: 'none',
+                        fontWeight:
+                          G.players['1'].actionPoints >= idx
+                            ? 'bold'
+                            : 'normal',
                         background:
-                          G.players[1].actionPoints >= idx
+                          G.players['1'].actionPoints >= idx
                             ? 'lightgreen'
-                            : 'light#333',
+                            : '#ccc',
+                        color:
+                          G.players['1'].actionPoints >= idx
+                            ? '#052d05'
+                            : '#4e4e4e',
                       }}
                     >
-                      &nbsp;
+                      {idx}
                     </div>
                   );
                 }
@@ -332,7 +340,7 @@ export const Board = (props: GameProps) => {
                 width: '100%',
               }}
             >
-              {Array.from(Array(G.players[0].actionPointsTotal)).map(
+              {Array.from(Array(G.players['0'].actionPointsTotal)).map(
                 (_, idx) => {
                   idx = idx + 1;
                   return (
@@ -345,13 +353,21 @@ export const Board = (props: GameProps) => {
                         justifyContent: 'center',
                         pointerEvents: 'none',
                         userSelect: 'none',
+                        fontWeight:
+                          G.players['0'].actionPoints >= idx
+                            ? 'bold'
+                            : 'normal',
                         background:
-                          G.players[0].actionPoints >= idx
+                          G.players['0'].actionPoints >= idx
                             ? 'lightgreen'
-                            : 'light#333',
+                            : '#ccc',
+                        color:
+                          G.players['0'].actionPoints >= idx
+                            ? '#052d05'
+                            : '#4e4e4e',
                       }}
                     >
-                      &nbsp;
+                      {idx}
                     </div>
                   );
                 }
