@@ -397,7 +397,7 @@ export const Board = (props: GameProps) => {
                 minWidth: 95,
               }}
             >
-              End Turn {ctx.turn}/
+              End Turn {G.turn}/
               {config.gameConfig.numberOfSingleTurnsPerGame}
             </button>
           </div>

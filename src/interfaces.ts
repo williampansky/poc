@@ -29,6 +29,7 @@ export interface Card {
   canPlay: boolean;
   currentCost: number;
   description?: string;
+  displayPower: number;
   mechanic?: string;
   name: string;
   powerOverride?: number; // use this power instead of base or latest stream
@@ -78,7 +79,9 @@ export interface Config {
 }
 
 export interface GameState {
+  turn: number;
   done: Record<string, boolean>;
+  revealed: Record<string, boolean>;
   players: Record<string, Player>;
   selectedCard: Record<string, SelectedCard | undefined>;
   playedCards: Record<string, Card[]>;

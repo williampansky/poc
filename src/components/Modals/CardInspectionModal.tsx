@@ -1,7 +1,6 @@
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
 import { Card, CardPowerStream, GameState } from '../../interfaces';
-import getDisplayPower from '../../utilities/get-display-power';
 
 interface CardInspectionProps {
   card?: Card;
@@ -246,7 +245,7 @@ export const CardInspectionModal = ({
             whiteSpace: 'nowrap',
           }}
         >
-          {cardData && getDisplayPower(cardData)}
+          {cardData?.displayPower}
         </div>
         <div style={{ fontSize: '1.5vh' }}>{cardData?.__id}</div>
         <div style={{ fontSize: '4vh' }}>{cardData?.name}</div>

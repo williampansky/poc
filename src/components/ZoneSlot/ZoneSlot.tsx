@@ -1,7 +1,6 @@
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
 import { Card, GameState } from '../../interfaces';
-import getDisplayPower from '../../utilities/get-display-power';
 
 interface ReactZoneSlot {
   card?: Card;
@@ -116,7 +115,7 @@ export const ZoneSlot = ({ card, onClick }: ReactZoneSlot): ReactElement => {
             borderRadius: '50%',
           }}
         >
-          {cardData && getDisplayPower(cardData)}
+          {cardData?.displayPower}
         </div>
         <div style={{ fontSize: '0.5em' }}>{cardData?.name}</div>
       </div>
