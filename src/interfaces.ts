@@ -1,4 +1,7 @@
 export const config = {
+  debugConfig: {
+    debugCardId: ''
+  },
   gameConfig: {
     actionPointsPerTurn: 1,
     actionPointsTotal: 10,
@@ -64,6 +67,9 @@ export interface SelectedCard {
 }
 
 export interface Config {
+  debugConfig: {
+    debugCardId: string;
+  };
   gameConfig: {
     actionPointsPerTurn: number;
     actionPointsTotal: number;
