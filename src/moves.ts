@@ -102,10 +102,10 @@ const revealCard = async (
   G.zones[zoneNumber].sides[playerId][cardIndex].revealed = true;
 
   // handle zone interactions
-  handleZoneInteraction(G, ctx, playerId, zoneNumber);
+  // handleZoneInteraction(G, ctx, playerId, zoneNumber);
 
   // run interaction
-  handleCardInteraction(G, ctx, playerId, zoneNumber, card);
+  // handleCardInteraction(G, ctx, playerId, zoneNumber, card);
 
   // calculate new power
   const power = getCardPower(card);
@@ -113,11 +113,14 @@ const revealCard = async (
   // set display power
   G.zones[zoneNumber].sides[playerId][cardIndex].displayPower = power;
 
+  // set revealedOnTurn value
+  G.zones[zoneNumber].sides[playerId][cardIndex].revealedOnTurn = G.turn;
+
   // calculate zone power
-  G.zones[zoneNumber].powers[playerId] = add(
-    G.zones[zoneNumber].powers[playerId],
-    power
-  );
+  // G.zones[zoneNumber].powers[playerId] = add(
+  //   G.zones[zoneNumber].powers[playerId],
+  //   power
+  // );
 };
 
 const playAiCard = (

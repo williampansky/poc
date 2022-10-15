@@ -17,10 +17,10 @@ const handleZonePowerCalculationsPhase: PhaseConfig = {
       // loop thru each side and add each card's current power
       // to the sidePowerX variable defined above
       z.sides['0'].forEach((c: Card) => {
-        return sidePower0 = add(sidePower0, c.basePower);
+        return sidePower0 = add(c.displayPower, sidePower0);
       });
       z.sides['1'].forEach((c: Card) => {
-        return sidePower1 = add(sidePower1, c.basePower);
+        return sidePower1 = add(c.displayPower, sidePower1);
       });
 
       // set the zone power based on the previous calculations

@@ -136,6 +136,7 @@ const onTurnBegin = (G: GameState, ctx: Ctx) => {
         uuid: uuid(),
         zonePowerAdjustment: 0,
         revealed: false,
+        revealedOnTurn: 0
     } as Card);
   }
 
@@ -143,7 +144,7 @@ const onTurnBegin = (G: GameState, ctx: Ctx) => {
   G.zones.forEach((z: Zone) => {
     switch (z.id) {
       case 'ZONE_002':
-        if (G.turn === 5) {
+        if (G.turn === 6) {
           z.sides = {
             '0': [],
             '1': [],

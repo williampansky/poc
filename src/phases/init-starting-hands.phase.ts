@@ -28,6 +28,7 @@ const initStartingHandsPhase: PhaseConfig = {
         uuid: uuid(),
         zonePowerAdjustment: 0,
         revealed: false,
+        revealedOnTurn: 0
       } as Card);
       tempPlayerArray.push({
         __id: randomCard2?.id,
@@ -43,6 +44,7 @@ const initStartingHandsPhase: PhaseConfig = {
         uuid: uuid(),
         zonePowerAdjustment: 0,
         revealed: false,
+        revealedOnTurn: 0
       } as Card);
     });
 
@@ -64,6 +66,7 @@ const initStartingHandsPhase: PhaseConfig = {
           uuid: uuid(),
           zonePowerAdjustment: 0,
           revealed: false,
+          revealedOnTurn: 0
         } as Card);
       }
     }

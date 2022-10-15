@@ -40,6 +40,7 @@ export interface Card {
   zonePowerAdjustment: number;
   uuid: string;
   revealed: boolean;
+  revealedOnTurn: number;
 }
 
 export interface Zone {
