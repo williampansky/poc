@@ -1,6 +1,6 @@
 import { Ctx, MoveMap } from 'boardgame.io';
 import React, { ReactElement } from 'react';
-import { Card, config, GameState, Zone as ZoneProps } from '../../interfaces';
+import { Card, config, GameState, Minion, Zone as ZoneProps } from '../../interfaces';
 import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
 import { ZoneDropSlot } from '../ZoneDropSlot/ZoneDropSlot';
 
@@ -11,7 +11,7 @@ interface ReactZone {
   disabled: boolean;
   zone: ZoneProps;
   zoneNumber: number;
-  onCardClick: (card: Card) => void;
+  onCardClick: (obj: Minion) => void;
 }
 
 export const Zone = ({
@@ -63,8 +63,8 @@ export const Zone = ({
           justifyContent: 'center',
         }}
       >
-        {zone?.sides[1].map((card: Card, idx: number) => {
-          return <ZoneSlot key={idx} card={card} onClick={onCardClick} />;
+        {zone?.sides[1].map((obj: Minion, idx: number) => {
+          return <ZoneSlot key={idx} data={obj} onClick={onCardClick} />;
         })}
         {[
           ...Array.from(
@@ -194,8 +194,8 @@ export const Zone = ({
             gridGap: '0.3em',
           }}
         >
-          {zone?.sides[0].map((card: Card, idx: number) => {
-            return <ZoneSlot key={idx} card={card} onClick={onCardClick} />;
+          {zone?.sides[0].map((obj: Minion, idx: number) => {
+            return <ZoneSlot key={idx} data={obj} onClick={onCardClick} />;
           })}
         </div>
       </div>

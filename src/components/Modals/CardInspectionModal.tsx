@@ -1,21 +1,21 @@
 import { Ctx } from 'boardgame.io';
-import React, { ReactElement } from 'react';
-import { Card, CardPowerStream, GameState } from '../../interfaces';
+import React, { ReactElement, useState } from 'react';
+import { Card, CardPowerStream, GameState, Minion } from '../../interfaces';
 
 interface CardInspectionProps {
-  card?: Card;
+  data?: Card | Minion;
   onClick: () => void;
 }
 
 export const CardInspectionModal = ({
-  card,
+  data,
   onClick,
 }: CardInspectionProps): ReactElement => {
-  const [cardData, setCardData] = React.useState<Card | undefined>(undefined);
+  const [objData, setObjData] = useState<Card | Minion | undefined>(undefined);
 
   React.useEffect(() => {
-    setTimeout(() => setCardData(card), 50);
-  }, [card]);
+    setTimeout(() => setObjData(data), 50);
+  }, [data]);
 
   return (
     <div
@@ -24,14 +24,14 @@ export const CardInspectionModal = ({
         height: '100%',
         width: '100%',
         transition: '150ms ease-in',
-        opacity: cardData ? '1' : '0',
+        opacity: objData ? '1' : '0',
         position: 'absolute',
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        zIndex: cardData ? 999 : -1,
-        pointerEvents: cardData ? 'auto' : 'none',
+        zIndex: objData ? 999 : -1,
+        pointerEvents: objData ? 'auto' : 'none',
         display: 'flex',
         flexFlow: 'column nowrap',
         alignItems: 'center',
@@ -54,7 +54,7 @@ export const CardInspectionModal = ({
           gridGap: '0.5em',
         }}
       >
-        {cardData?.powerStream.map((s: CardPowerStream, i: number) => {
+        {objData?.powerStream.map((s: CardPowerStream, i: number) => {
           return (
             <React.Fragment key={`stream_${i}`}>
               <div
@@ -102,7 +102,7 @@ export const CardInspectionModal = ({
           );
         })}
 
-        {cardData?.zonePowerAdjustment && (
+        {objData?.zonePowerAdjustment && (
           <div
             style={{
               display: 'flex',
@@ -128,7 +128,7 @@ export const CardInspectionModal = ({
                 marginBottom: 4,
               }}
             >
-              {cardData?.zonePowerAdjustment}
+              {objData?.zonePowerAdjustment}
             </div>
             <div style={{ color: 'white', fontSize: 9 }}>Zone Adjustment</div>
           </div>
@@ -146,7 +146,7 @@ export const CardInspectionModal = ({
           <div style={{ color: 'white', fontSize: 14 }}>{'<-'}</div>
         </div>
 
-        {cardData?.basePower && (
+        {objData?.basePower && (
           <div
             style={{
               display: 'flex',
@@ -172,7 +172,7 @@ export const CardInspectionModal = ({
                 marginBottom: 4,
               }}
             >
-              {cardData?.basePower}
+              {objData?.basePower}
             </div>
             <div style={{ color: 'white', fontSize: 9 }}>Base Power</div>
           </div>
@@ -195,7 +195,7 @@ export const CardInspectionModal = ({
           width: '60vw',
           maxHeight: `600px`,
           maxWidth: `400px`,
-          transform: cardData ? 'scale(100%)' : 'scale(0%)',
+          transform: objData ? 'scale(100%)' : 'scale(0%)',
           transition: '150ms ease-in',
         }}
       >
@@ -220,7 +220,7 @@ export const CardInspectionModal = ({
             borderRadius: '50%',
           }}
         >
-          {cardData?.currentCost}
+          {objData?.currentCost}
         </div>
         <div
           style={{
@@ -245,11 +245,11 @@ export const CardInspectionModal = ({
             whiteSpace: 'nowrap',
           }}
         >
-          {cardData?.displayPower}
+          {objData?.displayPower}
         </div>
-        <div style={{ fontSize: '1.5vh' }}>{cardData?.__id}</div>
-        <div style={{ fontSize: '4vh' }}>{cardData?.name}</div>
-        <div style={{ fontSize: '2vh' }}>{cardData?.description}</div>
+        <div style={{ fontSize: '1.5vh' }}>{objData?.__id}</div>
+        <div style={{ fontSize: '4vh' }}>{objData?.name}</div>
+        <div style={{ fontSize: '2vh' }}>{objData?.description}</div>
       </div>
     </div>
   );

@@ -1,19 +1,17 @@
 import { add } from 'mathjs';
-import { Card } from '../interfaces';
+import { Card, Minion } from '../interfaces';
 
 /**
  * Determines which power to show on a card or minion.
- * @param {Card} card
- * @returns power to display on card/minion
  */
-const getCardPower = (card: Card): number => {
+const getCardPower = (obj: Card | Minion): number => {
   const initialPower =
-    card?.powerOverride ||
-    card.powerStream[card.powerStream.length - 1]?.currentPower ||
-    card.basePower;
+    obj?.powerOverride ||
+    obj.powerStream[obj.powerStream.length - 1]?.currentPower ||
+    obj.basePower;
 
-  if (card.zonePowerAdjustment) {
-    return add(initialPower, card.zonePowerAdjustment);
+  if (obj.zonePowerAdjustment) {
+    return add(initialPower, obj.zonePowerAdjustment);
   }
 
   return initialPower;

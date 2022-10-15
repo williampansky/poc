@@ -1,28 +1,28 @@
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
-import { Card, GameState } from '../../interfaces';
+import { Card, GameState, Minion } from '../../interfaces';
 
 interface ReactZoneSlot {
-  card?: Card;
-  onClick: (card: Card) => void;
+  data?: Minion;
+  onClick: (card: Minion) => void;
 }
 
-export const ZoneSlot = ({ card, onClick }: ReactZoneSlot): ReactElement => {
-  const [cardData, setCardData] = React.useState<Card | undefined>(undefined);
+export const ZoneSlot = ({ data, onClick }: ReactZoneSlot): ReactElement => {
+  const [objData, setObjData] = React.useState<Minion | undefined>(undefined);
 
   React.useEffect(() => {
-    setTimeout(() => setCardData(card), 50);
-  }, [card]);
+    setTimeout(() => setObjData(data), 50);
+  }, [data]);
 
-  if (cardData?.revealed === false) {
+  if (objData?.revealed === false) {
     return (
       <div
         style={{
           height: '3.5em',
           width: '2.75em',
           transition: '150ms ease-in',
-          opacity: cardData ? '1' : '0',
-          transform: cardData ? 'scale(100%)' : 'scale(200%)',
+          opacity: objData ? '1' : '0',
+          transform: objData ? 'scale(100%)' : 'scale(200%)',
         }}
       >
         <div
@@ -48,13 +48,13 @@ export const ZoneSlot = ({ card, onClick }: ReactZoneSlot): ReactElement => {
 
   return (
     <div
-      onClick={() => card && onClick(card)}
+      onClick={() => data && onClick(data)}
       style={{
         height: '3.5em',
         width: '2.75em',
         transition: '150ms ease-in',
-        opacity: cardData ? '1' : '0',
-        transform: cardData ? 'scale(100%)' : 'scale(200%)',
+        opacity: objData ? '1' : '0',
+        transform: objData ? 'scale(100%)' : 'scale(200%)',
       }}
     >
       <div
@@ -93,7 +93,7 @@ export const ZoneSlot = ({ card, onClick }: ReactZoneSlot): ReactElement => {
             borderRadius: '50%',
           }}
         >
-          {cardData?.currentCost}
+          {objData?.currentCost}
         </div>
         <div
           style={{
@@ -115,9 +115,9 @@ export const ZoneSlot = ({ card, onClick }: ReactZoneSlot): ReactElement => {
             borderRadius: '50%',
           }}
         >
-          {cardData?.displayPower}
+          {objData?.displayPower}
         </div>
-        <div style={{ fontSize: '0.5em' }}>{cardData?.name}</div>
+        <div style={{ fontSize: '0.5em' }}>{objData?.name}</div>
       </div>
     </div>
   );

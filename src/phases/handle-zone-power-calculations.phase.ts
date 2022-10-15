@@ -1,6 +1,6 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
 import { add } from 'mathjs';
-import { Card, GameState, Zone } from '../interfaces';
+import { Card, GameState, Minion, Zone } from '../interfaces';
 
 const handleZonePowerCalculationsPhase: PhaseConfig = {
   next: 'drawCard',
@@ -16,11 +16,11 @@ const handleZonePowerCalculationsPhase: PhaseConfig = {
 
       // loop thru each side and add each card's current power
       // to the sidePowerX variable defined above
-      z.sides['0'].forEach((c: Card) => {
-        return sidePower0 = add(c.displayPower, sidePower0);
+      z.sides['0'].forEach((obj: Minion) => {
+        return sidePower0 = add(obj.displayPower, sidePower0);
       });
-      z.sides['1'].forEach((c: Card) => {
-        return sidePower1 = add(c.displayPower, sidePower1);
+      z.sides['1'].forEach((obj: Minion) => {
+        return sidePower1 = add(obj.displayPower, sidePower1);
       });
 
       // set the zone power based on the previous calculations

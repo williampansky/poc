@@ -1,5 +1,5 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { Card, GameState, Zone } from '../interfaces';
+import { Card, GameState, Minion, Zone } from '../interfaces';
 import getCardPower from '../utilities/get-card-power';
 
 const initZoneInteractions: PhaseConfig = {
@@ -13,23 +13,23 @@ const initZoneInteractions: PhaseConfig = {
         case 'ZONE_001':
         case 'ZONE_004':
           // loop thru side 0
-          z.sides['0'].forEach((c: Card, cardIdx: number) => {
-            if (turn === c.revealedOnTurn) {
+          z.sides['0'].forEach((obj: Minion, cardIdx: number) => {
+            if (turn === obj.revealedOnTurn) {
               G.zones[zoneIdx].sides['0'][cardIdx].zonePowerAdjustment = z.powerAdjustment;
               G.zones[zoneIdx].sides['0'][cardIdx] = {
-                ...c,
-                displayPower: getCardPower(c)
+                ...obj,
+                displayPower: getCardPower(obj)
               };
             }
           });
 
           // loop thru side 1
-          z.sides['1'].forEach((c: Card, cardIdx: number) => {
-            if (turn === c.revealedOnTurn) {
+          z.sides['1'].forEach((obj: Minion, cardIdx: number) => {
+            if (turn === obj.revealedOnTurn) {
               G.zones[zoneIdx].sides['1'][cardIdx].zonePowerAdjustment = z.powerAdjustment;
               G.zones[zoneIdx].sides['1'][cardIdx] = {
-                ...c,
-                displayPower: getCardPower(c)
+                ...obj,
+                displayPower: getCardPower(obj)
               };
             }
           });

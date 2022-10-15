@@ -1,7 +1,8 @@
 import { Ctx } from 'boardgame.io';
 import { ActivePlayers, INVALID_MOVE } from 'boardgame.io/core';
 import { add, subtract } from 'mathjs';
-import { Card, GameState, SelectedCard } from './interfaces';
+import { Card, GameState, Minion, SelectedCard } from './interfaces';
+import createMinionObject from './utilities/create-minion-object';
 import getCardPower from './utilities/get-card-power';
 
 const selectCard = (
@@ -68,7 +69,7 @@ const playCard = (
   G.players[playerId].actionPoints = newAP;
 
   // push card to zone side array
-  zone.sides[playerId].push(card);
+  zone.sides[playerId].push(createMinionObject(card));
 
   // remove card from hand
   const newHand = player.hand.filter((c: Card) => c.uuid !== cardUuid);
@@ -93,13 +94,13 @@ const revealCard = async (
   ctx: Ctx,
   playerId: string,
   zoneNumber: number,
-  card: Card,
-  cardIndex: number
+  obj: Minion,
+  objIndex: number
 ) => {
-  const { uuid } = card;
+  const { uuid } = obj;
 
   // reveal card
-  G.zones[zoneNumber].sides[playerId][cardIndex].revealed = true;
+  G.zones[zoneNumber].sides[playerId][objIndex].revealed = true;
 
   // handle zone interactions
   // handleZoneInteraction(G, ctx, playerId, zoneNumber);
@@ -108,13 +109,13 @@ const revealCard = async (
   // handleCardInteraction(G, ctx, playerId, zoneNumber, card);
 
   // calculate new power
-  const power = getCardPower(card);
+  const power = getCardPower(obj);
 
   // set display power
-  G.zones[zoneNumber].sides[playerId][cardIndex].displayPower = power;
+  G.zones[zoneNumber].sides[playerId][objIndex].displayPower = power;
 
   // set revealedOnTurn value
-  G.zones[zoneNumber].sides[playerId][cardIndex].revealedOnTurn = G.turn;
+  G.zones[zoneNumber].sides[playerId][objIndex].revealedOnTurn = G.turn;
 
   // calculate zone power
   // G.zones[zoneNumber].powers[playerId] = add(
@@ -164,7 +165,7 @@ const playAiCard = (
   G.players['1'].actionPoints = newAP;
 
   // push card to zone side array
-  zone.sides['1'].push(card);
+  zone.sides['1'].push(createMinionObject(card));
 
   // remove card from hand
   const newHand = player.hand.filter((c: Card) => c.uuid !== cardUuid);
@@ -197,12 +198,10 @@ const handleCardInteraction = async (
   const apPerGame = G.config.gameConfig.actionPointsTotal;
   switch (card?.__id) {
     case 'CARD_017':
-      // if (G.players[playerId].actionPointsTotal < apPerGame) {
       G.players[playerId].actionPointsTotal = add(
         G.players[playerId].actionPointsTotal,
         1
       );
-      // }
       break;
     default:
       break;
@@ -219,9 +218,9 @@ const handleZoneInteraction = async (
   switch (zone.id) {
     case 'ZONE_001':
     case 'ZONE_004':
-      zone.sides[playerId].forEach((c: Card, i: number) => {
+      zone.sides[playerId].forEach((m: Minion, i: number) => {
         G.zones[zoneNumber].sides[playerId][i] = {
-          ...c,
+          ...m,
           zonePowerAdjustment: zone.powerAdjustment,
         };
         // if (G.zones[zoneNumber].sides[playerId][i].powerStream) {

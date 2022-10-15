@@ -1,6 +1,7 @@
 import { Card, GameState } from '../../../interfaces';
 import { v4 as uuid } from 'uuid';
 import CARD_DATABASE from '../../../tempCardsDatabase';
+import createCardObject from '../../../utilities/create-card-object';
 
 /**
  * If a card's id is set in `config.debugConfig`, add that
@@ -9,22 +10,12 @@ import CARD_DATABASE from '../../../tempCardsDatabase';
 const addDebugCardToHand = (G: GameState): void => {
   if (G.config.debugConfig.debugCardId !== '') {
     const DEBUG_CARD_ID = G.config.debugConfig.debugCardId;
-    const dCard = CARD_DATABASE.find((c) => c.id === DEBUG_CARD_ID);
+    const dCardBase = CARD_DATABASE.find((c) => c.id === DEBUG_CARD_ID)!;
+    const dCardObj = createCardObject(dCardBase);
     G.players['0'].hand.push({
-      __id: dCard?.id,
-      baseCost: dCard?.cost,
-      basePower: dCard?.power,
+      ...dCardObj,
       canPlay: true,
-      currentCost: 0,
-      description: dCard?.description,
-      displayPower: dCard?.power,
-      mechanic: dCard?.mechanic,
-      name: dCard?.name,
-      powerStream: [],
-      revealed: false,
-      revealedOnTurn: 0,
-      uuid: uuid(),
-      zonePowerAdjustment: 0,
+      currentCost: 0
     } as Card);
   }
 };
