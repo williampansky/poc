@@ -14,7 +14,9 @@ export interface GameProps extends BoardProps<GameState> {}
 
 export const Board = (props: GameProps) => {
   const [addressBarSize, setAddressBarSize] = useState<number>(0);
-  const [cardModal, setCardModal] = useState<Card | Minion | undefined>(undefined);
+  const [cardModalDataObject, setCardModalDataObject] = useState<
+    Card | Minion | undefined
+  >(undefined);
 
   const {
     G,
@@ -64,7 +66,7 @@ export const Board = (props: GameProps) => {
   };
 
   const onCardClick = (obj: Card | Minion) => {
-    setCardModal(obj);
+    setCardModalDataObject(obj);
   };
 
   const onCardSelect = (playerId: string, uuid: string) => {
@@ -147,8 +149,8 @@ export const Board = (props: GameProps) => {
         }}
       >
         <CardInspectionModal
-          data={cardModal}
-          onClick={() => setCardModal(undefined)}
+          data={cardModalDataObject}
+          onClick={() => setCardModalDataObject(undefined)}
         />
         <div
           style={{
@@ -174,7 +176,7 @@ export const Board = (props: GameProps) => {
               marginRight: 'auto',
               fontSize: '11px',
               whiteSpace: 'nowrap',
-              color: 'white'
+              color: 'white',
             }}
           >
             {G.players[1].name}
@@ -382,9 +384,12 @@ export const Board = (props: GameProps) => {
           >
             <button
               onClick={onClick}
-              disabled={G.done['0'] === true}
+              disabled={G.done['0'] === true || ctx.phase !== 'playCards'}
               style={{
-                background: G.done['0'] === false ? 'yellow' : 'initial',
+                background:
+                  G.done['0'] === false && ctx.phase === 'playCards'
+                    ? 'yellow'
+                    : 'initial',
                 display: 'flex',
                 flexFlow: 'column nowrap',
                 alignItems: 'center',
@@ -397,8 +402,7 @@ export const Board = (props: GameProps) => {
                 minWidth: 95,
               }}
             >
-              End Turn {G.turn}/
-              {config.gameConfig.numberOfSingleTurnsPerGame}
+              End Turn {G.turn}/{config.gameConfig.numberOfSingleTurnsPerGame}
             </button>
           </div>
         </div>
