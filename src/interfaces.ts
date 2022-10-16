@@ -84,6 +84,7 @@ export interface Zone {
   powers: Record<string, number>;
   powerText?: string;
   powerAdjustment: number;
+  revealed: boolean;
   sides: Record<string, Minion[]>;
   uuid: string;
 }

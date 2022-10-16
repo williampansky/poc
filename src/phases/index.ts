@@ -6,3 +6,4 @@ export { default as initZoneInteractionsPhase } from './init-zone-interactions.p
 export { default as initZonesPhase } from './init-zones.phase';
 export { playCardsPhase } from './play-cards-phase';
 export { default as revealCardsPhase } from './reveal-cards.phase';
+export { revealZonePhase } from './reveal-zone-phase';

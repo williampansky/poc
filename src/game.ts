@@ -9,6 +9,7 @@ import {
   initZonesPhase,
   playCardsPhase,
   revealCardsPhase,
+  revealZonePhase,
 } from './phases';
 import aiEnumeration from './ai';
 
@@ -69,6 +70,7 @@ export const BcgPoc: Game<GameState> = {
           },
           powerAdjustment: 0,
           powerText: undefined,
+          revealed: false,
           sides: {
             '0': [],
             '1': [],
@@ -111,6 +113,10 @@ export const BcgPoc: Game<GameState> = {
     },
     initStartingHands: {
       ...initStartingHandsPhase,
+      next: 'revealZone',
+    },
+    revealZone: {
+      ...revealZonePhase,
       next: 'drawCard',
     },
     drawCard: {
@@ -135,7 +141,15 @@ export const BcgPoc: Game<GameState> = {
     },
     handleZonePowerCalculations: {
       ...handleZonePowerCalculationsPhase,
-      next: 'drawCard',
+      next(G: GameState) {
+        switch (G.turn) {
+          case 1:
+          case 2:
+            return 'revealZone';
+          default:
+            return 'drawCard';
+        }
+      },
     },
   },
   ai: aiEnumeration,
