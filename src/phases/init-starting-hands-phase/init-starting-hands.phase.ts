@@ -1,23 +1,13 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { Card, GameState } from '../interfaces';
-import createCardObject from '../utilities/create-card-object';
-import CARD_DATABASE from '../tempCardsDatabase';
-import createMinionObject from '../utilities/create-minion-object';
+import { Card, GameState } from '../../interfaces';
+import createCardObject from '../../utilities/create-card-object';
+import CARD_DATABASE from '../../tempCardsDatabase';
+import createMinionObject from '../../utilities/create-minion-object';
+import { createRandomDeck } from './methods';
 
 const initStartingHandsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
     const { random } = ctx;
-    let tempOpponentArray: Card[] = [];
-    let tempPlayerArray: Card[] = [];
-
-    // create deck
-    [...Array(G.config.gameConfig.cardsPerDeck)].forEach((_, i) => {
-      let randomCard1 = random!.Shuffle(CARD_DATABASE)[0];
-      let randomCard2 = random!.Shuffle(CARD_DATABASE)[0];
-
-      tempOpponentArray.push(createCardObject(randomCard1));
-      tempPlayerArray.push(createCardObject(randomCard2));
-    });
 
     // debug opponents side interactions of CARD_10
     if (G.config.debugConfig.debugCardId !== '') {
@@ -29,8 +19,8 @@ const initStartingHandsPhase: PhaseConfig = {
     }
 
     // set decks
-    G.players['0'].deck = tempPlayerArray;
-    G.players['1'].deck = tempOpponentArray;
+    G.players['0'].deck = createRandomDeck(G, ctx, CARD_DATABASE);
+    G.players['1'].deck = createRandomDeck(G, ctx, CARD_DATABASE);
 
     // init hands
     [...Array(G.config.gameConfig.cardsPerStartingHand)].forEach(() => {
