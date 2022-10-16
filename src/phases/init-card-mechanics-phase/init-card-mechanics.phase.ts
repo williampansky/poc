@@ -1,11 +1,12 @@
 import { PhaseConfig } from "boardgame.io";
 
-const initCardMechanics: PhaseConfig = {
+const initCardMechanicsPhase: PhaseConfig = {
   next: 'initZoneInteractions',
   onBegin(G, ctx) {
+    // @todo add mechanics here
     // end the phase
     ctx.events?.endPhase();
   },
 }
 
-export default initCardMechanics;
+export default initCardMechanicsPhase;
