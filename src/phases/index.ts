@@ -7,3 +7,4 @@ export { default as initZonesPhase } from './init-zones.phase';
 export { playCardsPhase } from './play-cards-phase';
 export { default as revealCardsPhase } from './reveal-cards.phase';
 export { revealZonePhase } from './reveal-zone-phase';
+export { default as incrementGameTurnPhase } from './increment-game-turn.phase'

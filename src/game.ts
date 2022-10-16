@@ -3,6 +3,7 @@ import { config, GameState, Zone } from './interfaces';
 import {
   drawCardPhase,
   handleZonePowerCalculationsPhase,
+  incrementGameTurnPhase,
   initCardMechanicsPhase,
   initStartingHandsPhase,
   initZoneInteractionsPhase,
@@ -12,6 +13,7 @@ import {
   revealZonePhase,
 } from './phases';
 import aiEnumeration from './ai';
+import { handleRevealedZonePowerCalculationsPhase } from './phases/handle-zone-power-calculations-phase';
 
 
 export const BcgPoc: Game<GameState> = {
@@ -94,6 +96,8 @@ export const BcgPoc: Game<GameState> = {
    *  - initZones
    *  - initStartingHands
    * 
+   *  - revealZone (turns 0,1,2 only)
+   *  - incrementGameTurn
    *  - drawCard
    *  - playCards
    *  - revealCards
@@ -101,6 +105,7 @@ export const BcgPoc: Game<GameState> = {
    *  - initZoneInteractions
    *  - handleZonePowerCalculations
    * 
+   *  - incrementGameTurn
    *  - drawCard
    *  - playCards
    *  - etc... loop until game ends
@@ -117,6 +122,10 @@ export const BcgPoc: Game<GameState> = {
     },
     revealZone: {
       ...revealZonePhase,
+      next: 'incrementGameTurn',
+    },
+    incrementGameTurn: {
+      ...incrementGameTurnPhase,
       next: 'drawCard',
     },
     drawCard: {
@@ -141,15 +150,7 @@ export const BcgPoc: Game<GameState> = {
     },
     handleZonePowerCalculations: {
       ...handleZonePowerCalculationsPhase,
-      next(G: GameState) {
-        switch (G.turn) {
-          case 1:
-          case 2:
-            return 'revealZone';
-          default:
-            return 'drawCard';
-        }
-      },
+      next: 'revealZone',
     },
   },
   ai: aiEnumeration,

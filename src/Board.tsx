@@ -20,8 +20,9 @@ export const Board = (props: GameProps) => {
 
   const {
     G,
-    G: { players },
+    G: { players, turn },
     ctx,
+    ctx: { phase },
     moves,
     events,
     reset,
@@ -40,6 +41,10 @@ export const Board = (props: GameProps) => {
       );
     }
   }, []);
+
+  // React.useEffect(() => {
+  //   console.log(turn, phase)
+  // }, [turn, phase])
 
   React.useLayoutEffect(() => {
     addressBarCallback();

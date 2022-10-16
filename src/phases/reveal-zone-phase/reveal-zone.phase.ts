@@ -3,14 +3,17 @@ import { GameState, Zone } from "../../interfaces";
 
 const revealZonePhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    if (!G.zones[0].revealed) {
+    console.log(G.turn, ctx.phase);
+    if (G.turn === 0 && !G.zones[0].revealed) {
       G.zones[0].revealed = true;
       ctx.events?.endPhase();
-    } else if (!G.zones[1].revealed) {
+    } else if (G.turn === 1 && !G.zones[1].revealed) {
       G.zones[1].revealed = true;
       ctx.events?.endPhase();
-    } else if (!G.zones[2].revealed) {
+    } else if (G.turn === 2 && !G.zones[2].revealed) {
       G.zones[2].revealed = true;
+      ctx.events?.endPhase();
+    } else {
       ctx.events?.endPhase();
     }
   },

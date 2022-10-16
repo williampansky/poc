@@ -7,6 +7,7 @@ import { createRandomDeck } from './methods';
 
 const initStartingHandsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
+    console.log(G.turn, ctx.phase);
     const { random } = ctx;
 
     // debug opponents side interactions of CARD_10

@@ -4,6 +4,7 @@ import { GameState } from "../../interfaces";
 
 const drawCardPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
+    console.log(G.turn, ctx.phase);
     spliceDeckAndPushToHand(G);
     ctx.events?.endPhase();
   },
