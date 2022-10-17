@@ -120,7 +120,20 @@ export const Zone = ({
               {zone?.powerText}
             </div>
           </React.Fragment>
-        ) : null}
+        ) : (
+          <div
+            style={{
+              marginTop: '0.25em',
+              fontSize: '12px',
+              fontStyle: 'italic',
+              fontWeight: 'normal',
+              lineHeight: '0.925',
+            }}
+          >
+            <div>Reveals in</div>
+            <div>{G.turn === 1 && zoneNumber === 1 ? '1 turn' : '2 turns'}</div>
+          </div>
+        )}
 
         <div
           style={{
