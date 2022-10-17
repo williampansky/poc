@@ -8,7 +8,6 @@ const initZonesPhase: PhaseConfig = {
   next: 'drawCard',
   onBegin(G: GameState, ctx: Ctx) {
     console.clear();
-    console.log(G.turn, ctx.phase);
     const { random } = ctx;
     const randomZonesArray = random?.Shuffle(ZONE_DATABASE);
     let newZones: Zone[] = [];
@@ -28,6 +27,7 @@ const initZonesPhase: PhaseConfig = {
     }
 
     G.zones = newZones;
+    console.log(G.turn, ctx.phase, `0: ${G.zones[0].name}, 1: ${G.zones[1].name}, 2: ${G.zones[2].name}`);
   },
   endIf(G: GameState) {
     return (

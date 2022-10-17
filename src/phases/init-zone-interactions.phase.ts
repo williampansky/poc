@@ -14,6 +14,8 @@ const initZoneInteractions: PhaseConfig = {
         switch (z.id) {
           case 'ZONE_001':
           case 'ZONE_004':
+          case 'ZONE_007':
+          case 'ZONE_008':
             // loop thru side 0
             z.sides['0'].forEach((obj: Minion, cardIdx: number) => {
               // if (turn === obj.revealedOnTurn) {
@@ -60,6 +62,27 @@ const initZoneInteractions: PhaseConfig = {
             //   //   }];
             //   // }
             // });
+            break;
+          case 'ZONE_010':
+            // loop thru side 0
+            z.sides['0'].forEach((obj: Minion, cardIdx: number) => {
+              // if (turn === obj.revealedOnTurn) {
+                G.zones[zoneIdx].sides['0'][cardIdx] = {
+                  ...obj,
+                  displayPower: obj.currentCost,
+                };
+              // }
+            });
+
+            // loop thru side 1
+            z.sides['1'].forEach((obj: Minion, cardIdx: number) => {
+              // if (turn === obj.revealedOnTurn) {
+                G.zones[zoneIdx].sides['1'][cardIdx] = {
+                  ...obj,
+                  displayPower: obj.currentCost,
+                };
+              // }
+            });
             break;
           default:
             break;
