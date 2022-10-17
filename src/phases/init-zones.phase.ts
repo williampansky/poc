@@ -1,6 +1,6 @@
-import { Ctx, PhaseConfig } from "boardgame.io";
+import { Ctx, PhaseConfig } from 'boardgame.io';
 import { v4 as uuid } from 'uuid';
-import { GameState, Zone } from "../interfaces";
+import { GameState, Zone } from '../interfaces';
 import ZONE_DATABASE from '../tempZonesDatabase';
 
 const initZonesPhase: PhaseConfig = {
@@ -16,10 +16,7 @@ const initZonesPhase: PhaseConfig = {
     for (let idx = 0; idx < G.config.gameConfig.numberOfZones; idx++) {
       let newZone = {
         ...G.zones[0],
-        disabled:
-          randomZonesArray![idx].id === 'ZONE_003'
-            ? { '0': true, '1': true }
-            : { '0': false, '1': false },
+        disabled: { '0': false, '1': false },
         id: randomZonesArray![idx].id,
         name: randomZonesArray![idx].name,
         powerText: randomZonesArray![idx]?.powerText,

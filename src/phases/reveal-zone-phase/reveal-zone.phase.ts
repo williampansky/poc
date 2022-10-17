@@ -58,6 +58,9 @@ const revealZonePhase: PhaseConfig = {
               //   // }
               // });
               break;
+            case 'ZONE_003':
+              z.disabled = { '0': true, '1': true }
+              break;
             default:
               break;
           }
