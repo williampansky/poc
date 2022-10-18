@@ -6,6 +6,18 @@ import { BcgPoc } from './game';
 import { Board } from './Board';
 import { v4 as uuid } from 'uuid';
 
+// @todo figure out better solution here
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION__?: any;
+  }
+}
+
+const REDUX_DEVTOOLS =
+  typeof window !== undefined &&
+  window.__REDUX_DEVTOOLS_EXTENSION__ &&
+  window.__REDUX_DEVTOOLS_EXTENSION__();
+
 const Client = BoardgameClient({
   game: BcgPoc,
   board: Board,
@@ -13,6 +25,7 @@ const Client = BoardgameClient({
   numPlayers: 1,
   // loading: GameLoader,
   debug: false,
+  enhancer: REDUX_DEVTOOLS
 });
 
 class GameWrapper extends React.Component {
