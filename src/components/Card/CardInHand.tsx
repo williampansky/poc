@@ -1,6 +1,5 @@
 import { ReactElement } from 'react';
 import { Card as CardProps } from '../../interfaces';
-import getDisplayPower from '../../utilities/get-display-power';
 
 export interface ReactCardProps extends CardProps {
   isSelected: boolean;
@@ -15,6 +14,7 @@ export const CardInHand = ({
     basePower,
     canPlay,
     currentCost,
+    displayPower,
     name,
     powerOverride,
     powerStream,
@@ -87,7 +87,7 @@ export const CardInHand = ({
           borderRadius: '50%',
         }}
       >
-        {getDisplayPower(card)}
+        {displayPower}
       </div>
       <div style={{ fontSize: '0.5em' }}>{name}</div>
     </div>

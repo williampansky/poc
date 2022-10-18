@@ -1,4 +1,7 @@
 export const config = {
+  debugConfig: {
+    debugCardId: ''
+  },
   gameConfig: {
     actionPointsPerTurn: 1,
     actionPointsTotal: 10,
@@ -22,6 +25,20 @@ export interface CardPowerStream {
   currentPower: number; // if no previous idx, basePower + adjustment—otherwise last idx currentPower + this adjustment
 }
 
+/**
+ * Base card information from the database/API, which gets
+ * converted into a Card interface via the `createCardObject` util.
+ * @see createCardObject
+ */
+export interface CardBase {
+  cost: number;
+  description?: string;
+  id: string;
+  mechanic?: string;
+  name: string;
+  power: number;
+}
+
 export interface Card {
   __id: string;
   baseCost: number;
@@ -29,12 +46,35 @@ export interface Card {
   canPlay: boolean;
   currentCost: number;
   description?: string;
+  displayPower: number;
   mechanic?: string;
   name: string;
   powerOverride?: number; // use this power instead of base or latest stream
   powerStream: CardPowerStream[];
-  zonePowerAdjustment: number;
+  revealed: boolean;
+  revealedOnTurn: number;
+  type: 'CARD';
   uuid: string;
+  zonePowerAdjustment: number;
+}
+
+export interface Minion {
+  __id: string;
+  baseCost: number;
+  basePower: number;
+  canPlay: boolean;
+  currentCost: number;
+  description?: string;
+  displayPower: number;
+  mechanic?: string;
+  name: string;
+  powerOverride?: number; // use this power instead of base or latest stream
+  powerStream: CardPowerStream[];
+  revealed: boolean;
+  revealedOnTurn: number;
+  type: 'MINION';
+  uuid: string;
+  zonePowerAdjustment: number;
 }
 
 export interface Zone {
@@ -44,7 +84,8 @@ export interface Zone {
   powers: Record<string, number>;
   powerText?: string;
   powerAdjustment: number;
-  sides: Record<string, Card[]>;
+  revealed: boolean;
+  sides: Record<string, Minion[]>;
   uuid: string;
 }
 
@@ -62,6 +103,9 @@ export interface SelectedCard {
 }
 
 export interface Config {
+  debugConfig: {
+    debugCardId: string;
+  };
   gameConfig: {
     actionPointsPerTurn: number;
     actionPointsTotal: number;
@@ -77,6 +121,9 @@ export interface Config {
 }
 
 export interface GameState {
+  turn: number;
+  done: Record<string, boolean>;
+  revealed: Record<string, boolean>;
   players: Record<string, Player>;
   selectedCard: Record<string, SelectedCard | undefined>;
   playedCards: Record<string, Card[]>;

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BoardProps, Client } from 'boardgame.io/react';
 import { Ctx } from 'boardgame.io';
-import { Card, config, GameState, Zone as IZone } from './interfaces';
+import { Card, config, GameState, Minion, Zone as IZone } from './interfaces';
 import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
 import { CardInHand } from './components/Card/CardInHand';
@@ -13,13 +13,16 @@ const showDebug = false;
 export interface GameProps extends BoardProps<GameState> {}
 
 export const Board = (props: GameProps) => {
-  const [addressBarSize, setAddressBarSize] = React.useState<number>(0);
-  const [cardModal, setCardModal] = React.useState<Card | undefined>(undefined);
+  const [addressBarSize, setAddressBarSize] = useState<number>(0);
+  const [cardModalDataObject, setCardModalDataObject] = useState<
+    Card | Minion | undefined
+  >(undefined);
 
   const {
     G,
-    G: { players },
+    G: { players, turn },
     ctx,
+    ctx: { phase },
     moves,
     events,
     reset,
@@ -39,15 +42,20 @@ export const Board = (props: GameProps) => {
     }
   }, []);
 
+  // React.useEffect(() => {
+  //   console.log(turn, phase)
+  // }, [turn, phase])
+
   React.useLayoutEffect(() => {
     addressBarCallback();
   }, [addressBarCallback]);
 
   const onClick = () => {
-    // @ts-ignore
-    if (ctx.currentPlayer === '0') return events.endTurn({ next: '1' });
-    // @ts-ignore
-    if (ctx.currentPlayer === '1') return events.endTurn({ next: '0' });
+    return moves.setDone('0');
+    // // @ts-ignore
+    // if (ctx.currentPlayer === '0') return events.endTurn({ next: '1' });
+    // // @ts-ignore
+    // if (ctx.currentPlayer === '1') return events.endTurn({ next: '0' });
   };
 
   const resetGame = () => {
@@ -62,8 +70,8 @@ export const Board = (props: GameProps) => {
     else return 'Defeat...';
   };
 
-  const onCardClick = (card: Card) => {
-    setCardModal(card);
+  const onCardClick = (obj: Card | Minion) => {
+    setCardModalDataObject(obj);
   };
 
   const onCardSelect = (playerId: string, uuid: string) => {
@@ -146,8 +154,8 @@ export const Board = (props: GameProps) => {
         }}
       >
         <CardInspectionModal
-          card={cardModal}
-          onClick={() => setCardModal(undefined)}
+          data={cardModalDataObject}
+          onClick={() => setCardModalDataObject(undefined)}
         />
         <div
           style={{
@@ -173,7 +181,7 @@ export const Board = (props: GameProps) => {
               marginRight: 'auto',
               fontSize: '11px',
               whiteSpace: 'nowrap',
-              color: 'white'
+              color: 'white',
             }}
           >
             {G.players[1].name}
@@ -187,7 +195,7 @@ export const Board = (props: GameProps) => {
                 width: '100%',
               }}
             >
-              {Array.from(Array(G.players[1].actionPointsTotal)).map(
+              {Array.from(Array(G.players['1'].actionPointsTotal)).map(
                 (_, idx) => {
                   idx = idx + 1;
                   return (
@@ -200,13 +208,21 @@ export const Board = (props: GameProps) => {
                         justifyContent: 'center',
                         pointerEvents: 'none',
                         userSelect: 'none',
+                        fontWeight:
+                          G.players['1'].actionPoints >= idx
+                            ? 'bold'
+                            : 'normal',
                         background:
-                          G.players[1].actionPoints >= idx
+                          G.players['1'].actionPoints >= idx
                             ? 'lightgreen'
-                            : 'light#333',
+                            : '#ccc',
+                        color:
+                          G.players['1'].actionPoints >= idx
+                            ? '#052d05'
+                            : '#4e4e4e',
                       }}
                     >
-                      &nbsp;
+                      {idx}
                     </div>
                   );
                 }
@@ -331,7 +347,7 @@ export const Board = (props: GameProps) => {
                 width: '100%',
               }}
             >
-              {Array.from(Array(G.players[0].actionPointsTotal)).map(
+              {Array.from(Array(G.players['0'].actionPointsTotal)).map(
                 (_, idx) => {
                   idx = idx + 1;
                   return (
@@ -344,13 +360,21 @@ export const Board = (props: GameProps) => {
                         justifyContent: 'center',
                         pointerEvents: 'none',
                         userSelect: 'none',
+                        fontWeight:
+                          G.players['0'].actionPoints >= idx
+                            ? 'bold'
+                            : 'normal',
                         background:
-                          G.players[0].actionPoints >= idx
+                          G.players['0'].actionPoints >= idx
                             ? 'lightgreen'
-                            : 'light#333',
+                            : '#ccc',
+                        color:
+                          G.players['0'].actionPoints >= idx
+                            ? '#052d05'
+                            : '#4e4e4e',
                       }}
                     >
-                      &nbsp;
+                      {idx}
                     </div>
                   );
                 }
@@ -365,8 +389,12 @@ export const Board = (props: GameProps) => {
           >
             <button
               onClick={onClick}
+              disabled={G.done['0'] === true || ctx.phase !== 'playCards'}
               style={{
-                background: ctx.currentPlayer === '0' ? 'yellow' : 'initial',
+                background:
+                  G.done['0'] === false && ctx.phase === 'playCards'
+                    ? 'yellow'
+                    : 'initial',
                 display: 'flex',
                 flexFlow: 'column nowrap',
                 alignItems: 'center',
@@ -379,8 +407,7 @@ export const Board = (props: GameProps) => {
                 minWidth: 95,
               }}
             >
-              End Turn {Math.round(ctx.turn / 2)}/
-              {config.gameConfig.numberOfSingleTurnsPerGame}
+              End Turn {G.turn}/{config.gameConfig.numberOfSingleTurnsPerGame}
             </button>
           </div>
         </div>

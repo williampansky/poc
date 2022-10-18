@@ -1,6 +1,12 @@
 import { Ctx, MoveMap } from 'boardgame.io';
 import React, { ReactElement } from 'react';
-import { Card, config, GameState, Zone as ZoneProps } from '../../interfaces';
+import {
+  Card,
+  config,
+  GameState,
+  Minion,
+  Zone as ZoneProps,
+} from '../../interfaces';
 import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
 import { ZoneDropSlot } from '../ZoneDropSlot/ZoneDropSlot';
 
@@ -11,7 +17,7 @@ interface ReactZone {
   disabled: boolean;
   zone: ZoneProps;
   zoneNumber: number;
-  onCardClick: (card: Card) => void;
+  onCardClick: (obj: Minion) => void;
 }
 
 export const Zone = ({
@@ -21,7 +27,7 @@ export const Zone = ({
   disabled,
   zone,
   zoneNumber,
-  onCardClick
+  onCardClick,
 }: ReactZone): ReactElement => {
   const { playCard } = moves;
 
@@ -37,9 +43,9 @@ export const Zone = ({
 
   const handleZoneDropEvent = (e: any) => {
     // e.preventDefault();
-    console.log(e)
+    console.log(e);
     return moves.playCard('0', zoneNumber);
-  }
+  };
 
   return (
     <div
@@ -63,8 +69,8 @@ export const Zone = ({
           justifyContent: 'center',
         }}
       >
-        {zone?.sides[1].map((card: Card, idx: number) => {
-          return <ZoneSlot key={idx} card={card} onClick={onCardClick} />;
+        {zone?.sides[1].map((obj: Minion, idx: number) => {
+          return <ZoneSlot key={idx} data={obj} onClick={onCardClick} />;
         })}
         {[
           ...Array.from(
@@ -92,25 +98,43 @@ export const Zone = ({
           padding: '0.5em',
         }}
       >
-        <div
-          style={{
-            fontSize: '9px',
-            fontStyle: 'italic',
-            letterSpacing: '-0.15px',
-          }}
-        >
-          {zone?.name}
-        </div>
-        <div
-          style={{
-            marginTop: '0.25em',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            lineHeight: '0.875',
-          }}
-        >
-          {zone?.powerText}
-        </div>
+        {zone && zone.revealed ? (
+          <React.Fragment>
+            <div
+              style={{
+                fontSize: '9px',
+                fontStyle: 'italic',
+                letterSpacing: '-0.15px',
+              }}
+            >
+              {zone?.name}
+            </div>
+            <div
+              style={{
+                marginTop: '0.25em',
+                fontSize: '12px',
+                fontWeight: 'bold',
+                lineHeight: '0.875',
+              }}
+            >
+              {zone?.powerText}
+            </div>
+          </React.Fragment>
+        ) : (
+          <div
+            style={{
+              marginTop: '0.25em',
+              fontSize: '12px',
+              fontStyle: 'italic',
+              fontWeight: 'normal',
+              lineHeight: '0.925',
+            }}
+          >
+            <div>Reveals in</div>
+            <div>{G.turn === 1 && zoneNumber === 1 ? '1 turn' : '2 turns'}</div>
+          </div>
+        )}
+
         <div
           style={{
             fontSize: '1em',
@@ -194,8 +218,8 @@ export const Zone = ({
             gridGap: '0.3em',
           }}
         >
-          {zone?.sides[0].map((card: Card, idx: number) => {
-            return <ZoneSlot key={idx} card={card} onClick={onCardClick} />;
+          {zone?.sides[0].map((obj: Minion, idx: number) => {
+            return <ZoneSlot key={idx} data={obj} onClick={onCardClick} />;
           })}
         </div>
       </div>

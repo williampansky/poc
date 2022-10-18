@@ -133,7 +133,7 @@ export const PlayerHand = ({
 
         if (tap) {
           return onCardClick(G.players['0'].hand[originalIndex]);
-        } else if (!canPlay && y <= -150) {
+        } else if (!canPlay) {
           cancel();
         } else {
           setSprings(
