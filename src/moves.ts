@@ -1,7 +1,7 @@
 import { Ctx } from 'boardgame.io';
 import { ActivePlayers, INVALID_MOVE } from 'boardgame.io/core';
 import { add, subtract } from 'mathjs';
-import { Card, GameState, Minion, SelectedCard } from './interfaces';
+import { Card, GameState, Minion } from './interfaces';
 import createMinionObject from './utilities/create-minion-object';
 import getCardPower from './utilities/get-card-power';
 
@@ -18,18 +18,17 @@ const selectCard = (
     (c: Card) => c.uuid === cardUuid
   );
 
-  if (G.selectedCard[playerId]?.data?.uuid === cardMatch?.uuid) {
-    G.selectedCard[playerId] = undefined;
+  if (G.selectedCardData[playerId]?.uuid === cardMatch?.uuid) {
+    G.selectedCardData[playerId] = undefined;
   } else {
-    G.selectedCard[playerId] = {
-      index: cardMatchIndex,
-      data: cardMatch,
-    };
+    G.selectedCardData[playerId] = cardMatch;
+    G.selectedCardIndex[playerId] = cardMatchIndex;
   }
 };
 
 const deselectCard = (G: GameState, ctx: Ctx, playerId: string) => {
-  G.selectedCard[playerId] = undefined;
+  G.selectedCardData[playerId] = undefined;
+  G.selectedCardIndex[playerId] = undefined;
 };
 
 const playCard = (
@@ -47,11 +46,11 @@ const playCard = (
   } = G;
 
   // validate selected card
-  if (G.selectedCard[playerId] === undefined) return INVALID_MOVE;
+  if (G.selectedCardData[playerId] === undefined) return INVALID_MOVE;
 
   const player = G.players[playerId];
-  const card = G.selectedCard[playerId]!.data as Card;
-  const cardUuid = G.selectedCard[playerId]!.data!.uuid;
+  const card = G.selectedCardData[playerId]! as Card;
+  const cardUuid = G.selectedCardData[playerId]!.uuid;
   const zone = zones[zoneNumber];
 
   // validate cost playability
@@ -86,7 +85,8 @@ const playCard = (
     });
 
   // unset selected card
-  G.selectedCard[playerId] = undefined;
+  G.selectedCardData[playerId] = undefined;
+  G.selectedCardIndex[playerId] = undefined;
 };
 
 const revealCard = async (
@@ -139,10 +139,8 @@ const playAiCard = (
   } = G;
 
   // set selected card
-  G.selectedCard['1'] = {
-    data: card,
-    index: cardIndex,
-  } as SelectedCard;
+  G.selectedCardData['1'] = card;
+  G.selectedCardIndex['1'] = cardIndex;
 
   const player = G.players['1'];
   const cardUuid = card.uuid;
@@ -181,7 +179,8 @@ const playAiCard = (
   });
 
   // unset selectedCard
-  G.selectedCard['1'] = undefined;
+  G.selectedCardData['1'] = undefined;
+  G.selectedCardIndex['1'] = undefined;
 };
 
 const setDone = (G: GameState, ctx: Ctx, playerId: string) => {

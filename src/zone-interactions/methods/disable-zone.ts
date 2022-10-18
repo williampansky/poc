@@ -1,10 +1,19 @@
 import { GameState } from '../../interfaces';
 
-/**
- * Disables the `zone[#]` for both players.
- */
-const disableZone = (G: GameState, zoneNumber: number): void => {
-  G.zones[zoneNumber].disabled = { '0': false, '1': false }
+const disableZone = (
+  G: GameState,
+  zoneNumber: number,
+  playerId?: string
+): void => {
+  switch (playerId !== undefined) {
+    case true:
+      G.zones[zoneNumber].disabled[playerId!] = true;
+      break;
+
+    default:
+      G.zones[zoneNumber].disabled = { '0': true, '1': true };
+      break;
+  }
 };
 
 export default disableZone;

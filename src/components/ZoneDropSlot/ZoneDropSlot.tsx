@@ -43,7 +43,7 @@ export const ZoneDropSlot = ({
           borderColor: 'red',
           transition: '150ms ease-in',
           zIndex: isActive ? 1 : -1,
-          opacity: G.selectedCard['0'] !== undefined ? (isActive ? 0.5 : 0) : 0,
+          opacity: G.selectedCardData['0'] !== undefined ? (isActive ? 0.5 : 0) : 0,
           willChange: 'border-style, opacity, pointer-events',
           overflow: 'hidden',
           display: 'flex',

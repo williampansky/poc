@@ -200,10 +200,10 @@ export const Zone = ({
           moves={moves}
           isActive={
             ctx.currentPlayer === '0' &&
-            G.selectedCard[0]?.data !== undefined &&
-            zone?.sides[0].length !== config.gameConfig.numberOfSlotsPerZone &&
-            !zone?.disabled[0] &&
-            G.players[0].actionPoints >= G.selectedCard[0]?.data?.currentCost
+            G.selectedCardData['0'] !== undefined &&
+            zone?.sides['0'].length !== config.gameConfig.numberOfSlotsPerZone &&
+            !zone?.disabled['0'] &&
+            G.players['0'].actionPoints >= G.selectedCardData['0']?.currentCost
           }
           playerId='0'
           zoneNumber={zoneNumber}

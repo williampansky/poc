@@ -1,4 +1,4 @@
-import { Ctx, Game } from 'boardgame.io';
+import { Ctx, Game, PlayerID } from 'boardgame.io';
 import { config, GameState, Zone } from './interfaces';
 import {
   drawCardPhase,
@@ -14,10 +14,22 @@ import {
 } from './phases';
 import aiEnumeration from './ai';
 import { handleRevealedZonePowerCalculationsPhase } from './phases/handle-zone-power-calculations-phase';
-
+import stripSecrets from './utilities/strip-secrets';
 
 export const BcgPoc: Game<GameState> = {
   name: 'BcgPoc',
+
+  /**
+   * This method uses the `stripSecrets` function to hide
+   * the opponent player's hand and deck data from your client.
+   * @name playerView
+   * @requires stripSecrets
+   * @see https://boardgame.io/documentation/#/secret-state
+   */
+  playerView: (G: GameState, ctx: Ctx, playerId: PlayerID | null) => {
+    return stripSecrets(G, ctx, playerId!);
+  },
+
   setup: () => ({
     turn: 0,
     done: {
@@ -47,7 +59,12 @@ export const BcgPoc: Game<GameState> = {
       },
     },
 
-    selectedCard: {
+    selectedCardData: {
+      '0': undefined,
+      '1': undefined,
+    },
+
+    selectedCardIndex: {
       '0': undefined,
       '1': undefined,
     },
@@ -86,16 +103,16 @@ export const BcgPoc: Game<GameState> = {
   }),
 
   /**
-   * Each phase in boardgame.io defines a set of game configuration options 
-   * that are applied for the duration of that phase. This includes the 
-   * ability to define a different set of moves, use a different turn order 
+   * Each phase in boardgame.io defines a set of game configuration options
+   * that are applied for the duration of that phase. This includes the
+   * ability to define a different set of moves, use a different turn order
    * etc. Turns happen inside phases.
    * @see https://boardgame.io/documentation/#/phases
-   * 
+   *
    * Order of Phases:
    *  - initZones
    *  - initStartingHands
-   * 
+   *
    *  - revealZone (turns 0,1,2 only)
    *  - incrementGameTurn
    *  - drawCard
@@ -104,7 +121,7 @@ export const BcgPoc: Game<GameState> = {
    *  - initCardMechanics
    *  - initZoneInteractions
    *  - handleZonePowerCalculations
-   * 
+   *
    *  - incrementGameTurn
    *  - drawCard
    *  - playCards

@@ -282,7 +282,7 @@ export const PlayerHand = ({
                       cursor: canPlay ? cursor : 'default',
                       marginLeft: marginLeft.to((mL: number) => `${mL}px`),
                       marginTop: marginTop.to((mT: number) => `${mT}px`),
-                      // opacity: G.selectedCard['0']?.index === i ? 0.795 : 1,
+                      // opacity: G.selectedCardIndex['0'] === i ? 0.795 : 1,
                       // pointerEvents: 'none',
                       position: 'relative',
                       touchAction: 'none',
@@ -300,7 +300,7 @@ export const PlayerHand = ({
                       key={G.players['0'].hand[i].uuid}
                       // onClick={(c: Card) => onCardClick(c)}
                       isSelected={
-                        G.selectedCard[0]?.data?.uuid ===
+                        G.selectedCardData[0]?.uuid ===
                         G.players['0'].hand[i].uuid
                       }
                     />

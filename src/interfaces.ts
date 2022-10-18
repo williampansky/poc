@@ -1,3 +1,5 @@
+import { PlayerID } from "boardgame.io";
+
 export const config = {
   debugConfig: {
     debugCardId: ''
@@ -15,6 +17,8 @@ export const config = {
     numberOfSlotsPerZone: 6,
   },
 };
+
+// export type PlayerId = '0' | '1' | PlayerID;
 
 /**
  * Used to track a card or minion's power changes.
@@ -97,11 +101,6 @@ export interface Player {
   actionPointsTotal: number;
 }
 
-export interface SelectedCard {
-  index?: number;
-  data?: Card;
-}
-
 export interface Config {
   debugConfig: {
     debugCardId: string;
@@ -122,11 +121,12 @@ export interface Config {
 
 export interface GameState {
   turn: number;
-  done: Record<string, boolean>;
-  revealed: Record<string, boolean>;
-  players: Record<string, Player>;
-  selectedCard: Record<string, SelectedCard | undefined>;
-  playedCards: Record<string, Card[]>;
+  done: Record<PlayerID, boolean>;
+  revealed: Record<PlayerID, boolean>;
+  players: Record<PlayerID, Player>;
+  selectedCardData: Record<PlayerID, Card | undefined>;
+  selectedCardIndex: Record<PlayerID, number | undefined>;
+  playedCards: Record<PlayerID, Card[]>;
   zones: Zone[];
   config: Config;
 }
