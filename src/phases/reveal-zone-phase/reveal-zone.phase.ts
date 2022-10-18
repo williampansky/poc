@@ -15,77 +15,38 @@ const revealZonePhase: PhaseConfig = {
             case 'ZONE_008':
               // loop thru side 0
               z.sides['0'].forEach((obj: Minion, cardIdx: number) => {
-                // if (turn === obj.revealedOnTurn) {
-                G.zones[zoneIdx].sides['0'][cardIdx].zonePowerAdjustment =
-                  z.powerAdjustment;
+                const pA = z.powerAdjustment
+                G.zones[zoneIdx].sides['0'][cardIdx].zonePowerAdjustment = pA;
                 G.zones[zoneIdx].sides['0'][cardIdx] = {
                   ...obj,
                   displayPower: getCardPower(obj),
                 };
-                // }
               });
 
-              // loop thru side 1
               z.sides['1'].forEach((obj: Minion, cardIdx: number) => {
-                // if (turn === obj.revealedOnTurn) {
-                G.zones[zoneIdx].sides['1'][cardIdx].zonePowerAdjustment =
-                  z.powerAdjustment;
+                const pA = z.powerAdjustment
+                G.zones[zoneIdx].sides['1'][cardIdx].zonePowerAdjustment = pA;
                 G.zones[zoneIdx].sides['1'][cardIdx] = {
                   ...obj,
                   displayPower: getCardPower(obj),
                 };
-                // }
               });
-              // zone.sides[playerId].forEach((c: Card, i: number) => {
-              //   G.zones[zoneNumber].sides[playerId][i] = {
-              //     ...c,
-              //     zonePowerAdjustment: zone.powerAdjustment,
-              //   };
-              //   // if (G.zones[zoneNumber].sides[playerId][i].powerStream) {
-              //   //   const stream = G.zones[zoneNumber].sides[playerId][i].powerStream!;
-              //   //   const streamLength = stream.length;
-              //   //   const lastStreamPower = stream[streamLength].currentPower;
-
-              //   //   G.zones[zoneNumber].sides[playerId][i].powerStream!.push({
-              //   //     blame: zone.id,
-              //   //     adjustment: zone.powerAdjustment,
-              //   //     currentPower: add(lastStreamPower, zone.powerAdjustment),
-              //   //   });
-              //   // } else {
-              //   //   G.zones[zoneNumber].sides[playerId][i].powerStream = [{
-              //   //     blame: zone.id,
-              //   //     adjustment: zone.powerAdjustment,
-              //   //     currentPower: add(c.basePower, zone.powerAdjustment),
-              //   //   }];
-              //   // }
-              // });
               break;
             case 'ZONE_003':
               z.disabled = { '0': true, '1': true };
               break;
             case 'ZONE_010':
-              // loop thru side 0
               z.sides['0'].forEach((obj: Minion, cardIdx: number) => {
-                // if (turn === obj.revealedOnTurn) {
-                G.zones[zoneIdx].sides['0'][cardIdx] = {
-                  ...obj,
-                  displayPower: obj.currentCost,
-                };
-                // }
+                const c = obj.currentCost;
+                G.zones[zoneIdx].sides['0'][cardIdx].displayPower = c;
               });
-
-              // loop thru side 1
               z.sides['1'].forEach((obj: Minion, cardIdx: number) => {
-                // if (turn === obj.revealedOnTurn) {
-                G.zones[zoneIdx].sides['1'][cardIdx] = {
-                  ...obj,
-                  displayPower: obj.currentCost,
-                };
-                // }
+                const c = obj.currentCost;
+                G.zones[zoneIdx].sides['1'][cardIdx].displayPower = c;
               });
               break;
             case 'ZONE_011':
-              z.disabled = { '0': true, '1': true }
+              z.disabled = { '0': true, '1': true };
               break;
             default:
               break;
