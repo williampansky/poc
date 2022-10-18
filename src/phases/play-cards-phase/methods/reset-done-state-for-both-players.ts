@@ -1,13 +1,11 @@
 import { GameState } from '../../../interfaces';
+import { PlayerTurnDone } from '../../../state';
 
 /**
  * Sets `G.done` of each player back to false.
  */
 const resetDoneStateForBothPlayers = (G: GameState): void => {
-  G.done = {
-    '0': false,
-    '1': false,
-  };
+  PlayerTurnDone.reset(G);
 };
 
 export default resetDoneStateForBothPlayers;

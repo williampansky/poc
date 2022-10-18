@@ -15,6 +15,7 @@ import {
 import aiEnumeration from './ai';
 import { handleRevealedZonePowerCalculationsPhase } from './phases/handle-zone-power-calculations-phase';
 import stripSecrets from './utilities/strip-secrets';
+import { PlayerTurnDone } from './state';
 
 export const BcgPoc: Game<GameState> = {
   name: 'BcgPoc',
@@ -32,10 +33,7 @@ export const BcgPoc: Game<GameState> = {
 
   setup: () => ({
     turn: 0,
-    done: {
-      '0': false,
-      '1': false,
-    },
+    PlayerTurnDone: PlayerTurnDone.defaultState,
 
     revealed: {
       '0': false,

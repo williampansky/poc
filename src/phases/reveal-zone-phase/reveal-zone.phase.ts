@@ -1,6 +1,7 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
 import { GameState, Minion, Zone } from '../../interfaces';
 import getCardPower from '../../utilities/get-card-power';
+import runInteractionForZone001 from '../../zone-interactions/zone-interactions-by-id/zone_001.interaction';
 import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/methods';
 
 const revealZonePhase: PhaseConfig = {
@@ -13,24 +14,7 @@ const revealZonePhase: PhaseConfig = {
             case 'ZONE_004':
             case 'ZONE_007':
             case 'ZONE_008':
-              // loop thru side 0
-              z.sides['0'].forEach((obj: Minion, cardIdx: number) => {
-                const pA = z.powerAdjustment
-                G.zones[zoneIdx].sides['0'][cardIdx].zonePowerAdjustment = pA;
-                G.zones[zoneIdx].sides['0'][cardIdx] = {
-                  ...obj,
-                  displayPower: getCardPower(obj),
-                };
-              });
-
-              z.sides['1'].forEach((obj: Minion, cardIdx: number) => {
-                const pA = z.powerAdjustment
-                G.zones[zoneIdx].sides['1'][cardIdx].zonePowerAdjustment = pA;
-                G.zones[zoneIdx].sides['1'][cardIdx] = {
-                  ...obj,
-                  displayPower: getCardPower(obj),
-                };
-              });
+              runInteractionForZone001(G);
               break;
             case 'ZONE_003':
               z.disabled = { '0': true, '1': true };

@@ -11,7 +11,7 @@ const aiEnumeration = {
     let moves = [];
 
     // avoids onslaught of INVALID_MOVE errors
-    if (G.done['1'] === false) {
+    if (G.PlayerTurnDone['1'] === false) {
       if (aiHand.length >= 1) {
         let cardsThanCanBePlayed: Card[] = []; // find playable cards
         aiHand.forEach((c: Card) => {

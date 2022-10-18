@@ -5,11 +5,10 @@ import ZONE_DATABASE from '../tempZonesDatabase';
 
 const initZonesPhase: PhaseConfig = {
   start: true,
-  next: 'drawCard',
   onBegin(G: GameState, ctx: Ctx) {
     console.clear();
     const { random } = ctx;
-    const randomZonesArray = random?.Shuffle(ZONE_DATABASE);
+    const randomZonesArray = random?.Shuffle(ZONE_DATABASE) as Zone[];
     let newZones: Zone[] = [];
 
     for (let idx = 0; idx < G.config.gameConfig.numberOfZones; idx++) {
@@ -27,7 +26,7 @@ const initZonesPhase: PhaseConfig = {
     }
 
     G.zones = newZones;
-    console.log(G.turn, ctx.phase, `0: ${G.zones[0].name}, 1: ${G.zones[1].name}, 2: ${G.zones[2].name}`);
+    console.log(G.turn, ctx.phase, ` | 0: ${G.zones[0].name}, 1: ${G.zones[1].name}, 2: ${G.zones[2].name}`);
   },
   endIf(G: GameState) {
     return (

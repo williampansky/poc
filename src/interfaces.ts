@@ -121,7 +121,7 @@ export interface Config {
 
 export interface GameState {
   turn: number;
-  done: Record<PlayerID, boolean>;
+  PlayerTurnDone: Record<PlayerID, boolean>;
   revealed: Record<PlayerID, boolean>;
   players: Record<PlayerID, Player>;
   selectedCardData: Record<PlayerID, Card | undefined>;

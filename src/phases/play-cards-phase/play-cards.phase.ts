@@ -43,7 +43,7 @@ const playCardsPhase: PhaseConfig = {
       },
     },
     endIf(G: GameState, ctx: Ctx) {
-      return G.done['0'] === true && G.done['1'] === true;
+      return G.PlayerTurnDone['0'] === true && G.PlayerTurnDone['1'] === true;
     },
     onEnd(G: GameState, ctx: Ctx) {
       ctx.events?.endPhase();

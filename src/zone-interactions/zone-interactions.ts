@@ -7,6 +7,7 @@ const ZoneInteractions = {
    * otherwise it clears the zone side for both players.
    */
   clearZoneSide: (G: GameState, zoneNumber: number) => {
+    G.zones[zoneNumber].powers = { '0': 0, '1': 1 };
     return clearZoneSide(G, zoneNumber);
   },
 

@@ -1,7 +1,8 @@
-import { Ctx } from 'boardgame.io';
+import { Ctx, PlayerID } from 'boardgame.io';
 import { ActivePlayers, INVALID_MOVE } from 'boardgame.io/core';
 import { add, subtract } from 'mathjs';
 import { Card, GameState, Minion } from './interfaces';
+import { PlayerTurnDone } from './state';
 import createMinionObject from './utilities/create-minion-object';
 import getCardPower from './utilities/get-card-power';
 
@@ -183,8 +184,8 @@ const playAiCard = (
   G.selectedCardIndex['1'] = undefined;
 };
 
-const setDone = (G: GameState, ctx: Ctx, playerId: string) => {
-  G.done[playerId] = true;
+const setDone = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
+  PlayerTurnDone.set(G, playerId);
 };
 
 const handleCardInteraction = async (
@@ -207,49 +208,9 @@ const handleCardInteraction = async (
   }
 };
 
-const handleZoneInteraction = async (
-  G: GameState,
-  ctx: Ctx,
-  playerId: string,
-  zoneNumber: number
-) => {
-  const zone = G.zones[zoneNumber];
-  switch (zone.id) {
-    case 'ZONE_001':
-    case 'ZONE_004':
-      zone.sides[playerId].forEach((m: Minion, i: number) => {
-        G.zones[zoneNumber].sides[playerId][i] = {
-          ...m,
-          zonePowerAdjustment: zone.powerAdjustment,
-        };
-        // if (G.zones[zoneNumber].sides[playerId][i].powerStream) {
-        //   const stream = G.zones[zoneNumber].sides[playerId][i].powerStream!;
-        //   const streamLength = stream.length;
-        //   const lastStreamPower = stream[streamLength].currentPower;
-
-        //   G.zones[zoneNumber].sides[playerId][i].powerStream!.push({
-        //     blame: zone.id,
-        //     adjustment: zone.powerAdjustment,
-        //     currentPower: add(lastStreamPower, zone.powerAdjustment),
-        //   });
-        // } else {
-        //   G.zones[zoneNumber].sides[playerId][i].powerStream = [{
-        //     blame: zone.id,
-        //     adjustment: zone.powerAdjustment,
-        //     currentPower: add(c.basePower, zone.powerAdjustment),
-        //   }];
-        // }
-      });
-      break;
-    default:
-      break;
-  }
-};
-
 export {
   deselectCard,
   handleCardInteraction,
-  handleZoneInteraction,
   playAiCard,
   playCard,
   revealCard,

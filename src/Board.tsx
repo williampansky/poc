@@ -390,10 +390,10 @@ export const Board = (props: GameProps) => {
           >
             <button
               onClick={onClick}
-              disabled={G.done['0'] === true || ctx.phase !== 'playCards'}
+              disabled={G.PlayerTurnDone['0'] === true || ctx.phase !== 'playCards'}
               style={{
                 background:
-                  G.done['0'] === false && ctx.phase === 'playCards'
+                  G.PlayerTurnDone['0'] === false && ctx.phase === 'playCards'
                     ? 'yellow'
                     : 'initial',
                 display: 'flex',
