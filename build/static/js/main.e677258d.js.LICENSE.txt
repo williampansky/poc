@@ -5,6 +5,14 @@ object-assign
 */
 
 /*!
+ *  decimal.js v10.4.1
+ *  An arbitrary-precision Decimal type for JavaScript.
+ *  https://github.com/MikeMcl/decimal.js
+ *  Copyright (c) 2022 Michael Mclaughlin <M8ch88l@gmail.com>
+ *  MIT Licence
+ */
+
+/*!
  * cookie
  * Copyright(c) 2012-2014 Roman Shtylman
  * Copyright(c) 2015 Douglas Christopher Wilson
@@ -14,6 +22,21 @@ object-assign
 /*! (c) 2020 Andrea Giammarchi */
 
 /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
+/**
+ * @license Complex.js v2.1.1 12/05/2020
+ *
+ * Copyright (c) 2020, Robert Eisele (robert@xarg.org)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ **/
+
+/**
+ * @license Fraction.js v4.2.0 05/03/2022
+ * https://www.xarg.org/2014/03/rational-numbers-in-javascript/
+ *
+ * Copyright (c) 2021, Robert Eisele (robert@xarg.org)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ **/
 
 /** @license React v0.20.2
  * scheduler.production.min.js

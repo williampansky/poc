@@ -1,5 +1,5 @@
 {
-  "homepage": "https://williampansky.github.io/poc",
+  "homepage": "./build",
   "name": "poc",
   "version": "0.1.0",
   "private": true,
