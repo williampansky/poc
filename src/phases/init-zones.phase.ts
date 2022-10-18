@@ -2,6 +2,7 @@ import { Ctx, PhaseConfig } from 'boardgame.io';
 import { v4 as uuid } from 'uuid';
 import { GameState, Zone } from '../interfaces';
 import ZONE_DATABASE from '../tempZonesDatabase';
+import createZoneObject from '../utilities/create-zone-object';
 
 const initZonesPhase: PhaseConfig = {
   start: true,
@@ -9,19 +10,11 @@ const initZonesPhase: PhaseConfig = {
     console.clear();
     const { random } = ctx;
     const randomZonesArray = random?.Shuffle(ZONE_DATABASE) as Zone[];
+    const withUuid = true;
     let newZones: Zone[] = [];
 
     for (let idx = 0; idx < G.config.gameConfig.numberOfZones; idx++) {
-      let newZone = {
-        ...G.zones[0],
-        disabled: { '0': false, '1': false },
-        id: randomZonesArray![idx].id,
-        name: randomZonesArray![idx].name,
-        powerText: randomZonesArray![idx]?.powerText,
-        powerAdjustment: randomZonesArray![idx]?.powerAdjustment,
-        uuid: uuid(),
-      } as Zone;
-
+      let newZone = createZoneObject(randomZonesArray![idx], withUuid);
       newZones.push(newZone);
     }
 

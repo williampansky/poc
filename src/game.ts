@@ -16,6 +16,7 @@ import aiEnumeration from './ai';
 import { handleRevealedZonePowerCalculationsPhase } from './phases/handle-zone-power-calculations-phase';
 import stripSecrets from './utilities/strip-secrets';
 import { PlayerTurnDone } from './state';
+import createZoneObject from './utilities/create-zone-object';
 
 export const BcgPoc: Game<GameState> = {
   name: 'BcgPoc',
@@ -74,26 +75,10 @@ export const BcgPoc: Game<GameState> = {
 
     zones: [
       ...Array.from(Array(config.gameConfig.numberOfZones)).map(() => {
-        return {
-          disabled: {
-            '0': false,
-            '1': false,
-          },
+        return createZoneObject({
           id: '',
-          name: 'Zone',
-          powers: {
-            '0': 0,
-            '1': 0,
-          },
-          powerAdjustment: 0,
-          powerText: undefined,
-          revealed: false,
-          sides: {
-            '0': [],
-            '1': [],
-          },
-          uuid: '',
-        };
+          name: ''
+        });
       }),
     ],
 

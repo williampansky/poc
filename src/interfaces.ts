@@ -81,6 +81,18 @@ export interface Minion {
   zonePowerAdjustment: number;
 }
 
+/**
+ * Base zone information from the database/API, which gets
+ * converted into a Zone interface via the `createZoneObject` util.
+ * @see createZoneObject
+ */
+ export interface ZoneBase {
+  id: string;
+  name: string;
+  powerText?: string;
+  powerAdjustment?: number;
+}
+
 export interface Zone {
   disabled: Record<string, boolean>;
   id: string;

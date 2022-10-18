@@ -188,29 +188,8 @@ const setDone = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
   PlayerTurnDone.set(G, playerId);
 };
 
-const handleCardInteraction = async (
-  G: GameState,
-  ctx: Ctx,
-  playerId: string,
-  zoneNumber: number,
-  card: Card
-) => {
-  const apPerGame = G.config.gameConfig.actionPointsTotal;
-  switch (card?.__id) {
-    case 'CARD_017':
-      G.players[playerId].actionPointsTotal = add(
-        G.players[playerId].actionPointsTotal,
-        1
-      );
-      break;
-    default:
-      break;
-  }
-};
-
 export {
   deselectCard,
-  handleCardInteraction,
   playAiCard,
   playCard,
   revealCard,

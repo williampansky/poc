@@ -5,7 +5,6 @@ const initCardMechanicsPhase: PhaseConfig = {
   onBegin(G, ctx) {
     console.log(G.turn, ctx.phase);
     // @todo add mechanics here
-    // end the phase
     ctx.events?.endPhase();
   },
 }
