@@ -94,16 +94,18 @@ export interface Minion {
 }
 
 export interface Zone {
-  disabled: Record<string, boolean>;
+  disabled: Record<PlayerID, boolean>;
   id: string;
   name: string;
-  powers: Record<string, number>;
+  powers: Record<PlayerID, number>;
   powerText?: string;
   powerAdjustment: number;
   revealed: boolean;
-  sides: Record<string, Minion[]>;
+  sides: Record<PlayerID, Minion[]>;
   uuid: string;
 }
+
+export declare type ZonesCardsReference = Record<PlayerID, Card[]>;
 
 export interface Player {
   name: string;
@@ -140,5 +142,6 @@ export interface GameState {
   selectedCardIndex: Record<PlayerID, number | undefined>;
   playedCards: Record<PlayerID, Card[]>;
   zones: Zone[];
+  ZonesCardsReference: Record<PlayerID, Card[]>[];
   config: Config;
 }

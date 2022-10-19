@@ -53,12 +53,14 @@ const playCard = (
   const card = G.selectedCardData[playerId]! as Card;
   const cardUuid = G.selectedCardData[playerId]!.uuid;
   const zone = zones[zoneNumber];
+  const zoneRef = G.ZonesCardsReference[zoneNumber];
 
   // validate cost playability
   if (G.players[playerId].actionPoints < card.currentCost) return INVALID_MOVE;
 
   // validate zone playability
   if (zone.sides[playerId].length > numberOfSlotsPerZone) return INVALID_MOVE;
+  if (zoneRef[playerId].length > numberOfSlotsPerZone) return INVALID_MOVE;
   if (zone.disabled[playerId]) return INVALID_MOVE;
 
   // add card to playedCards array
@@ -69,7 +71,8 @@ const playCard = (
   G.players[playerId].actionPoints = newAP;
 
   // push card to zone side array
-  zone.sides[playerId].push(createMinionObject(card));
+  // zone.sides[playerId].push(createMinionObject(card));
+  zoneRef[playerId].push(card);
 
   // remove card from hand
   const newHand = player.hand.filter((c: Card) => c.uuid !== cardUuid);
@@ -95,11 +98,14 @@ const revealCard = async (
   ctx: Ctx,
   playerId: string,
   zoneNumber: number,
-  obj: Minion,
+  obj: Card,
   objIndex: number
 ) => {
+  // @ts-ignore
+  const zoneRefs = G.ZonesCardsReference;
+  const cardToReveal = zoneRefs[zoneNumber][playerId][objIndex];
   G.zones[zoneNumber].sides[playerId][objIndex] = {
-    ...G.zones[zoneNumber].sides[playerId][objIndex],
+    ...createMinionObject(cardToReveal),
     revealed: true, // reveal card
     displayPower: getCardPower(obj),// set display power
     revealedOnTurn: G.turn // set revealedOnTurn value
@@ -128,6 +134,8 @@ const playAiCard = (
   const cardUuid = card.uuid;
   const zone = zones[zoneNumber];
   const zoneSideLength = zone.sides['1'].length;
+  const zoneRef = G.ZonesCardsReference[zoneNumber];
+  const zoneRefSideLength = zoneRef['1'].length;
   const currentAP = G.players['1'].actionPoints;
 
   // validate cost playability
@@ -135,6 +143,7 @@ const playAiCard = (
 
   // validate zone playability
   if (zoneSideLength > numberOfSlotsPerZone) return INVALID_MOVE;
+  if (zoneRefSideLength > numberOfSlotsPerZone) return INVALID_MOVE;
   if (zone.disabled['1']) return INVALID_MOVE;
 
   // add card to playedCards array
@@ -145,7 +154,8 @@ const playAiCard = (
   G.players['1'].actionPoints = newAP;
 
   // push card to zone side array
-  zone.sides['1'].push(createMinionObject(card));
+  // zone.sides['1'].push(createMinionObject(card));
+  zoneRef['1'].push(card);
 
   // remove card from hand
   const newHand = player.hand.filter((c: Card) => c.uuid !== cardUuid);

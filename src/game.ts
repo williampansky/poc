@@ -77,8 +77,14 @@ export const BcgPoc: Game<GameState> = {
       ...Array.from(Array(config.gameConfig.numberOfZones)).map(() => {
         return createZoneObject({
           id: '',
-          name: ''
+          name: '',
         });
+      }),
+    ],
+
+    ZonesCardsReference: [
+      ...Array.from(Array(config.gameConfig.numberOfZones)).map(() => {
+        return { '0': [], '1': [] };
       }),
     ],
 

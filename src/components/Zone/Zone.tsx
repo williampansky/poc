@@ -89,7 +89,7 @@ export const Zone = ({
           width: '8em',
           borderRadius: '50%',
           background: 'gray',
-          margin: '0.5em auto 0.5em',
+          margin: '1em auto',
           display: 'flex',
           flexFlow: 'column nowrap',
           alignItems: 'center',
@@ -201,7 +201,8 @@ export const Zone = ({
           isActive={
             ctx.currentPlayer === '0' &&
             G.selectedCardData['0'] !== undefined &&
-            zone?.sides['0'].length !== config.gameConfig.numberOfSlotsPerZone &&
+            zone?.sides['0'].length !==
+              config.gameConfig.numberOfSlotsPerZone &&
             !zone?.disabled['0'] &&
             G.players['0'].actionPoints >= G.selectedCardData['0']?.currentCost
           }
@@ -221,6 +222,38 @@ export const Zone = ({
           {zone?.sides[0].map((obj: Minion, idx: number) => {
             return <ZoneSlot key={idx} data={obj} onClick={onCardClick} />;
           })}
+          {G.ZonesCardsReference[zoneNumber]['0']?.map(
+            (obj: Card, idx: number) => {
+              return !obj.revealed && zone.sides['0'][idx] === undefined ? (
+                <div
+                  key={idx}
+                  style={{
+                    height: '3.5em',
+                    width: '2.75em',
+                    transition: '150ms ease-in',
+                    opacity: '1',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexFlow: 'column nowrap',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '0.25em',
+                      textAlign: 'center',
+                      position: 'relative',
+                      border: '1px solid black',
+                      borderRadius: '0.25em',
+                      background: '#ccc',
+                      height: '100%',
+                      width: '100%',
+                    }}
+                  ></div>
+                </div>
+              ) : null;
+            }
+          )}
         </div>
       </div>
     </div>
