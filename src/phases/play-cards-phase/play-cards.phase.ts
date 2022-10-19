@@ -22,7 +22,6 @@ const playCardsPhase: PhaseConfig = {
   next: 'revealCards',
   onBegin(G: GameState, ctx: Ctx) {
     console.log(G.turn, ctx.phase);
-    // incrementGameTurn(G); // ............... G.turn++
     incrementActionPointsTotal(G); // ...... set new total action points available
     setActionPointsToTotal(G); // .......... set current action points to new total
     setPlayableCardsInHand(G); // .......... check card playability

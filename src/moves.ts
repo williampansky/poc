@@ -98,31 +98,12 @@ const revealCard = async (
   obj: Minion,
   objIndex: number
 ) => {
-  const { uuid } = obj;
-
-  // reveal card
-  G.zones[zoneNumber].sides[playerId][objIndex].revealed = true;
-
-  // handle zone interactions
-  // handleZoneInteraction(G, ctx, playerId, zoneNumber);
-
-  // run interaction
-  // handleCardInteraction(G, ctx, playerId, zoneNumber, card);
-
-  // calculate new power
-  const power = getCardPower(obj);
-
-  // set display power
-  G.zones[zoneNumber].sides[playerId][objIndex].displayPower = power;
-
-  // set revealedOnTurn value
-  G.zones[zoneNumber].sides[playerId][objIndex].revealedOnTurn = G.turn;
-
-  // calculate zone power
-  // G.zones[zoneNumber].powers[playerId] = add(
-  //   G.zones[zoneNumber].powers[playerId],
-  //   power
-  // );
+  G.zones[zoneNumber].sides[playerId][objIndex] = {
+    ...G.zones[zoneNumber].sides[playerId][objIndex],
+    revealed: true, // reveal card
+    displayPower: getCardPower(obj),// set display power
+    revealedOnTurn: G.turn // set revealedOnTurn value
+  }
 };
 
 const playAiCard = (
