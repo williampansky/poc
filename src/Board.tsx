@@ -267,7 +267,7 @@ export const Board = (props: GameProps) => {
                     border: '1px solid',
                     borderColor: '#333',
                     borderRadius: '0.25em',
-                    background: ctx.currentPlayer === '1' ? 'white' : '#333',
+                    background: ctx.currentPlayer === '1' ? 'white' : '#616161',
                     height: '3.5em',
                     width: '2.45em',
                     transform:
