@@ -14,10 +14,10 @@ import {
   revealZonePhase,
 } from './phases';
 import aiEnumeration from './ai';
-import { handleRevealedZonePowerCalculationsPhase } from './phases/handle-zone-power-calculations-phase';
 import stripSecrets from './utilities/strip-secrets';
 import { PlayerTurnDone } from './state';
 import createZoneObject from './utilities/create-zone-object';
+import getGameResult from './utilities/get-game-result';
 
 export const BcgPoc: Game<GameState> = {
   name: 'BcgPoc',
@@ -169,35 +169,12 @@ export const BcgPoc: Game<GameState> = {
   ai: aiEnumeration,
   endIf: (G: GameState, ctx: Ctx) => {
     if (G.turn === G.config.gameConfig.numberOfSingleTurnsPerGame) {
-      switch (isVictory(G.zones[0], G.zones[1], G.zones[2])) {
-        case '1':
-          return { winner: '1' };
-
-        case '0':
-          return { winner: '0' };
-
-        case '':
-        default:
-          return { draw: true };
+      // prettier-ignore
+      switch (getGameResult(G.zones)) {
+        case '1': return { winner: '1' };
+        case '0': return { winner: '0' };
+        default:  return { draw: true };
       }
     }
   },
-};
-
-const isVictory = (zone1: Zone, zone2: Zone, zone3: Zone): string => {
-  let player0TotalPower = 0;
-  let player1TotalPower = 0;
-  let winner = '';
-
-  player0TotalPower = Math.round(
-    zone1.powers[0] + zone2.powers[0] + zone3.powers[0]
-  );
-  player1TotalPower = Math.round(
-    zone1.powers[1] + zone2.powers[1] + zone3.powers[1]
-  );
-
-  if (player1TotalPower > player0TotalPower) winner = '1';
-  else if (player0TotalPower > player1TotalPower) winner = '0';
-
-  return winner;
 };
