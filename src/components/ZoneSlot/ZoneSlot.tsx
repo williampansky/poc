@@ -24,11 +24,11 @@ export const ZoneSlot = ({
   }, [data]);
 
   const getAnimationDirection = (zoneNumber: number): string => {
-    const scaleEnd = playerId === '1' ? 'scaleY(-1)' : 'scaleY(1)';
-    const scaleStart = playerId === '1' ? 'scaleY(-1) scale(5)' : 'scale(5)';
-    const translateStart0 = playerId === '1' ? 'translate(150%, -50%)' : 'translate(-150%, 50%)';
+    const scaleEnd = playerId === '1' ? 'scale(1, -1)' : 'scale(1)';
+    const scaleStart = playerId === '1' ? 'scale(5, -5)' : 'scale(5)';
+    const translateStart0 = playerId === '1' ? 'translate(-50%, -50%)' : 'translate(-50%, 50%)';
     const translateStart1 = playerId === '1' ? 'translate(0, -100%)' : 'translate(0, 100%)';
-    const translateStart2 = playerId === '1' ? 'translate(-150%, -50%)' : 'translate(150%, 50%)';
+    const translateStart2 = playerId === '1' ? 'translate(50%, -50%)' : 'translate(50%, 50%)';
 
     switch (zoneNumber) {
       case 0:
