@@ -60,7 +60,6 @@ export interface Card {
   type: 'CARD';
   uuid: string;
   zonePowerAdjustment: number;
-  transitionDelay: number;
 }
 
 export interface Minion {
@@ -80,7 +79,6 @@ export interface Minion {
   type: 'MINION';
   uuid: string;
   zonePowerAdjustment: number;
-  transitionDelay: number;
 }
 
 /**

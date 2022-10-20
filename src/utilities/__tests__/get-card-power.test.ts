@@ -17,6 +17,8 @@ describe(describe1, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: 0,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
@@ -42,6 +44,8 @@ describe(describe1, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: 0,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
@@ -61,6 +65,8 @@ describe(describe1, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: 0,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
@@ -84,6 +90,8 @@ describe(describe2, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: 1,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
@@ -109,6 +117,8 @@ describe(describe2, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: 1,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
@@ -128,6 +138,8 @@ describe(describe2, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: 1,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
@@ -151,6 +163,8 @@ describe(describe3, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: -1,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
@@ -176,6 +190,8 @@ describe(describe3, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: -1,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
@@ -195,6 +211,8 @@ describe(describe3, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: -1,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
@@ -218,6 +236,8 @@ describe(describe4, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: -15,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
@@ -243,6 +263,8 @@ describe(describe4, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: -3,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
@@ -262,6 +284,8 @@ describe(describe4, () => {
       revealed: false,
       uuid: '12345',
       zonePowerAdjustment: -3,
+      type: 'CARD',
+      revealedOnTurn: 0,
     } as Card;
 
     const fn = getCardPower(card);
