@@ -20,6 +20,7 @@ const createMinionObject = (obj: Card): Minion => {
     type: 'MINION',
     uuid: obj?.uuid,
     zonePowerAdjustment: 0,
+    transitionDelay: 0,
   } as Minion;
 };
 

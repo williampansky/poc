@@ -67,12 +67,25 @@ export const Zone = ({
           flexFlow: 'column nowrap',
           alignItems: 'center',
           justifyContent: 'center',
+          gridTemplate: `repeat(3, 3.5em) / repeat(${
+            zone?.sides[0].length === 1 ? '2' : '2'
+          }, 2.75em)`,
+          transform: 'scaleY(-1)'
         }}
       >
         {zone?.sides[1].map((obj: Minion, idx: number) => {
-          return <ZoneSlot key={idx} data={obj} onClick={onCardClick} />;
+          return (
+            <ZoneSlot
+              key={idx}
+              data={obj}
+              onClick={onCardClick}
+              zoneNumber={zoneNumber}
+              slotIndex={idx}
+              playerId={'1'}
+            />
+          );
         })}
-        {[
+        {/* {[
           ...Array.from(
             Array(
               config.gameConfig.numberOfSlotsPerZone - zone?.sides[1].length
@@ -80,7 +93,7 @@ export const Zone = ({
           ),
         ].map((_, idx: number) => {
           return <div key={idx} />;
-        })}
+        })} */}
       </div>
       <div
         style={{
@@ -220,7 +233,16 @@ export const Zone = ({
           }}
         >
           {zone?.sides[0].map((obj: Minion, idx: number) => {
-            return <ZoneSlot key={idx} data={obj} onClick={onCardClick} />;
+            return (
+              <ZoneSlot
+                key={idx}
+                data={obj}
+                onClick={onCardClick}
+                zoneNumber={zoneNumber}
+                slotIndex={idx}
+                playerId={'0'}
+              />
+            );
           })}
           {G.ZonesCardsReference[zoneNumber]['0']?.map(
             (obj: Card, idx: number) => {

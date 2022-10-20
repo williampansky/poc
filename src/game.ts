@@ -9,6 +9,7 @@ import {
   initZoneInteractionsPhase,
   initZonesPhase,
   playCardsPhase,
+  revealCardsFaceDownPhase,
   revealCardsPhase,
   revealZonePhase,
 } from './phases';
@@ -89,6 +90,7 @@ export const BcgPoc: Game<GameState> = {
     ],
 
     config: config,
+    cardDrag: null,
   }),
 
   /**
@@ -106,6 +108,7 @@ export const BcgPoc: Game<GameState> = {
    *  - incrementGameTurn
    *  - drawCard
    *  - playCards
+   *  - revealCardsFaceDown
    *  - revealCards
    *  - initCardMechanics
    *  - initZoneInteractions
@@ -140,6 +143,10 @@ export const BcgPoc: Game<GameState> = {
     },
     playCards: {
       ...playCardsPhase,
+      next: 'revealCardsFaceDown',
+    },
+    revealCardsFaceDown: {
+      ...revealCardsFaceDownPhase,
       next: 'revealCards',
     },
     revealCards: {

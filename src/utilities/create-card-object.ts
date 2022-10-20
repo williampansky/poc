@@ -21,6 +21,7 @@ const createCardObject = (obj: CardBase): Card => {
     type: 'CARD',
     uuid: uuid(),
     zonePowerAdjustment: 0,
+    transitionDelay: 0,
   } as Card;
 };
 
