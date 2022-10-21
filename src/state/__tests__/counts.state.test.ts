@@ -1,9 +1,8 @@
-import { config } from '../../interfaces';
-import Counts from '../counts.state';
-import DefaultState from '../default.state';
+import { config, GameState } from '../../interfaces';
+import { Counts, DefaultState } from '../';
 
 const getMockGameState = () => {
-  const mockGameState = {
+  const mockGameState: GameState = {
     ...DefaultState,
     Counts: {
       '0': {

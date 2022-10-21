@@ -1,9 +1,9 @@
-import { config } from '../../interfaces';
-import {DefaultState, SelectedCardData} from '../';
+import { DefaultState, SelectedCardData } from '../';
+import { GameState } from '../../interfaces';
 import createCardObject from '../../utilities/create-card-object';
 
 const getMockGameState = () => {
-  const mockGameState = {
+  const mockGameState: GameState = {
     ...DefaultState,
     SelectedCardData: {
       '0': undefined,
