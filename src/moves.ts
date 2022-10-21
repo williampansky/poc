@@ -2,7 +2,7 @@ import { Ctx } from 'boardgame.io';
 import { ActivePlayers, INVALID_MOVE } from 'boardgame.io/core';
 import { add, subtract } from 'mathjs';
 import { Card, GameState, PlayerID } from './interfaces';
-import { PlayerTurnDone } from './state';
+import { PlayedCards, PlayerTurnDone } from './state';
 import createMinionObject from './utilities/create-minion-object';
 import getCardPower from './utilities/get-card-power';
 
@@ -63,8 +63,8 @@ const playCard = (
   if (zoneRef[playerId].length > numberOfSlotsPerZone) return INVALID_MOVE;
   if (zone.disabled[playerId]) return INVALID_MOVE;
 
-  // add card to playedCards array
-  G.playedCards[playerId].push(card);
+  // add card to PlayedCards array
+  PlayedCards.push(G, playerId, card);
 
   // remove cost from current action points
   const newAP = subtract(G.players[playerId].actionPoints, card.currentCost);
@@ -146,8 +146,8 @@ const playAiCard = (
   if (zoneRefSideLength > numberOfSlotsPerZone) return INVALID_MOVE;
   if (zone.disabled['1']) return INVALID_MOVE;
 
-  // add card to playedCards array
-  G.playedCards['1'].push(card);
+  // add card to PlayedCards array
+  PlayedCards.push(G, '1', card);
 
   // remove cost from current action points
   const newAP = subtract(G.players['1'].actionPoints, card.currentCost);

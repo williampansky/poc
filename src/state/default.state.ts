@@ -2,6 +2,7 @@ import { config } from "../interfaces";
 import createZoneObject from "../utilities/create-zone-object";
 import Counts from "./counts.state";
 import FirstRevealer from "./first-revealer.state";
+import PlayedCards from "./played-cards.state";
 import PlayerTurnDone from "./player-turn-done.state";
 
 const DefaultState = {
@@ -41,10 +42,7 @@ const DefaultState = {
       '1': undefined,
     },
 
-    playedCards: {
-      '0': [],
-      '1': [],
-    },
+    PlayedCards: PlayedCards.defaultState,
 
     zones: [
       ...Array.from(Array(config.gameConfig.numberOfZones)).map(() => {

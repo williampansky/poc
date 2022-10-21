@@ -1,26 +1,14 @@
-import { GameState, PlayerID } from "../interfaces";
+import { Card, GameState, PlayerID } from "../interfaces";
 
-const Counts = {
+const PlayedCards = {
   defaultState: {
     '0': [],
     '1': []
   },
 
-  decrementDeck: (G: GameState, playerId: PlayerID) => {
-    G.Counts[playerId].deck--;
+  push: (G: GameState, playerId: PlayerID, card: Card) => {
+    G.PlayedCards[playerId].push(card);
   },
-
-  decrementHand: (G: GameState, playerId: PlayerID) => {
-    G.Counts[playerId].hand--;
-  },
-
-  incrementDeck: (G: GameState, playerId: PlayerID) => {
-    G.Counts[playerId].deck++;
-  },
-
-  incrementHand: (G: GameState, playerId: PlayerID) => {
-    G.Counts[playerId].hand++;
-  }
 };
 
-export default Counts;
+export default PlayedCards;
