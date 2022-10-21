@@ -15,8 +15,7 @@ import {
 } from './phases';
 import aiEnumeration from './ai';
 import stripSecrets from './utilities/strip-secrets';
-import { FirstRevealer, PlayerTurnDone } from './state';
-import createZoneObject from './utilities/create-zone-object';
+import { DefaultState } from './state';
 import getGameResult from './utilities/get-game-result';
 
 export const BcgPoc: Game<GameState> = {
@@ -33,66 +32,7 @@ export const BcgPoc: Game<GameState> = {
     return stripSecrets(G, ctx, playerId!);
   },
 
-  setup: () => ({
-    turn: 0,
-    PlayerTurnDone: PlayerTurnDone.defaultState,
-
-    revealed: {
-      '0': false,
-      '1': false,
-    },
-    FirstRevealer: FirstRevealer.defaultState,
-
-    players: {
-      '0': {
-        name: 'Player',
-        deck: [],
-        hand: [],
-        actionPoints: 0,
-        actionPointsTotal: 0,
-      },
-      '1': {
-        name: 'Opponent',
-        deck: [],
-        hand: [],
-        actionPoints: 0,
-        actionPointsTotal: 0,
-      },
-    },
-
-    selectedCardData: {
-      '0': undefined,
-      '1': undefined,
-    },
-
-    selectedCardIndex: {
-      '0': undefined,
-      '1': undefined,
-    },
-
-    playedCards: {
-      '0': [],
-      '1': [],
-    },
-
-    zones: [
-      ...Array.from(Array(config.gameConfig.numberOfZones)).map(() => {
-        return createZoneObject({
-          id: '',
-          name: '',
-        });
-      }),
-    ],
-
-    ZonesCardsReference: [
-      ...Array.from(Array(config.gameConfig.numberOfZones)).map(() => {
-        return { '0': [], '1': [] };
-      }),
-    ],
-
-    config: config,
-    cardDrag: null,
-  }),
+  setup: () => DefaultState,
 
   /**
    * Each phase in boardgame.io defines a set of game configuration options

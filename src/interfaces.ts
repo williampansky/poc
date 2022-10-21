@@ -115,6 +115,11 @@ export interface Player {
   actionPointsTotal: number;
 }
 
+export interface Counts {
+  deck: number;
+  hand: number;
+}
+
 export interface Config {
   debugConfig: {
     debugCardId: string;
@@ -145,4 +150,5 @@ export interface GameState {
   zones: Zone[];
   ZonesCardsReference: Record<PlayerID, Card[]>[];
   config: Config;
+  Counts: Record<PlayerID, Counts>;
 }

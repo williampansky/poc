@@ -1,4 +1,5 @@
 import { GameState } from '../../../interfaces';
+import { Counts } from '../../../state';
 
 const spliceDeckAndPushToHand = (G: GameState): void => {
   // prettier-ignore
@@ -8,6 +9,9 @@ const spliceDeckAndPushToHand = (G: GameState): void => {
       G.players[playerId].hand.push( // .......................... pushes to hand
         G.players[playerId].deck.splice(0, 1)[0] // .............. splices from deck
       );
+      
+      Counts.incrementHand(G, playerId); // ...................... count hand
+      Counts.decrementDeck(G, playerId); // .................... count deck
     }
   }
 

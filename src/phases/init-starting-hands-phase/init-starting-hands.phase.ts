@@ -4,6 +4,7 @@ import createCardObject from '../../utilities/create-card-object';
 import CARD_DATABASE from '../../tempCardsDatabase';
 import createMinionObject from '../../utilities/create-minion-object';
 import { createRandomDeck } from './methods';
+import { spliceDeckAndPushToHand } from '../draw-card-phase/methods';
 
 const initStartingHandsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
@@ -25,8 +26,7 @@ const initStartingHandsPhase: PhaseConfig = {
 
     // init hands
     [...Array(G.config.gameConfig.cardsPerStartingHand)].forEach(() => {
-      G.players['0'].hand.push(G.players['0'].deck.splice(0, 1)[0]);
-      G.players['1'].hand.push(G.players['1'].deck.splice(0, 1)[0]);
+      spliceDeckAndPushToHand(G);
     });
   },
   endIf: (G: GameState) => {
