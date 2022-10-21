@@ -1,6 +1,6 @@
-import { Ctx, PlayerID } from 'boardgame.io';
+import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
-import { Card, GameState, Minion } from '../../interfaces';
+import { Minion, PlayerID } from '../../interfaces';
 
 interface ReactZoneSlot {
   data?: Minion;

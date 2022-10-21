@@ -1,5 +1,5 @@
-import { Ctx, Game, PlayerID } from 'boardgame.io';
-import { config, GameState, Zone } from './interfaces';
+import { Ctx, Game } from 'boardgame.io';
+import { GameState, PlayerID } from './interfaces';
 import {
   drawCardPhase,
   handleZonePowerCalculationsPhase,

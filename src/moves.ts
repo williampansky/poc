@@ -1,7 +1,7 @@
-import { Ctx, PlayerID } from 'boardgame.io';
+import { Ctx } from 'boardgame.io';
 import { ActivePlayers, INVALID_MOVE } from 'boardgame.io/core';
 import { add, subtract } from 'mathjs';
-import { Card, GameState, Minion } from './interfaces';
+import { Card, GameState, PlayerID } from './interfaces';
 import { PlayerTurnDone } from './state';
 import createMinionObject from './utilities/create-minion-object';
 import getCardPower from './utilities/get-card-power';

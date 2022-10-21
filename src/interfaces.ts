@@ -1,4 +1,4 @@
-import { PlayerID } from "boardgame.io";
+import { PlayerID as bgioPlayerID } from "boardgame.io";
 
 export const config = {
   debugConfig: {
@@ -18,7 +18,7 @@ export const config = {
   },
 };
 
-// export type PlayerId = '0' | '1' | PlayerID;
+export type PlayerID = '0' | '1' | bgioPlayerID;
 
 /**
  * Used to track a card or minion's power changes.

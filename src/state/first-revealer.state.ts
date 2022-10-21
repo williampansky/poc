@@ -1,5 +1,4 @@
-import { PlayerID } from 'boardgame.io';
-import { GameState } from '../interfaces';
+import { GameState, PlayerID } from '../interfaces';
 import determineFirstRevealer from '../utilities/determine-first-revealer';
 
 const FirstRevealer = {

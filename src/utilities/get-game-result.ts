@@ -1,5 +1,4 @@
-import { PlayerID } from 'boardgame.io';
-import { Zone } from '../interfaces';
+import { PlayerID, Zone } from '../interfaces';
 import getSumOfAllZonesPower from './get-sum-of-all-zones-power';
 import getZonesWonBySide from './get-zone-wins-by-side';
 

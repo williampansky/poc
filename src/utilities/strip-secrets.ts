@@ -1,5 +1,5 @@
-import { Ctx, PlayerID } from 'boardgame.io';
-import { GameState } from '../interfaces';
+import { Ctx } from 'boardgame.io';
+import { GameState, PlayerID } from '../interfaces';
 
 /**
  * Strips away the following nested fields

@@ -1,5 +1,4 @@
-import { PlayerID } from 'boardgame.io';
-import { Zone } from '../interfaces';
+import { PlayerID, Zone } from '../interfaces';
 import getGameResult from './get-game-result';
 import getRandomNumberBetween from './get-random-number-between';
 

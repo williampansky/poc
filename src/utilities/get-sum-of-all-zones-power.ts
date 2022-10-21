@@ -1,6 +1,5 @@
 import { add } from "mathjs";
-import { PlayerID } from "boardgame.io"
-import { Zone } from "../interfaces";
+import { PlayerID, Zone } from "../interfaces";
 
 const getSumOfAllZonesPower = (zones: Zone[], playerId: PlayerID): number => {
   let result = 0;
