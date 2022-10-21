@@ -15,7 +15,7 @@ import {
 } from './phases';
 import aiEnumeration from './ai';
 import stripSecrets from './utilities/strip-secrets';
-import { PlayerTurnDone } from './state';
+import { FirstRevealer, PlayerTurnDone } from './state';
 import createZoneObject from './utilities/create-zone-object';
 import getGameResult from './utilities/get-game-result';
 
@@ -41,6 +41,7 @@ export const BcgPoc: Game<GameState> = {
       '0': false,
       '1': false,
     },
+    FirstRevealer: FirstRevealer.defaultState,
 
     players: {
       '0': {

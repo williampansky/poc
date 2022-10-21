@@ -137,6 +137,7 @@ export interface GameState {
   turn: number;
   PlayerTurnDone: Record<PlayerID, boolean>;
   revealed: Record<PlayerID, boolean>;
+  FirstRevealer: PlayerID;
   players: Record<PlayerID, Player>;
   selectedCardData: Record<PlayerID, Card | undefined>;
   selectedCardIndex: Record<PlayerID, number | undefined>;
