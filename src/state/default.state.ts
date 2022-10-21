@@ -8,11 +8,6 @@ import PlayerTurnDone from "./player-turn-done.state";
 const DefaultState = {
   turn: 0,
     PlayerTurnDone: PlayerTurnDone.defaultState,
-
-    revealed: {
-      '0': false,
-      '1': false,
-    },
     FirstRevealer: FirstRevealer.defaultState,
 
     players: {
