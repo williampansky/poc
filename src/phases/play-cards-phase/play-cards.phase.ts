@@ -7,6 +7,7 @@ import {
   initZoneOnTurnStartInteractions,
   resetDoneStateForBothPlayers,
   setActionPointsToTotal,
+  setFirstRevealer,
   setPlayableCardsInHand,
   unsetPlayableCardsInHand,
 } from './methods';
@@ -19,7 +20,6 @@ import {
 } from '../../moves';
 
 const playCardsPhase: PhaseConfig = {
-  next: 'revealCards',
   onBegin(G: GameState, ctx: Ctx) {
     console.log(G.turn, ctx.phase);
     incrementActionPointsTotal(G); // ...... set new total action points available
@@ -27,6 +27,7 @@ const playCardsPhase: PhaseConfig = {
     setPlayableCardsInHand(G); // .......... check card playability
     initZoneOnTurnStartInteractions(G); // . on-turn-start zone effects
     resetDoneStateForBothPlayers(G); // .... reset turn done state
+    setFirstRevealer(G); // ................ sets who reveals first
     addDebugCardToHand(G); // .............. handle debug card draw, if applicable
   },
   onEnd(G: GameState, ctx: Ctx) {
