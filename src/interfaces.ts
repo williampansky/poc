@@ -19,6 +19,7 @@ export const config = {
 };
 
 export type PlayerID = '0' | '1' | bgioPlayerID;
+export type SelectedCardIndex = Record<PlayerID, number | undefined>;
 
 /**
  * Used to track a card or minion's power changes.
@@ -144,7 +145,7 @@ export interface GameState {
   FirstRevealer: PlayerID;
   players: Record<PlayerID, Player>;
   SelectedCardData: Record<PlayerID, Card | undefined>;
-  selectedCardIndex: Record<PlayerID, number | undefined>;
+  SelectedCardIndex: SelectedCardIndex;
   PlayedCards: Record<PlayerID, Card[]>;
   zones: Zone[];
   ZonesCardsReference: Record<PlayerID, Card[]>[];
