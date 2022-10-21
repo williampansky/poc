@@ -143,7 +143,7 @@ export interface GameState {
   PlayerTurnDone: Record<PlayerID, boolean>;
   FirstRevealer: PlayerID;
   players: Record<PlayerID, Player>;
-  selectedCardData: Record<PlayerID, Card | undefined>;
+  SelectedCardData: Record<PlayerID, Card | undefined>;
   selectedCardIndex: Record<PlayerID, number | undefined>;
   PlayedCards: Record<PlayerID, Card[]>;
   zones: Zone[];

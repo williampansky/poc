@@ -142,7 +142,7 @@ export const Board = (props: GameProps) => {
           <div>
             ctx.turn: {ctx.turn} / singleTurn: {Math.round(ctx.turn / 2)}
           </div>
-          <div>selectedCardData: {G.selectedCardData['0']?.__id}</div>
+          <div>selectedCardData: {G.SelectedCardData['0']?.__id}</div>
           <div>selectedCardIndex: {G.selectedCardIndex['0']}</div>
         </div>
       )}

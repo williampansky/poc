@@ -2,14 +2,14 @@ import { Ctx } from 'boardgame.io';
 import { ActivePlayers, INVALID_MOVE } from 'boardgame.io/core';
 import { add, subtract } from 'mathjs';
 import { Card, GameState, PlayerID } from './interfaces';
-import { PlayedCards, PlayerTurnDone } from './state';
+import { PlayedCards, PlayerTurnDone, SelectedCardData } from './state';
 import createMinionObject from './utilities/create-minion-object';
 import getCardPower from './utilities/get-card-power';
 
 const selectCard = (
   G: GameState,
   ctx: Ctx,
-  playerId: string,
+  playerId: PlayerID,
   cardUuid: string
 ) => {
   const cardMatch = G.players[playerId].hand.find(
@@ -19,23 +19,23 @@ const selectCard = (
     (c: Card) => c.uuid === cardUuid
   );
 
-  if (G.selectedCardData[playerId]?.uuid === cardMatch?.uuid) {
-    G.selectedCardData[playerId] = undefined;
+  if (G.SelectedCardData[playerId]?.uuid === cardMatch!.uuid) {
+    SelectedCardData.reset(G, playerId);
   } else {
-    G.selectedCardData[playerId] = cardMatch;
+    SelectedCardData.set(G, playerId, cardMatch!);
     G.selectedCardIndex[playerId] = cardMatchIndex;
   }
 };
 
-const deselectCard = (G: GameState, ctx: Ctx, playerId: string) => {
-  G.selectedCardData[playerId] = undefined;
+const deselectCard = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
+  SelectedCardData.reset(G, playerId);
   G.selectedCardIndex[playerId] = undefined;
 };
 
 const playCard = (
   G: GameState,
   ctx: Ctx,
-  playerId: string,
+  playerId: PlayerID,
   zoneNumber: number
 ) => {
   const { currentPlayer } = ctx;
@@ -47,11 +47,11 @@ const playCard = (
   } = G;
 
   // validate selected card
-  if (G.selectedCardData[playerId] === undefined) return INVALID_MOVE;
+  if (G.SelectedCardData[playerId] === undefined) return INVALID_MOVE;
 
   const player = G.players[playerId];
-  const card = G.selectedCardData[playerId]! as Card;
-  const cardUuid = G.selectedCardData[playerId]!.uuid;
+  const card = G.SelectedCardData[playerId]! as Card;
+  const cardUuid = G.SelectedCardData[playerId]!.uuid;
   const zone = zones[zoneNumber];
   const zoneRef = G.ZonesCardsReference[zoneNumber];
 
@@ -89,7 +89,7 @@ const playCard = (
     });
 
   // unset selected card
-  G.selectedCardData[playerId] = undefined;
+  SelectedCardData.reset(G, playerId);
   G.selectedCardIndex[playerId] = undefined;
 };
 
@@ -127,7 +127,7 @@ const playAiCard = (
   } = G;
 
   // set selected card
-  G.selectedCardData['1'] = card;
+  G.SelectedCardData['1'] = card;
   G.selectedCardIndex['1'] = cardIndex;
 
   const player = G.players['1'];
@@ -171,7 +171,7 @@ const playAiCard = (
   });
 
   // unset selectedCard
-  G.selectedCardData['1'] = undefined;
+  SelectedCardData.reset(G, '1');
   G.selectedCardIndex['1'] = undefined;
 };
 

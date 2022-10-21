@@ -4,6 +4,7 @@ import Counts from "./counts.state";
 import FirstRevealer from "./first-revealer.state";
 import PlayedCards from "./played-cards.state";
 import PlayerTurnDone from "./player-turn-done.state";
+import SelectedCardData from "./selected-card-data.state";
 
 const DefaultState = {
   turn: 0,
@@ -27,10 +28,7 @@ const DefaultState = {
       },
     },
 
-    selectedCardData: {
-      '0': undefined,
-      '1': undefined,
-    },
+    SelectedCardData: SelectedCardData.defaultState,
 
     selectedCardIndex: {
       '0': undefined,

@@ -213,11 +213,11 @@ export const Zone = ({
           moves={moves}
           isActive={
             ctx.currentPlayer === '0' &&
-            G.selectedCardData['0'] !== undefined &&
+            G.SelectedCardData['0'] !== undefined &&
             zone?.sides['0'].length !==
               config.gameConfig.numberOfSlotsPerZone &&
             !zone?.disabled['0'] &&
-            G.players['0'].actionPoints >= G.selectedCardData['0']?.currentCost
+            G.players['0'].actionPoints >= G.SelectedCardData['0']?.currentCost
           }
           playerId='0'
           zoneNumber={zoneNumber}

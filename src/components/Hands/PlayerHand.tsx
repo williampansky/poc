@@ -300,7 +300,7 @@ export const PlayerHand = ({
                       key={G.players['0'].hand[i].uuid}
                       // onClick={(c: Card) => onCardClick(c)}
                       isSelected={
-                        G.selectedCardData[0]?.uuid ===
+                        G.SelectedCardData[0]?.uuid ===
                         G.players['0'].hand[i].uuid
                       }
                     />
