@@ -1,17 +1,5 @@
-import { DefaultState, SelectedCardIndex } from '..';
-import { GameState } from '../../interfaces';
-
-const getMockGameState = (val1?: any, val2?: any) => {
-  const mockGameState: GameState = {
-    ...DefaultState,
-    SelectedCardIndex: {
-      '0': val1 ? val1 : undefined,
-      '1': val2 ? val2 : undefined
-    }
-  }
-
-  return mockGameState;
-}
+import { SelectedCardIndex } from '..';
+import { mockGameState } from '../../test-utils';
 
 describe('Handles G.SelectedCardIndex state manipulation', () => {
   test('Should return the default state', () => {
@@ -25,7 +13,7 @@ describe('Handles G.SelectedCardIndex state manipulation', () => {
   });
 
   test('Should set the player\'s selected card index', () => {
-    let G = getMockGameState();
+    let G = mockGameState('SelectedCardIndex');
 
     SelectedCardIndex.set(G, '0', 2);
     
@@ -34,7 +22,7 @@ describe('Handles G.SelectedCardIndex state manipulation', () => {
   });
 
   test('Should set the player\'s selected card to undefined', () => {
-    let G = getMockGameState(1);
+    let G = mockGameState('SelectedCardIndex', 1);
     SelectedCardIndex.reset(G, '0');
     
     expect(G.SelectedCardIndex['0']).toBeUndefined();

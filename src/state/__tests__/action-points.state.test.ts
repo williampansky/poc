@@ -1,20 +1,5 @@
-import { ActionPoints, DefaultState } from '..';
-import { GameState } from '../../interfaces';
-
-const getMockGameState = (
-  val1: any = { current: 0, total: 0 },
-  val2: any = { current: 0, total: 0 }
-) => {
-  const mockGameState: GameState = {
-    ...DefaultState,
-    ActionPoints: {
-      '0': val1,
-      '1': val2,
-    },
-  };
-
-  return mockGameState;
-};
+import { ActionPoints } from '..';
+import { mockGameState } from '../../test-utils';
 
 describe('Handles G.ActionPoints state manipulation', () => {
   test('Should return the default state', () => {
@@ -28,7 +13,8 @@ describe('Handles G.ActionPoints state manipulation', () => {
   });
 
   test("Should increment the player's total action point value", () => {
-    let G = getMockGameState(
+    let G = mockGameState(
+      'ActionPoints',
       { current: 0, total: 0 },
       { current: 4, total: 4 }
     );
@@ -39,7 +25,8 @@ describe('Handles G.ActionPoints state manipulation', () => {
   });
 
   test("Should set the player's current value to match their total", () => {
-    let G = getMockGameState(
+    let G = mockGameState(
+      'ActionPoints',
       { current: 0, total: 5 },
       { current: 1, total: 2 }
     );
@@ -50,7 +37,8 @@ describe('Handles G.ActionPoints state manipulation', () => {
   });
 
   test("Should set the player's current value to any provided amount", () => {
-    let G = getMockGameState(
+    let G = mockGameState(
+      'ActionPoints',
       { current: 0, total: 5 },
       { current: 2, total: 3 }
     );
@@ -61,7 +49,8 @@ describe('Handles G.ActionPoints state manipulation', () => {
   });
 
   test("Should set the player's total value to any provided amount", () => {
-    let G = getMockGameState(
+    let G = mockGameState(
+      'ActionPoints',
       { current: 2, total: 5 },
       { current: 4, total: 5 }
     );
@@ -72,7 +61,8 @@ describe('Handles G.ActionPoints state manipulation', () => {
   });
 
   test("Should subtract from the player's current value", () => {
-    let G = getMockGameState(
+    let G = mockGameState(
+      'ActionPoints',
       { current: 6, total: 6 },
       { current: 1, total: 8 }
     );
@@ -83,7 +73,8 @@ describe('Handles G.ActionPoints state manipulation', () => {
   });
 
   test("Should *not* subtract from the player's current value past zero", () => {
-    let G = getMockGameState(
+    let G = mockGameState(
+      'ActionPoints',
       { current: 5, total: 5 },
       { current: 2, total: 9 }
     );

@@ -1,18 +1,6 @@
-import { GameState } from '../../interfaces';
-import { DefaultState, PlayedCards } from '../';
+import { PlayedCards } from '../';
+import { mockGameState } from '../../test-utils';
 import createCardObject from '../../utilities/create-card-object';
-
-const getMockGameState = () => {
-  const mockGameState: GameState = {
-    ...DefaultState,
-    PlayedCards: {
-      '0': [],
-      '1': [],
-    },
-  };
-
-  return mockGameState;
-};
 
 describe('Handles G.PlayedCards state manipulation', () => {
   test('Should return the default state', () => {
@@ -26,7 +14,7 @@ describe('Handles G.PlayedCards state manipulation', () => {
   });
 
   test("Should push a Card object the player's PlayedCards array", () => {
-    let G = getMockGameState();
+    let G = mockGameState();
     const testCardBase = { id: 'testCard1', name: 'cardy', cost: 1, power: 0 };
     const testCardObj = createCardObject(testCardBase);
 

@@ -1,18 +1,6 @@
-import { DefaultState, SelectedCardData } from '../';
-import { GameState } from '../../interfaces';
+import { SelectedCardData } from '../';
+import { mockGameState } from '../../test-utils';
 import createCardObject from '../../utilities/create-card-object';
-
-const getMockGameState = () => {
-  const mockGameState: GameState = {
-    ...DefaultState,
-    SelectedCardData: {
-      '0': undefined,
-      '1': undefined
-    }
-  }
-
-  return mockGameState;
-}
 
 describe('Handles G.SelectedCardData state manipulation', () => {
   test('Should return the default state', () => {
@@ -26,7 +14,7 @@ describe('Handles G.SelectedCardData state manipulation', () => {
   });
 
   test('Should set the player\'s selected card data object', () => {
-    let G = getMockGameState();
+    let G = mockGameState('SelectedCardData');
     const testCardBase = { id: 'testCard1', name: 'cardy', cost: 1, power: 0 };
     const testCardObj = createCardObject(testCardBase);
 
@@ -37,7 +25,7 @@ describe('Handles G.SelectedCardData state manipulation', () => {
   });
 
   test('Should set the player\'s selected card to undefined', () => {
-    let G = getMockGameState();
+    let G = mockGameState('SelectedCardData');
     SelectedCardData.reset(G, '0');
     
     expect(G.SelectedCardData['0']).toBeUndefined(); // should'nt change

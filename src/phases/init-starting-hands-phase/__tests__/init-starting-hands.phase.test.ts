@@ -7,14 +7,6 @@ import initStartingHandsPhase from '../init-starting-hands.phase';
 const { gameConfig: { cardsPerDeck, cardsPerStartingHand } } = config;
 const startingDeckLength = Math.abs(cardsPerDeck - cardsPerStartingHand);
 
-const getMockGameState = () => {
-  const mockGameState: GameState = {
-    ...DefaultState,
-  };
-
-  return mockGameState;
-};
-
 const getMockCtx = () => {
   const random = () => {
     const rand = getRandomNumberBetween(0, 20);

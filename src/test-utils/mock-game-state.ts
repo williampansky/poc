@@ -6,23 +6,29 @@ const mockGameState = (
   mockValueForPlayer0?: any,
   mockValueForPlayer1?: any
 ): GameState => {
+  const mockedDefaultGameState = {
+    ...DefaultState
+  }
+
   if (mockKey) {
-    return {
+    const mockedModifiedGameState = {
       ...DefaultState,
       [`${mockKey}`]: {
         '0': mockValueForPlayer0
           ? mockValueForPlayer0
           // @ts-ignore
-          : DefaultState[mockKey]['0'],
+          : DefaultState[`${mockKey}`]['0'],
         '1': mockValueForPlayer1
           ? mockValueForPlayer1
           // @ts-ignore
           : DefaultState[`${mockKey}`]['1'],
       },
-    } as GameState;
+    };
+
+    return mockedModifiedGameState;
   }
 
-  return DefaultState;
+  return mockedDefaultGameState;
 };
 
 export default mockGameState;

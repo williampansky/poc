@@ -1,6 +1,6 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
+import { drawTopCardFromPlayersDeck } from '../../utilities';
 import { GameState } from '../../interfaces';
-import { spliceDeckAndPushToHand } from '../draw-card-phase/methods';
 import CARD_DATABASE from '../../tempCardsDatabase';
 import createCardObject from '../../utilities/create-card-object';
 import createMinionObject from '../../utilities/create-minion-object';
@@ -8,7 +8,7 @@ import createRandomDeck from '../../utilities/create-random-deck';
 
 const initStartingHandsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    console.log(G.turn, ctx.phase);
+    if (G.config.debugConfig.logPhaseToConsole) console.log(G.turn, ctx.phase);
     const { random } = ctx;
 
     // debug opponents side interactions of CARD_10
@@ -26,7 +26,8 @@ const initStartingHandsPhase: PhaseConfig = {
 
     // init hands
     [...Array(G.config.gameConfig.cardsPerStartingHand)].forEach(() => {
-      spliceDeckAndPushToHand(G);
+      drawTopCardFromPlayersDeck(G, '0');
+      drawTopCardFromPlayersDeck(G, '1');
     });
   },
   endIf: (G: GameState) => {
