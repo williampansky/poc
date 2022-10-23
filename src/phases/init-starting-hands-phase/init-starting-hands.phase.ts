@@ -1,10 +1,10 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { Card, GameState } from '../../interfaces';
-import createCardObject from '../../utilities/create-card-object';
-import CARD_DATABASE from '../../tempCardsDatabase';
-import createMinionObject from '../../utilities/create-minion-object';
-import { createRandomDeck } from './methods';
+import { GameState } from '../../interfaces';
 import { spliceDeckAndPushToHand } from '../draw-card-phase/methods';
+import CARD_DATABASE from '../../tempCardsDatabase';
+import createCardObject from '../../utilities/create-card-object';
+import createMinionObject from '../../utilities/create-minion-object';
+import createRandomDeck from '../../utilities/create-random-deck';
 
 const initStartingHandsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {

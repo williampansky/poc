@@ -1,6 +1,6 @@
 import { Ctx } from 'boardgame.io';
-import { Card, CardBase, GameState } from '../../../interfaces';
-import createCardObject from '../../../utilities/create-card-object';
+import { Card, CardBase, GameState } from '../interfaces';
+import createCardObject from './create-card-object';
 
 /**
  * Creates a random deck of cards from the provided
