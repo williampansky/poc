@@ -2,7 +2,8 @@ import { PlayerID as bgioPlayerID } from "boardgame.io";
 
 export const config = {
   debugConfig: {
-    debugCardId: ''
+    debugCardId: '',
+    logPhaseToConsole: false,
   },
   gameConfig: {
     actionPointsPerTurn: 1,
@@ -125,6 +126,7 @@ export interface Counts {
 export interface Config {
   debugConfig: {
     debugCardId: string;
+    logPhaseToConsole: boolean;
   };
   gameConfig: {
     actionPointsPerTurn: number;

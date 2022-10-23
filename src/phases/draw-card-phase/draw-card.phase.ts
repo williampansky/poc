@@ -1,13 +1,14 @@
-import { Ctx, PhaseConfig } from "boardgame.io";
-import { spliceDeckAndPushToHand } from "./methods";
-import { GameState } from "../../interfaces";
+import { Ctx, PhaseConfig } from 'boardgame.io';
+import { GameState } from '../../interfaces';
+import { drawTopCardFromPlayersDeck } from '../../utilities';
 
 const drawCardPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    console.log(G.turn, ctx.phase);
-    spliceDeckAndPushToHand(G);
+    if (G.config.debugConfig.logPhaseToConsole) console.log(G.turn, ctx.phase);
+    drawTopCardFromPlayersDeck(G, '0');
+    drawTopCardFromPlayersDeck(G, '1');
     ctx.events?.endPhase();
   },
-}
+};
 
 export default drawCardPhase;
