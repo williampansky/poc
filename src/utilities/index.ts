@@ -2,7 +2,7 @@ export { default as createCardObject } from './create-card-object';
 export { default as createRandomDeck } from './create-random-deck';
 export { default as createZoneObject } from './create-zone-object';
 export { default as determineFirstRevealer } from './determine-first-revealer';
-export { default as drawTopCardFromPlayersDeck } from './draw-top-card-from-players-deck';
+export { default as drawCardFromPlayersDeck } from './draw-card-from-players-deck';
 export { default as getCardPower } from './get-card-power';
 export { default as getGameResult } from './get-game-result';
 export { default as getRandomNumberBetween } from './get-random-number-between';

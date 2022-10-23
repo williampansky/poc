@@ -1,5 +1,5 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { drawTopCardFromPlayersDeck } from '../../utilities';
+import { drawCardFromPlayersDeck } from '../../utilities';
 import { GameState } from '../../interfaces';
 import CARD_DATABASE from '../../tempCardsDatabase';
 import createCardObject from '../../utilities/create-card-object';
@@ -26,8 +26,8 @@ const initStartingHandsPhase: PhaseConfig = {
 
     // init hands
     [...Array(G.config.gameConfig.cardsPerStartingHand)].forEach(() => {
-      drawTopCardFromPlayersDeck(G, '0');
-      drawTopCardFromPlayersDeck(G, '1');
+      drawCardFromPlayersDeck(G, '0');
+      drawCardFromPlayersDeck(G, '1');
     });
   },
   endIf: (G: GameState) => {
