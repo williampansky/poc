@@ -20,6 +20,7 @@ export const config = {
 
 export type PlayerID = '0' | '1' | bgioPlayerID;
 export type SelectedCardIndex = Record<PlayerID, number | undefined>;
+export type ActionPoints = Record<PlayerID, { current: number; total: number }>;
 
 /**
  * Used to track a card or minion's power changes.
@@ -141,6 +142,7 @@ export interface Config {
 
 export interface GameState {
   turn: number;
+  ActionPoints: ActionPoints;
   PlayerTurnDone: Record<PlayerID, boolean>;
   FirstRevealer: PlayerID;
   players: Record<PlayerID, Player>;

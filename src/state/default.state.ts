@@ -1,5 +1,6 @@
 import { config } from "../interfaces";
 import createZoneObject from "../utilities/create-zone-object";
+import ActionPoints from "./action-points.state";
 import Counts from "./counts.state";
 import FirstRevealer from "./first-revealer.state";
 import PlayedCards from "./played-cards.state";
@@ -9,6 +10,7 @@ import SelectedCardIndex from "./selected-card-index.state";
 
 const DefaultState = {
   turn: 0,
+    ActionPoints: ActionPoints.defaultState,
     PlayerTurnDone: PlayerTurnDone.defaultState,
     FirstRevealer: FirstRevealer.defaultState,
 
