@@ -36,7 +36,7 @@ const DefaultState = {
 
     PlayedCards: PlayedCards.defaultState,
 
-    zones: [
+    Zones: [
       ...Array.from(Array(config.gameConfig.numberOfZones)).map(() => {
         return createZoneObject({
           id: '',

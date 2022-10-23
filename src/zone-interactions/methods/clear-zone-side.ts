@@ -7,11 +7,11 @@ const clearZoneSide = (
 ): void => {
   switch (playerId !== undefined) {
     case true:
-      G.zones[zoneNumber].sides[playerId!] = [];
+      G.Zones[zoneNumber].sides[playerId!] = [];
       break;
   
     default:
-      G.zones[zoneNumber].sides = {
+      G.Zones[zoneNumber].sides = {
         '0': [],
         '1': [],
       }

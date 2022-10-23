@@ -111,7 +111,7 @@ export const BcgPoc: Game<GameState> = {
   endIf: (G: GameState, ctx: Ctx) => {
     if (G.turn === G.config.gameConfig.numberOfSingleTurnsPerGame) {
       // prettier-ignore
-      switch (getGameResult(G.zones)) {
+      switch (getGameResult(G.Zones)) {
         case '1': return { winner: '1' };
         case '0': return { winner: '0' };
         default:  return { draw: true };

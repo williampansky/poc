@@ -5,7 +5,7 @@ import {
 } from '../methods';
 
 const runInteractionForZone001 = (G: GameState): void => {
-  G.zones.forEach((z: Zone, zIdx: number) => {
+  G.Zones.forEach((z: Zone, zIdx: number) => {
     if (z.revealed) {
       z.sides['0'].forEach((obj: Minion, cIdx: number) => {
         setZoneAdjustmentPowerValue(G, zIdx, '0', cIdx, z.powerAdjustment);

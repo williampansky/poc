@@ -7,7 +7,7 @@ import determineFirstRevealer from '../../../utilities/determine-first-revealer'
  * on the next `revealCards` phase.
  */
 const setFirstRevealer = (G: GameState): void => {
-  FirstRevealer.set(G, determineFirstRevealer(G.zones));
+  FirstRevealer.set(G, determineFirstRevealer(G.Zones));
 };
 
 export default setFirstRevealer;

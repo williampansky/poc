@@ -1,12 +1,12 @@
 import { PlayerID, Zone } from '../interfaces';
-import getSumOfAllZonesPower from './get-sum-of-all-zones-power';
+import getSumOfAllZonesPower from './get-sum-of-all-Zones-power';
 import getZonesWonBySide from './get-zone-wins-by-side';
 
-const getGameResult = (zones: Zone[]): PlayerID | '' => {
-  const numberOfZonesWonByPlayer0 = getZonesWonBySide(zones)['0'];
-  const numberOfZonesWonByPlayer1 = getZonesWonBySide(zones)['1'];
-  const player0TotalPower = getSumOfAllZonesPower(zones, '0');
-  const player1TotalPower = getSumOfAllZonesPower(zones, '1');
+const getGameResult = (Zones: Zone[]): PlayerID | '' => {
+  const numberOfZonesWonByPlayer0 = getZonesWonBySide(Zones)['0'];
+  const numberOfZonesWonByPlayer1 = getZonesWonBySide(Zones)['1'];
+  const player0TotalPower = getSumOfAllZonesPower(Zones, '0');
+  const player1TotalPower = getSumOfAllZonesPower(Zones, '1');
 
   if (numberOfZonesWonByPlayer1 > numberOfZonesWonByPlayer0) {
     return '1';

@@ -16,7 +16,7 @@ const initStartingHandsPhase: PhaseConfig = {
       let randomCard3 = random!.Shuffle(CARD_DATABASE)[0];
       let randomCard3Obj = createCardObject(randomCard3);
       for (let index = 0; index < 2; index++) {
-        G.zones[0].sides['1'].push(createMinionObject(randomCard3Obj));
+        G.Zones[0].sides['1'].push(createMinionObject(randomCard3Obj));
       }
     }
 

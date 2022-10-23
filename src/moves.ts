@@ -40,7 +40,7 @@ const playCard = (
 ) => {
   const { currentPlayer } = ctx;
   const {
-    zones,
+    Zones,
     config: {
       gameConfig: { numberOfSlotsPerZone },
     },
@@ -52,7 +52,7 @@ const playCard = (
   const player = G.players[playerId];
   const card = G.SelectedCardData[playerId]! as Card;
   const cardUuid = G.SelectedCardData[playerId]!.uuid;
-  const zone = zones[zoneNumber];
+  const zone = Zones[zoneNumber];
   const zoneRef = G.ZonesCardsReference[zoneNumber];
 
   // validate cost playability
@@ -104,7 +104,7 @@ const revealCard = async (
   // @ts-ignore
   const zoneRefs = G.ZonesCardsReference;
   const cardToReveal = zoneRefs[zoneNumber][playerId][objIndex];
-  G.zones[zoneNumber].sides[playerId][objIndex] = {
+  G.Zones[zoneNumber].sides[playerId][objIndex] = {
     ...createMinionObject(cardToReveal),
     revealed: true, // reveal card
     displayPower: getCardPower(obj),// set display power
@@ -120,7 +120,7 @@ const playAiCard = (
   cardIndex: number
 ) => {
   const {
-    zones,
+    Zones,
     config: {
       gameConfig: { numberOfSlotsPerZone },
     },
@@ -132,7 +132,7 @@ const playAiCard = (
 
   const player = G.players['1'];
   const cardUuid = card.uuid;
-  const zone = zones[zoneNumber];
+  const zone = Zones[zoneNumber];
   const zoneSideLength = zone.sides['1'].length;
   const zoneRef = G.ZonesCardsReference[zoneNumber];
   const zoneRefSideLength = zoneRef['1'].length;

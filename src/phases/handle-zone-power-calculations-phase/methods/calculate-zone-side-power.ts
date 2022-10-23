@@ -13,7 +13,7 @@ const calculateZoneSidePower = (
   // add up each minion's current displayPower by
   // looping thru each side and add each card's current power
   // to the sidePowerX variable defined above
-  G.zones[zoneNumber].sides[playerId].forEach((obj: Minion) => {
+  G.Zones[zoneNumber].sides[playerId].forEach((obj: Minion) => {
     return (sidePower = add(obj.displayPower, sidePower));
   });
 

@@ -298,7 +298,7 @@ export const Board = (props: GameProps) => {
             width: '100%',
           }}
         >
-          {G.zones.map((zone: IZone, idx: number) => {
+          {G.Zones.map((zone: IZone, idx: number) => {
             return (
               <Zone
                 G={G}

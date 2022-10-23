@@ -6,12 +6,12 @@ const handleZonePowerCalculationsPhase: PhaseConfig = {
   next: 'drawCard',
   onBegin(G: GameState, ctx: Ctx) {
     console.log(G.turn, ctx.phase);
-    const { zones } = G;
+    const { Zones } = G;
 
     // loop thru each zone
-    zones.forEach((_, zoneIdx: number) => {
+    Zones.forEach((_, zoneIdx: number) => {
       // set the zone power
-      G.zones[zoneIdx].powers = {
+      G.Zones[zoneIdx].powers = {
         '0': calculateZoneSidePower(G, zoneIdx, '0'),
         '1': calculateZoneSidePower(G, zoneIdx, '1'),
       };

@@ -7,11 +7,11 @@ const enableZone = (
 ): void => {
   switch (playerId !== undefined) {
     case true:
-      G.zones[zoneNumber].disabled[playerId!] = false;
+      G.Zones[zoneNumber].disabled[playerId!] = false;
       break;
 
     default:
-      G.zones[zoneNumber].disabled = { '0': false, '1': false };
+      G.Zones[zoneNumber].disabled = { '0': false, '1': false };
       break;
   }
 };

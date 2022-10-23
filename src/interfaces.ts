@@ -149,7 +149,7 @@ export interface GameState {
   SelectedCardData: Record<PlayerID, Card | undefined>;
   SelectedCardIndex: SelectedCardIndex;
   PlayedCards: Record<PlayerID, Card[]>;
-  zones: Zone[];
+  Zones: Zone[];
   ZonesCardsReference: Record<PlayerID, Card[]>[];
   config: Config;
   Counts: Record<PlayerID, Counts>;

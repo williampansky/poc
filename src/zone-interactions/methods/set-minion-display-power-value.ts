@@ -12,7 +12,7 @@ const setMinionDisplayPowerValue = (
   minionObj: Minion
 ) => {
   const power = getCardPower(minionObj);
-  G.zones[zoneNumber].sides[playerId][cardIndex].displayPower = power;
+  G.Zones[zoneNumber].sides[playerId][cardIndex].displayPower = power;
 };
 
 export default setMinionDisplayPowerValue;

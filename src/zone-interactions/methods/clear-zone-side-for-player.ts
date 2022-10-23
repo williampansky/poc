@@ -8,7 +8,7 @@ const clearZoneSideForPlayer = (
   zoneNumber: number,
   playerId: string
 ): void => {
-  G.zones[zoneNumber].sides[playerId] = [];
+  G.Zones[zoneNumber].sides[playerId] = [];
 };
 
 export default clearZoneSideForPlayer;
