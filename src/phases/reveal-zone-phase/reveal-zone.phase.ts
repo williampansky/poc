@@ -1,5 +1,5 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { GameState, Minion, Zone } from '../../interfaces';
+import { GameState, Zone } from '../../interfaces';
 import getCardPower from '../../utilities/get-card-power';
 import runInteractionForZone001 from '../../zone-interactions/zone-interactions-by-id/zone_001.interaction';
 import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/methods';

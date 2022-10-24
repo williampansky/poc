@@ -1,10 +1,10 @@
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
-import { Minion, PlayerID } from '../../interfaces';
+import { Card, PlayerID } from '../../interfaces';
 
 interface ReactZoneSlot {
-  data?: Minion;
-  onClick: (card: Minion) => void;
+  data?: Card;
+  onClick: (card: Card) => void;
   zoneNumber: number;
   slotIndex: number;
   playerId: PlayerID;
@@ -17,7 +17,7 @@ export const ZoneSlot = ({
   slotIndex,
   playerId,
 }: ReactZoneSlot): ReactElement => {
-  const [objData, setObjData] = React.useState<Minion | undefined>(undefined);
+  const [objData, setObjData] = React.useState<Card | undefined>(undefined);
 
   React.useEffect(() => {
     setTimeout(() => setObjData(data), 50);

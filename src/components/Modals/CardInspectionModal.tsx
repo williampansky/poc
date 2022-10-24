@@ -1,9 +1,9 @@
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement, useState } from 'react';
-import { Card, CardPowerStream, GameState, Minion } from '../../interfaces';
+import { Card, CardPowerStream, GameState } from '../../interfaces';
 
 interface CardInspectionProps {
-  data?: Card | Minion;
+  data?: Card;
   onClick: () => void;
 }
 
@@ -11,7 +11,7 @@ export const CardInspectionModal = ({
   data,
   onClick,
 }: CardInspectionProps): ReactElement => {
-  const [objData, setObjData] = useState<Card | Minion | undefined>(undefined);
+  const [objData, setObjData] = useState<Card | undefined>(undefined);
 
   React.useEffect(() => {
     setTimeout(() => setObjData(data), 50);

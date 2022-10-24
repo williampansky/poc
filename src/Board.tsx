@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BoardProps, Client } from 'boardgame.io/react';
 import { Ctx } from 'boardgame.io';
-import { Card, GameState, Minion, Zone as IZone } from './interfaces';
+import { Card, GameState, Zone as IZone } from './interfaces';
 import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
 import { CardInHand } from './components/Card/CardInHand';
@@ -15,7 +15,7 @@ export interface GameProps extends BoardProps<GameState> {}
 export const Board = (props: GameProps) => {
   const [addressBarSize, setAddressBarSize] = useState<number>(0);
   const [cardModalDataObject, setCardModalDataObject] = useState<
-    Card | Minion | undefined
+    Card | undefined
   >(undefined);
 
   const {
@@ -70,7 +70,7 @@ export const Board = (props: GameProps) => {
     else return 'Defeat...';
   };
 
-  const onCardClick = (obj: Card | Minion) => {
+  const onCardClick = (obj: Card ) => {
     setCardModalDataObject(obj);
   };
 

@@ -3,7 +3,6 @@ import React, { ReactElement } from 'react';
 import {
   Card,
   GameState,
-  Minion,
   Zone as ZoneProps,
 } from '../../interfaces';
 import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
@@ -16,7 +15,7 @@ interface ReactZone {
   disabled: boolean;
   zone: ZoneProps;
   zoneNumber: number;
-  onCardClick: (obj: Minion) => void;
+  onCardClick: (obj: Card) => void;
 }
 
 export const Zone = ({
@@ -72,7 +71,7 @@ export const Zone = ({
           transform: 'scaleY(-1)'
         }}
       >
-        {zone?.sides[1].map((obj: Minion, idx: number) => {
+        {zone?.sides[1].map((obj: Card, idx: number) => {
           return (
             <ZoneSlot
               key={idx}
@@ -231,7 +230,7 @@ export const Zone = ({
             gridGap: '0.3em',
           }}
         >
-          {zone?.sides[0].map((obj: Minion, idx: number) => {
+          {zone?.sides[0].map((obj: Card, idx: number) => {
             return (
               <ZoneSlot
                 key={idx}

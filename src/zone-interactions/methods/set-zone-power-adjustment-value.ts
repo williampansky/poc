@@ -1,7 +1,7 @@
 import { GameState } from "../../interfaces";
 
 /**
- * Sets `minion.zoneAdjustmentPower` value.
+ * Sets `card.zoneAdjustmentPower` value.
  */
 const setZoneAdjustmentPowerValue = (
   G: GameState,

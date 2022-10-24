@@ -18,7 +18,7 @@ const createCardObject = (obj: CardBase): Card => {
     powerStream: [],
     revealed: false,
     revealedOnTurn: 0,
-    type: 'CARD',
+    type: obj?.type ? obj.type : 'CARD',
     uuid: uuid(),
     zonePowerAdjustment: 0,
   } as Card;

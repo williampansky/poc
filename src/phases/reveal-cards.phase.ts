@@ -2,7 +2,6 @@ import { Ctx, PhaseConfig } from 'boardgame.io';
 import {
   Card,
   GameState,
-  Minion,
   Zone,
   ZonesCardsReference,
 } from '../interfaces';

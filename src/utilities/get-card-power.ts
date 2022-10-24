@@ -1,10 +1,10 @@
 import { add } from 'mathjs';
-import { Card, Minion } from '../interfaces';
+import { Card } from '../interfaces';
 
 /**
- * Determines which power to show on a card or minion.
+ * Determines which power to show on a card.
  */
-const getCardPower = (obj: Card | Minion): number => {
+const getCardPower = (obj: Card): number => {
   const initialPower =
     obj?.powerOverride ||
     obj.powerStream[obj.powerStream.length - 1]?.currentPower ||

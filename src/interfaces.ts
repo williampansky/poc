@@ -43,10 +43,10 @@ export type SelectedCardIndex = Record<PlayerID, number | undefined>;
 export type ActionPoints = Record<PlayerID, { current: number; total: number }>;
 
 /**
- * Used to track a card or minion's power changes.
+ * Used to track a card's power changes.
  */
 export interface CardPowerStream {
-  blame: string; // card/minion that changed this power
+  blame: string; // card that changed this power
   adjustment: number; // adjustment to make
   currentPower: number; // if no previous idx, basePower + adjustment—otherwise last idx currentPower + this adjustment
 }
@@ -63,6 +63,7 @@ export interface CardBase {
   mechanic?: string;
   name: string;
   power: number;
+  type?: 'CARD' | 'MINION' | 'SPELL' | 'WEAPON';
 }
 
 export interface Card {
@@ -79,26 +80,7 @@ export interface Card {
   powerStream: CardPowerStream[];
   revealed: boolean;
   revealedOnTurn: number;
-  type: 'CARD';
-  uuid: string;
-  zonePowerAdjustment: number;
-}
-
-export interface Minion {
-  __id: string;
-  baseCost: number;
-  basePower: number;
-  canPlay: boolean;
-  currentCost: number;
-  description?: string;
-  displayPower: number;
-  mechanic?: string;
-  name: string;
-  powerOverride?: number; // use this power instead of base or latest stream
-  powerStream: CardPowerStream[];
-  revealed: boolean;
-  revealedOnTurn: number;
-  type: 'MINION';
+  type: 'CARD' | 'MINION' | 'SPELL' | 'WEAPON';
   uuid: string;
   zonePowerAdjustment: number;
 }
@@ -123,7 +105,7 @@ export interface Zone {
   powerText?: string;
   powerAdjustment: number;
   revealed: boolean;
-  sides: Record<PlayerID, Minion[]>;
+  sides: Record<PlayerID, Card[]>;
   uuid: string;
 }
 

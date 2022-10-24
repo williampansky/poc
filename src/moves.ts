@@ -3,7 +3,6 @@ import { ActivePlayers, INVALID_MOVE } from 'boardgame.io/core';
 import { add, subtract } from 'mathjs';
 import { Card, GameState, PlayerID } from './interfaces';
 import { ActionPoints, PlayedCards, PlayerTurnDone, SelectedCardData } from './state';
-import createMinionObject from './utilities/create-minion-object';
 import getCardPower from './utilities/get-card-power';
 
 const selectCard = (
@@ -70,7 +69,6 @@ const playCard = (
   ActionPoints.subtract(G, playerId, card.currentCost);
 
   // push card to zone side array
-  // zone.sides[playerId].push(createMinionObject(card));
   zoneRef[playerId].push(card);
 
   // remove card from hand
@@ -104,7 +102,7 @@ const revealCard = async (
   const zoneRefs = G.ZonesCardsReference;
   const cardToReveal = zoneRefs[zoneNumber][playerId][objIndex];
   G.Zones[zoneNumber].sides[playerId][objIndex] = {
-    ...createMinionObject(cardToReveal),
+    ...cardToReveal,
     revealed: true, // reveal card
     displayPower: getCardPower(obj),// set display power
     revealedOnTurn: G.turn // set revealedOnTurn value
@@ -152,7 +150,6 @@ const playAiCard = (
   ActionPoints.subtract(G, '1', card.currentCost);
 
   // push card to zone side array
-  // zone.sides['1'].push(createMinionObject(card));
   zoneRef['1'].push(card);
 
   // remove card from hand

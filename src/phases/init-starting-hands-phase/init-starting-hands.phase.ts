@@ -3,7 +3,6 @@ import { drawCardFromPlayersDeck } from '../../utilities';
 import { GameState } from '../../interfaces';
 import CARD_DATABASE from '../../tempCardsDatabase';
 import createCardObject from '../../utilities/create-card-object';
-import createMinionObject from '../../utilities/create-minion-object';
 import createRandomDeck from '../../utilities/create-random-deck';
 
 const initStartingHandsPhase: PhaseConfig = {
@@ -18,7 +17,7 @@ const initStartingHandsPhase: PhaseConfig = {
       let randomCard3 = random!.Shuffle(CARD_DATABASE)[0];
       let randomCard3Obj = createCardObject(randomCard3);
       for (let index = 0; index < 2; index++) {
-        G.Zones[0].sides['1'].push(createMinionObject(randomCard3Obj));
+        G.Zones[0].sides['1'].push(randomCard3Obj);
       }
     }
 

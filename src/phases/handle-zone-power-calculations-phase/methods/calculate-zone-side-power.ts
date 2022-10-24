@@ -1,5 +1,5 @@
 import { add } from 'mathjs';
-import { GameState, Minion } from '../../../interfaces';
+import { GameState, Card } from '../../../interfaces';
 
 const calculateZoneSidePower = (
   G: GameState,
@@ -10,10 +10,10 @@ const calculateZoneSidePower = (
   // we're looping thru each card on each side
   let sidePower: number = 0;
 
-  // add up each minion's current displayPower by
+  // add up each card's current displayPower by
   // looping thru each side and add each card's current power
   // to the sidePowerX variable defined above
-  G.Zones[zoneNumber].sides[playerId].forEach((obj: Minion) => {
+  G.Zones[zoneNumber].sides[playerId].forEach((obj: Card) => {
     return (sidePower = add(obj.displayPower, sidePower));
   });
 
