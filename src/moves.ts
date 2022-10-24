@@ -23,13 +23,13 @@ const selectCard = (
     SelectedCardData.reset(G, playerId);
   } else {
     SelectedCardData.set(G, playerId, cardMatch!);
-    G.selectedCardIndex[playerId] = cardMatchIndex;
+    G.SelectedCardIndex[playerId] = cardMatchIndex;
   }
 };
 
 const deselectCard = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
   SelectedCardData.reset(G, playerId);
-  G.selectedCardIndex[playerId] = undefined;
+  G.SelectedCardIndex[playerId] = undefined;
 };
 
 const playCard = (
@@ -90,7 +90,7 @@ const playCard = (
 
   // unset selected card
   SelectedCardData.reset(G, playerId);
-  G.selectedCardIndex[playerId] = undefined;
+  G.SelectedCardIndex[playerId] = undefined;
 };
 
 const revealCard = async (
@@ -128,7 +128,7 @@ const playAiCard = (
 
   // set selected card
   G.SelectedCardData['1'] = card;
-  G.selectedCardIndex['1'] = cardIndex;
+  G.SelectedCardIndex['1'] = cardIndex;
 
   const player = G.players['1'];
   const cardUuid = card.uuid;
@@ -172,7 +172,7 @@ const playAiCard = (
 
   // unset selectedCard
   SelectedCardData.reset(G, '1');
-  G.selectedCardIndex['1'] = undefined;
+  G.SelectedCardIndex['1'] = undefined;
 };
 
 const setDone = (G: GameState, ctx: Ctx, playerId: PlayerID) => {

@@ -1,10 +1,19 @@
-import { Ctx, PhaseConfig } from "boardgame.io";
-import { Card, GameState, Minion, Zone, ZonesCardsReference } from "../interfaces";
-import { revealCard } from "../moves";
+import { Ctx, PhaseConfig } from 'boardgame.io';
+import {
+  Card,
+  GameState,
+  Minion,
+  Zone,
+  ZonesCardsReference,
+} from '../interfaces';
+import { revealCard } from '../moves';
 
 const revealCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    console.log(G.turn, ctx.phase);
+    if (G.config.debugConfig.logPhaseToConsole) {
+      console.log(G.turn, ctx.phase);
+    }
+
     const first = G.FirstRevealer;
     const second = first === '0' ? '1' : '0';
     G.ZonesCardsReference.forEach((z: ZonesCardsReference, zoneIdx: number) => {

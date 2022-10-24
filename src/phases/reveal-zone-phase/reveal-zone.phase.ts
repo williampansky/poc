@@ -7,17 +7,26 @@ import { calculateZoneSidePower } from '../handle-zone-power-calculations-phase/
 const revealZonePhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
     if (G.turn === 0 && !G.Zones[0].revealed) {
-      console.log(G.turn, `${ctx.phase} 0`);
+      if (G.config.debugConfig.logPhaseToConsole) {
+        console.log(G.turn, `${ctx.phase} 0`);
+      }
+      
       G.Zones[0].revealed = true;
       // initOnZoneRevealInteractions();
       ctx.events?.endPhase();
     } else if (G.turn === 1 && !G.Zones[1].revealed) {
-      console.log(G.turn, `${ctx.phase} 1`);
+      if (G.config.debugConfig.logPhaseToConsole) {
+        console.log(G.turn, `${ctx.phase} 1`);
+      }
+
       G.Zones[1].revealed = true;
       // initOnZoneRevealInteractions();
       ctx.events?.endPhase();
     } else if (G.turn === 2 && !G.Zones[2].revealed) {
-      console.log(G.turn, `${ctx.phase} 2`);
+      if (G.config.debugConfig.logPhaseToConsole) {
+        console.log(G.turn, `${ctx.phase} 2`);
+      }
+
       G.Zones[2].revealed = true;
       // initOnZoneRevealInteractions();
       ctx.events?.endPhase();

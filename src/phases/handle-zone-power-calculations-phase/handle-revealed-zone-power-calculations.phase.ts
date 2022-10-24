@@ -1,11 +1,14 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
 import { calculateZoneSidePower } from './methods';
-import { GameState, } from '../../interfaces';
+import { GameState } from '../../interfaces';
 
 const handleZonePowerCalculationsPhase: PhaseConfig = {
   next: 'drawCard',
   onBegin(G: GameState, ctx: Ctx) {
-    console.log(G.turn, ctx.phase);
+    if (G.config.debugConfig.logPhaseToConsole) {
+      console.log(G.turn, ctx.phase);
+    }
+
     const { Zones } = G;
 
     // loop thru each zone

@@ -282,7 +282,7 @@ export const PlayerHand = ({
                       cursor: canPlay ? cursor : 'default',
                       marginLeft: marginLeft.to((mL: number) => `${mL}px`),
                       marginTop: marginTop.to((mT: number) => `${mT}px`),
-                      // opacity: G.selectedCardIndex['0'] === i ? 0.795 : 1,
+                      // opacity: G.SelectedCardIndex['0'] === i ? 0.795 : 1,
                       // pointerEvents: 'none',
                       position: 'relative',
                       touchAction: 'none',

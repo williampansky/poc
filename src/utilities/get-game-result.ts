@@ -1,5 +1,5 @@
 import { PlayerID, Zone } from '../interfaces';
-import getSumOfAllZonesPower from './get-sum-of-all-Zones-power';
+import getSumOfAllZonesPower from './get-sum-of-all-zones-power';
 import getZonesWonBySide from './get-zone-wins-by-side';
 
 const getGameResult = (Zones: Zone[]): PlayerID | '' => {

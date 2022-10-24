@@ -143,7 +143,7 @@ export const Board = (props: GameProps) => {
             ctx.turn: {ctx.turn} / singleTurn: {Math.round(ctx.turn / 2)}
           </div>
           <div>selectedCardData: {G.SelectedCardData['0']?.__id}</div>
-          <div>selectedCardIndex: {G.selectedCardIndex['0']}</div>
+          <div>SelectedCardIndex: {G.SelectedCardIndex['0']}</div>
         </div>
       )}
 
@@ -271,7 +271,7 @@ export const Board = (props: GameProps) => {
                     height: '3.5em',
                     width: '2.45em',
                     transform:
-                      G.selectedCardIndex['1'] === idx
+                      G.SelectedCardIndex['1'] === idx
                         ? 'scale(120%)'
                         : 'scale(80%)',
                     transition: '200ms ease-out',

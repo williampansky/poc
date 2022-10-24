@@ -21,7 +21,10 @@ import {
 
 const playCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    console.log(G.turn, ctx.phase);
+    if (G.config.debugConfig.logPhaseToConsole) {
+      console.log(G.turn, ctx.phase);
+    }
+
     incrementActionPointsTotal(G); // ...... set new total action points available
     setActionPointsToTotal(G); // .......... set current action points to new total
     setPlayableCardsInHand(G); // .......... check card playability

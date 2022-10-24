@@ -1,6 +1,6 @@
 import { Zone } from '../../interfaces';
 import createZoneObject from '../create-zone-object';
-import getSumOfAllZonesPower from '../get-sum-of-all-Zones-power';
+import getSumOfAllZonesPower from '../get-sum-of-all-zones-power';
 
 describe('Total power calculations for the given PlayerID', () => {
   const testZoneObj = createZoneObject({ id: 'testZone', name: 'Test Zone' });
