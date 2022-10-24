@@ -2,7 +2,6 @@ import { Ctx, MoveMap } from 'boardgame.io';
 import React, { ReactElement } from 'react';
 import {
   Card,
-  config,
   GameState,
   Minion,
   Zone as ZoneProps,
@@ -88,7 +87,7 @@ export const Zone = ({
         {/* {[
           ...Array.from(
             Array(
-              config.gameConfig.numberOfSlotsPerZone - zone?.sides[1].length
+              G.Config.gameConfig.numberOfSlotsPerZone - zone?.sides[1].length
             )
           ),
         ].map((_, idx: number) => {
@@ -215,9 +214,9 @@ export const Zone = ({
             ctx.currentPlayer === '0' &&
             G.SelectedCardData['0'] !== undefined &&
             zone?.sides['0'].length !==
-              config.gameConfig.numberOfSlotsPerZone &&
+              G.Config.gameConfig.numberOfSlotsPerZone &&
             !zone?.disabled['0'] &&
-            G.players['0'].actionPoints >= G.SelectedCardData['0']?.currentCost
+            G.ActionPoints['0'].current >= G.SelectedCardData['0']?.currentCost
           }
           playerId='0'
           zoneNumber={zoneNumber}

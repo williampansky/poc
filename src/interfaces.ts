@@ -1,6 +1,6 @@
 import { PlayerID as bgioPlayerID } from "boardgame.io";
 
-export const config = {
+export const Config = {
   debugConfig: {
     debugCardId: '',
     logPhaseToConsole: false,
@@ -18,6 +18,25 @@ export const config = {
     numberOfSlotsPerZone: 6,
   },
 };
+
+export interface IConfig {
+  debugConfig: {
+    debugCardId: string;
+    logPhaseToConsole: boolean;
+  };
+  gameConfig: {
+    actionPointsPerTurn: number;
+    actionPointsTotal: number;
+    cardsPerDeck: number;
+    cardsPerHand: number;
+    cardsPerStartingHand: number;
+    cardsPerTurn: number;
+    numberOfPlayers: number;
+    numberOfSingleTurnsPerGame: number;
+    numberOfZones: number;
+    numberOfSlotsPerZone: number;
+  };
+}
 
 export type PlayerID = '0' | '1' | bgioPlayerID;
 export type SelectedCardIndex = Record<PlayerID, number | undefined>;
@@ -123,36 +142,19 @@ export interface Counts {
   hand: number;
 }
 
-export interface Config {
-  debugConfig: {
-    debugCardId: string;
-    logPhaseToConsole: boolean;
-  };
-  gameConfig: {
-    actionPointsPerTurn: number;
-    actionPointsTotal: number;
-    cardsPerDeck: number;
-    cardsPerHand: number;
-    cardsPerStartingHand: number;
-    cardsPerTurn: number;
-    numberOfPlayers: number;
-    numberOfSingleTurnsPerGame: number;
-    numberOfZones: number;
-    numberOfSlotsPerZone: number;
-  };
-}
+
 
 export interface GameState {
-  turn: number;
   ActionPoints: ActionPoints;
-  PlayerTurnDone: Record<PlayerID, boolean>;
+  Config: IConfig;
+  Counts: Record<PlayerID, Counts>;
   FirstRevealer: PlayerID;
+  PlayedCards: Record<PlayerID, Card[]>;
   players: Record<PlayerID, Player>;
+  PlayerTurnDone: Record<PlayerID, boolean>;
   SelectedCardData: Record<PlayerID, Card | undefined>;
   SelectedCardIndex: SelectedCardIndex;
-  PlayedCards: Record<PlayerID, Card[]>;
+  turn: number;
   Zones: Zone[];
   ZonesCardsReference: Record<PlayerID, Card[]>[];
-  config: Config;
-  Counts: Record<PlayerID, Counts>;
 }

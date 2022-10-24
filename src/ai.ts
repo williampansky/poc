@@ -3,9 +3,9 @@ import { Card, GameState } from "./interfaces";
 
 const aiEnumeration = {
   enumerate: (G: GameState, ctx: Ctx) => {
-    const { players, Zones, config } = G;
+    const { players, Zones, Config } = G;
     const { random } = ctx;
-    const perZone = config.gameConfig.numberOfSlotsPerZone;
+    const perZone = Config.gameConfig.numberOfSlotsPerZone;
     const aiPlayer = players['1'];
     const aiHand = aiPlayer.hand;
     let moves = [];

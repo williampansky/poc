@@ -14,7 +14,7 @@ import { GameState, PlayerID } from '../interfaces';
 const stripSecrets = (G: GameState, ctx: Ctx, playerId: PlayerID) => ({
   ...G,
   // players: { [playerId]: G.players[playerId] },
-  selectedCardData: { [playerId]: G.SelectedCardData[playerId] },
+  SelectedCardData: { [playerId]: G.SelectedCardData[playerId] },
 });
 
 export default stripSecrets;

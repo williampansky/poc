@@ -3,7 +3,7 @@ import { GameState } from '../interfaces';
 
 const initZoneInteractions: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    if (G.config.debugConfig.logPhaseToConsole) {
+    if (G.Config.debugConfig.logPhaseToConsole) {
       console.log(G.turn, ctx.phase);
     }
 

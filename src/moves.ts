@@ -2,7 +2,7 @@ import { Ctx } from 'boardgame.io';
 import { ActivePlayers, INVALID_MOVE } from 'boardgame.io/core';
 import { add, subtract } from 'mathjs';
 import { Card, GameState, PlayerID } from './interfaces';
-import { PlayedCards, PlayerTurnDone, SelectedCardData } from './state';
+import { ActionPoints, PlayedCards, PlayerTurnDone, SelectedCardData } from './state';
 import createMinionObject from './utilities/create-minion-object';
 import getCardPower from './utilities/get-card-power';
 
@@ -41,7 +41,7 @@ const playCard = (
   const { currentPlayer } = ctx;
   const {
     Zones,
-    config: {
+    Config: {
       gameConfig: { numberOfSlotsPerZone },
     },
   } = G;
@@ -56,7 +56,7 @@ const playCard = (
   const zoneRef = G.ZonesCardsReference[zoneNumber];
 
   // validate cost playability
-  if (G.players[playerId].actionPoints < card.currentCost) return INVALID_MOVE;
+  if (G.ActionPoints[playerId].current < card.currentCost) return INVALID_MOVE;
 
   // validate zone playability
   if (zone.sides[playerId].length > numberOfSlotsPerZone) return INVALID_MOVE;
@@ -67,8 +67,7 @@ const playCard = (
   PlayedCards.push(G, playerId, card);
 
   // remove cost from current action points
-  const newAP = subtract(G.players[playerId].actionPoints, card.currentCost);
-  G.players[playerId].actionPoints = newAP;
+  ActionPoints.subtract(G, playerId, card.currentCost);
 
   // push card to zone side array
   // zone.sides[playerId].push(createMinionObject(card));
@@ -81,7 +80,7 @@ const playCard = (
   // re-evaluate cards in hand
   if (G.players[playerId].hand.length !== 0)
     G.players[playerId].hand.forEach((c: Card) => {
-      if (G.players[playerId].actionPoints >= c.currentCost) {
+      if (G.ActionPoints[playerId].current >= c.currentCost) {
         return (c.canPlay = true);
       } else {
         return (c.canPlay = false);
@@ -121,7 +120,7 @@ const playAiCard = (
 ) => {
   const {
     Zones,
-    config: {
+    Config: {
       gameConfig: { numberOfSlotsPerZone },
     },
   } = G;
@@ -136,7 +135,7 @@ const playAiCard = (
   const zoneSideLength = zone.sides['1'].length;
   const zoneRef = G.ZonesCardsReference[zoneNumber];
   const zoneRefSideLength = zoneRef['1'].length;
-  const currentAP = G.players['1'].actionPoints;
+  const currentAP = G.ActionPoints['1'].current;
 
   // validate cost playability
   if (currentAP < card.currentCost) return INVALID_MOVE;
@@ -150,8 +149,7 @@ const playAiCard = (
   PlayedCards.push(G, '1', card);
 
   // remove cost from current action points
-  const newAP = subtract(G.players['1'].actionPoints, card.currentCost);
-  G.players['1'].actionPoints = newAP;
+  ActionPoints.subtract(G, '1', card.currentCost);
 
   // push card to zone side array
   // zone.sides['1'].push(createMinionObject(card));
@@ -163,7 +161,7 @@ const playAiCard = (
 
   // re-evaluate cards in hand
   G.players['1'].hand.forEach((c: Card) => {
-    if (G.players['1'].actionPoints >= c.currentCost) {
+    if (G.ActionPoints['1'].current >= c.currentCost) {
       return (c.canPlay = true);
     } else {
       return (c.canPlay = false);

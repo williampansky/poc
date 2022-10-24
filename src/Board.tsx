@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BoardProps, Client } from 'boardgame.io/react';
 import { Ctx } from 'boardgame.io';
-import { Card, config, GameState, Minion, Zone as IZone } from './interfaces';
+import { Card, GameState, Minion, Zone as IZone } from './interfaces';
 import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
 import { CardInHand } from './components/Card/CardInHand';
@@ -20,7 +20,7 @@ export const Board = (props: GameProps) => {
 
   const {
     G,
-    G: { players, turn },
+    G: { Config, players, turn },
     ctx,
     ctx: { phase },
     moves,
@@ -142,7 +142,7 @@ export const Board = (props: GameProps) => {
           <div>
             ctx.turn: {ctx.turn} / singleTurn: {Math.round(ctx.turn / 2)}
           </div>
-          <div>selectedCardData: {G.SelectedCardData['0']?.__id}</div>
+          <div>SelectedCardData: {G.SelectedCardData['0']?.__id}</div>
           <div>SelectedCardIndex: {G.SelectedCardIndex['0']}</div>
         </div>
       )}
@@ -191,12 +191,12 @@ export const Board = (props: GameProps) => {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: `repeat(${G.players['1'].actionPointsTotal}, 1fr)`,
+                gridTemplateColumns: `repeat(${G.ActionPoints['1'].total}, 1fr)`,
                 gridGap: '0.15em',
                 width: '100%',
               }}
             >
-              {Array.from(Array(G.players['1'].actionPointsTotal)).map(
+              {Array.from(Array(G.ActionPoints['1'].total)).map(
                 (_, idx) => {
                   idx = idx + 1;
                   return (
@@ -210,15 +210,15 @@ export const Board = (props: GameProps) => {
                         pointerEvents: 'none',
                         userSelect: 'none',
                         fontWeight:
-                          G.players['1'].actionPoints >= idx
+                          G.ActionPoints['1'].current >= idx
                             ? 'bold'
                             : 'normal',
                         background:
-                          G.players['1'].actionPoints >= idx
+                          G.ActionPoints['1'].current >= idx
                             ? 'lightgreen'
                             : '#ccc',
                         color:
-                          G.players['1'].actionPoints >= idx
+                          G.ActionPoints['1'].current >= idx
                             ? '#052d05'
                             : '#4e4e4e',
                       }}
@@ -343,12 +343,12 @@ export const Board = (props: GameProps) => {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: `repeat(${G.players['0'].actionPointsTotal}, 1fr)`,
+                gridTemplateColumns: `repeat(${G.ActionPoints['0'].total}, 1fr)`,
                 gridGap: '0.15em',
                 width: '100%',
               }}
             >
-              {Array.from(Array(G.players['0'].actionPointsTotal)).map(
+              {Array.from(Array(G.ActionPoints['0'].total)).map(
                 (_, idx) => {
                   idx = idx + 1;
                   return (
@@ -362,15 +362,15 @@ export const Board = (props: GameProps) => {
                         pointerEvents: 'none',
                         userSelect: 'none',
                         fontWeight:
-                          G.players['0'].actionPoints >= idx
+                          G.ActionPoints['0'].current >= idx
                             ? 'bold'
                             : 'normal',
                         background:
-                          G.players['0'].actionPoints >= idx
+                          G.ActionPoints['0'].current >= idx
                             ? 'lightgreen'
                             : '#ccc',
                         color:
-                          G.players['0'].actionPoints >= idx
+                          G.ActionPoints['0'].current >= idx
                             ? '#052d05'
                             : '#4e4e4e',
                       }}
@@ -408,7 +408,7 @@ export const Board = (props: GameProps) => {
                 minWidth: 95,
               }}
             >
-              End Turn {G.turn}/{config.gameConfig.numberOfSingleTurnsPerGame}
+              End Turn {G.turn}/{Config.gameConfig.numberOfSingleTurnsPerGame}
             </button>
           </div>
         </div>

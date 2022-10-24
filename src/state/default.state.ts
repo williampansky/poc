@@ -1,4 +1,4 @@
-import { config } from "../interfaces";
+import { Config } from "../interfaces";
 import createZoneObject from "../utilities/create-zone-object";
 import ActionPoints from "./action-points.state";
 import Counts from "./counts.state";
@@ -11,6 +11,8 @@ import SelectedCardIndex from "./selected-card-index.state";
 const DefaultState = {
   turn: 0,
     ActionPoints: ActionPoints.defaultState,
+    Counts: Counts.defaultState,
+    Config: Config,
     PlayerTurnDone: PlayerTurnDone.defaultState,
     FirstRevealer: FirstRevealer.defaultState,
 
@@ -37,7 +39,7 @@ const DefaultState = {
     PlayedCards: PlayedCards.defaultState,
 
     Zones: [
-      ...Array.from(Array(config.gameConfig.numberOfZones)).map(() => {
+      ...Array.from(Array(Config.gameConfig.numberOfZones)).map(() => {
         return createZoneObject({
           id: '',
           name: '',
@@ -46,14 +48,13 @@ const DefaultState = {
     ],
 
     ZonesCardsReference: [
-      ...Array.from(Array(config.gameConfig.numberOfZones)).map(() => {
+      ...Array.from(Array(Config.gameConfig.numberOfZones)).map(() => {
         return { '0': [], '1': [] };
       }),
     ],
 
-    config: config,
-    Counts: Counts.defaultState,
-    cardDrag: null,
+    
+    
 };
 
 export default DefaultState;

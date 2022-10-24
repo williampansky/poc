@@ -1,13 +1,13 @@
-import { config, GameState, PlayerID } from "../interfaces";
+import { Config, GameState, PlayerID } from "../interfaces";
 
 const Counts = {
   defaultState: {
     '0': {
-      deck: config.gameConfig.cardsPerDeck,
+      deck: Config.gameConfig.cardsPerDeck,
       hand: 0
     },
     '1': {
-      deck: config.gameConfig.cardsPerDeck,
+      deck: Config.gameConfig.cardsPerDeck,
       hand: 0
     }
   },

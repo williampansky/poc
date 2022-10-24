@@ -1,4 +1,4 @@
-import { config } from '../../interfaces';
+import { Config } from '../../interfaces';
 import { Counts, DefaultState } from '../';
 import { mockGameState } from '../../test-utils';
 
@@ -6,11 +6,11 @@ describe('Handles G.Counts state manipulation', () => {
   test('Should return the default state', () => {
     const defaultStateCheck = {
       '0': {
-        deck: config.gameConfig.cardsPerDeck,
+        deck: Config.gameConfig.cardsPerDeck,
         hand: 0,
       },
       '1': {
-        deck: config.gameConfig.cardsPerDeck,
+        deck: Config.gameConfig.cardsPerDeck,
         hand: 0,
       },
     };

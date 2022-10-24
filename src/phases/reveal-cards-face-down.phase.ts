@@ -10,7 +10,7 @@ import { revealCard } from '../moves';
 
 const revealCardsFaceDownPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    if (G.config.debugConfig.logPhaseToConsole) {
+    if (G.Config.debugConfig.logPhaseToConsole) {
       console.log(G.turn, ctx.phase);
     }
 

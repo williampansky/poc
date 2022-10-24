@@ -8,7 +8,7 @@ const setPlayableCardsInHand = (G: GameState) => {
   const fn = (G: GameState, playerId: string): void => {
     if (G.players[playerId].hand.length !== 0) {
       G.players[playerId].hand.forEach((c: Card) => {
-        if (G.players[playerId].actionPoints >= c.currentCost) {
+        if (G.ActionPoints[playerId].current >= c.currentCost) {
           return (c.canPlay = true);
         } else {
           return (c.canPlay = false);

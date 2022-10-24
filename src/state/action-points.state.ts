@@ -1,12 +1,12 @@
 import { add, subtract } from 'mathjs';
-import { GameState, PlayerID, ActionPoints as Interface } from '../interfaces';
+import { GameState, PlayerID, ActionPoints as IActionPoints } from '../interfaces';
 import limitNumberWithinRange from '../utilities/limit-number-within-range';
 
 const ActionPoints = {
-  defaultState: <Interface>{
+  defaultState: {
     '0': { current: 0, total: 0 },
     '1': { current: 0, total: 0 },
-  },
+  } as IActionPoints,
 
   /**
    * Increments the `total` G.ActionPoints of the player by one;
@@ -17,10 +17,10 @@ const ActionPoints = {
    * @requires mathjs::add()
    */
   incrementTotal: (G: GameState, player: PlayerID) => {
-    const { ActionPoints, config } = G;
+    const { ActionPoints, Config } = G;
     const { total } = ActionPoints[player];
 
-    if (total === config.gameConfig.actionPointsTotal) return;
+    if (total === Config.gameConfig.actionPointsTotal) return;
 
     const newTotal = add(Number(total), 1);
     G.ActionPoints[player].total = newTotal;

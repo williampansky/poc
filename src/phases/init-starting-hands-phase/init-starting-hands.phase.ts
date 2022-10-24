@@ -8,11 +8,13 @@ import createRandomDeck from '../../utilities/create-random-deck';
 
 const initStartingHandsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    if (G.config.debugConfig.logPhaseToConsole) console.log(G.turn, ctx.phase);
     const { random } = ctx;
+    if (G.Config.debugConfig.logPhaseToConsole) {
+      console.log(G.turn, ctx.phase);
+    }
 
     // debug opponents side interactions of CARD_10
-    if (G.config.debugConfig.debugCardId !== '') {
+    if (G.Config.debugConfig.debugCardId !== '') {
       let randomCard3 = random!.Shuffle(CARD_DATABASE)[0];
       let randomCard3Obj = createCardObject(randomCard3);
       for (let index = 0; index < 2; index++) {
@@ -25,15 +27,15 @@ const initStartingHandsPhase: PhaseConfig = {
     G.players['1'].deck = createRandomDeck(G, ctx, CARD_DATABASE);
 
     // init hands
-    [...Array(G.config.gameConfig.cardsPerStartingHand)].forEach(() => {
+    [...Array(G.Config.gameConfig.cardsPerStartingHand)].forEach(() => {
       drawCardFromPlayersDeck(G, '0');
       drawCardFromPlayersDeck(G, '1');
     });
   },
   endIf: (G: GameState) => {
     // end phase when both players have cards in hand and in deck
-    const perDeck = G.config.gameConfig.cardsPerDeck;
-    const perStartingHand = G.config.gameConfig.cardsPerStartingHand;
+    const perDeck = G.Config.gameConfig.cardsPerDeck;
+    const perStartingHand = G.Config.gameConfig.cardsPerStartingHand;
     const startingDeckLength = Math.abs(perDeck - perStartingHand);
 
     return (

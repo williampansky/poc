@@ -3,7 +3,7 @@ import { PhaseConfig } from 'boardgame.io';
 const initCardMechanicsPhase: PhaseConfig = {
   next: 'initZoneInteractions',
   onBegin(G, ctx) {
-    if (G.config.debugConfig.logPhaseToConsole) {
+    if (G.Config.debugConfig.logPhaseToConsole) {
       console.log(G.turn, ctx.phase);
     }
 

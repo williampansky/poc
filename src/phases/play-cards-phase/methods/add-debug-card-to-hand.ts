@@ -4,12 +4,12 @@ import CARD_DATABASE from '../../../tempCardsDatabase';
 import createCardObject from '../../../utilities/create-card-object';
 
 /**
- * If a card's id is set in `config.debugConfig`, add that
+ * If a card's id is set in `Config.debugConfig`, add that
  * card to player 0's hand for testing.
  */
 const addDebugCardToHand = (G: GameState): void => {
-  if (G.config.debugConfig.debugCardId !== '') {
-    const DEBUG_CARD_ID = G.config.debugConfig.debugCardId;
+  if (G.Config.debugConfig.debugCardId !== '') {
+    const DEBUG_CARD_ID = G.Config.debugConfig.debugCardId;
     const dCardBase = CARD_DATABASE.find((c) => c.id === DEBUG_CARD_ID)!;
     const dCardObj = createCardObject(dCardBase);
     G.players['0'].hand.push({

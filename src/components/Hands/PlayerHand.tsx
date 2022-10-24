@@ -1,6 +1,6 @@
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
-import { Card, config, GameState } from '../../interfaces';
+import { Card, GameState } from '../../interfaces';
 import { CardInHand } from '../Card/CardInHand';
 import { useGesture } from '@use-gesture/react';
 import { useCallbackRef } from 'use-callback-ref';
@@ -109,7 +109,7 @@ export const PlayerHand = ({
   const [springs, setSprings] = useSprings(G.players['0'].hand.length, fn());
 
   const order = useCallbackRef(
-    Array.from(Array(config.gameConfig.cardsPerHand)).map((_, index) => index),
+    Array.from(Array(G.Config.gameConfig.cardsPerHand)).map((_, index) => index),
     () => update({})
   );
 

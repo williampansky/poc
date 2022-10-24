@@ -21,7 +21,7 @@ import {
 
 const playCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    if (G.config.debugConfig.logPhaseToConsole) {
+    if (G.Config.debugConfig.logPhaseToConsole) {
       console.log(G.turn, ctx.phase);
     }
 

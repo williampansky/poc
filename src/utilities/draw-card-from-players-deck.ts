@@ -10,7 +10,7 @@ const drawCardFromPlayersDeck = (
   player: PlayerID,
   amountToDraw: number = 1
 ): void => {
-  const maxHandSize = G.config.gameConfig.cardsPerHand;
+  const maxHandSize = G.Config.gameConfig.cardsPerHand;
 
   // prettier-ignore
   for (let i = 0; i < amountToDraw; i++) {

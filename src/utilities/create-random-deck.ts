@@ -13,7 +13,7 @@ const createRandomDeck = (
 ): Card[] => {
   let tempDeckArray: Card[] = [];
 
-  [...Array(G.config.gameConfig.cardsPerDeck)].forEach(() => {
+  [...Array(G.Config.gameConfig.cardsPerDeck)].forEach(() => {
     let randomCard = ctx.random!.Shuffle(database)[0];
     tempDeckArray.push(createCardObject(randomCard));
   });

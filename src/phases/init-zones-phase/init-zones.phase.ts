@@ -7,20 +7,20 @@ import createZoneObject from '../../utilities/create-zone-object';
 const initZonesPhase: PhaseConfig = {
   start: true,
   onBegin(G: GameState, ctx: Ctx) {
-    if (G.config.debugConfig.logPhaseToConsole) console.clear();
+    if (G.Config.debugConfig.logPhaseToConsole) console.clear();
     const { random } = ctx;
     const randomZonesArray = random?.Shuffle(ZONE_DATABASE);
     const withUuid = true;
     let newZones: Zone[] = [];
 
-    for (let idx = 0; idx < G.config.gameConfig.numberOfZones; idx++) {
+    for (let idx = 0; idx < G.Config.gameConfig.numberOfZones; idx++) {
       let newZone = createZoneObject(randomZonesArray![idx], withUuid);
       newZones.push(newZone);
     }
 
     Zones.set(G, newZones);
 
-    if (G.config.debugConfig.logPhaseToConsole) {
+    if (G.Config.debugConfig.logPhaseToConsole) {
       console.log(
         G.turn,
         ctx.phase,
