@@ -1,6 +1,6 @@
 import { DefaultState } from '../../../state';
 import { mockCtx } from '../../../test-utils';
-import { incrementGameTurnPhase } from '../';
+import { incrementGameTurnPhase } from '..';
 
 describe('Handles state manipulation to increment G.Turn', () => {
   test('Should increment the game turn', () => {
