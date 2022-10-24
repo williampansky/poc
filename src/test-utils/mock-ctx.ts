@@ -1,5 +1,5 @@
-import { ActivePlayers, Ctx, PlayerID } from "boardgame.io";
-import { getRandomNumberBetween } from "../utilities";
+import { ActivePlayers, Ctx, PlayerID } from 'boardgame.io';
+import { getRandomNumberBetween } from '../utilities';
 
 export interface MockCtxOptions {
   activePlayers?: null | ActivePlayers;
@@ -32,18 +32,10 @@ const mockCtx = (opts?: MockCtxOptions) => {
     gameover: opts?.gameover,
     random: {
       Shuffle: (array: any) => {
-        const clone = [...array];
-        let sourceIndex = array.length;
-        let destinationIndex = 0;
-        const shuffled = Array.from({ length: sourceIndex });
-
-        while (sourceIndex) {
-          const randomIndex = Math.trunc(sourceIndex * random());
-          shuffled[destinationIndex++] = clone[randomIndex];
-          clone[randomIndex] = clone[--sourceIndex];
-        }
-
-        return shuffled;
+        return array
+          .map((a: any) => ({ sort: Math.random(), value: a }))
+          .sort((a: any, b: any) => a.sort - b.sort)
+          .map((a: any) => a.value);
       },
       D4: () => getRandomNumberBetween(1, 4),
       D6: () => getRandomNumberBetween(1, 6),
@@ -52,7 +44,7 @@ const mockCtx = (opts?: MockCtxOptions) => {
       D20: () => getRandomNumberBetween(1, 20),
       Die: () => random(),
       Number: () => random(),
-    }
+    },
   } as Ctx;
 };
 
