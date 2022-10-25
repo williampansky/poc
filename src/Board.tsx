@@ -167,7 +167,7 @@ export const Board = (props: GameProps) => {
       <main
         style={{
           maxWidth: '100vw',
-          filter: ctx.gameover ? 'blur(2px)' : 'none',
+          filter: showGameOver ? 'blur(2px)' : 'none',
           height: `calc(100vh - ${addressBarSize}px)`,
         }}
       >
