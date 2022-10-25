@@ -3,7 +3,7 @@ import { PlayerID as bgioPlayerID } from "boardgame.io";
 export const Config = {
   debugConfig: {
     debugCardId: '',
-    logPhaseToConsole: false,
+    logPhaseToConsole: true,
   },
   gameConfig: {
     actionPointsPerTurn: 1,

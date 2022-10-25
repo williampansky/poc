@@ -71,11 +71,23 @@ export const Zone = ({
           transform: 'scaleY(-1)'
         }}
       >
-        {zone?.sides[1].map((obj: Card, idx: number) => {
+        {/* {zone?.sides[1].map((obj: Card, idx: number) => {
           return (
             <ZoneSlot
               key={idx}
               data={obj}
+              onClick={onCardClick}
+              zoneNumber={zoneNumber}
+              slotIndex={idx}
+              playerId={'1'}
+            />
+          );
+        })} */}
+        {[...Array.from(Array(6))].map((_, idx: number) => {
+          return (
+            <ZoneSlot
+              key={idx}
+              // data={obj}
               onClick={onCardClick}
               zoneNumber={zoneNumber}
               slotIndex={idx}
@@ -230,7 +242,7 @@ export const Zone = ({
             gridGap: '0.3em',
           }}
         >
-          {zone?.sides[0].map((obj: Card, idx: number) => {
+          {/* {zone?.sides[0].map((obj: Card, idx: number) => {
             return (
               <ZoneSlot
                 key={idx}
@@ -241,8 +253,21 @@ export const Zone = ({
                 playerId={'0'}
               />
             );
+          })} */}
+          {[...Array.from(Array(6))].map((_, idx: number) => {
+            return (
+              <ZoneSlot
+                G={G}
+                key={idx}
+                // data={obj}
+                onClick={onCardClick}
+                zoneNumber={zoneNumber}
+                slotIndex={idx}
+                playerId={'0'}
+              />
+            );
           })}
-          {G.ZonesCardsReference[zoneNumber]['0']?.map(
+          {/* {G.ZonesCardsReference[zoneNumber]['0']?.map(
             (obj: Card, idx: number) => {
               return !obj.revealed && zone.sides['0'][idx] === undefined ? (
                 <div
@@ -273,7 +298,7 @@ export const Zone = ({
                 </div>
               ) : null;
             }
-          )}
+          )} */}
         </div>
       </div>
     </div>

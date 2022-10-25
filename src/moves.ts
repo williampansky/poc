@@ -98,15 +98,24 @@ const revealCard = async (
   obj: Card,
   objIndex: number
 ) => {
-  // @ts-ignore
   const zoneRefs = G.ZonesCardsReference;
   const cardToReveal = zoneRefs[zoneNumber][playerId][objIndex];
-  G.Zones[zoneNumber].sides[playerId][objIndex] = {
+  const cardToPush = {
     ...cardToReveal,
     revealed: true, // reveal card
     displayPower: getCardPower(obj),// set display power
     revealedOnTurn: G.turn // set revealedOnTurn value
-  }
+  };
+
+  G.Zones[zoneNumber].sides[playerId][objIndex] = cardToPush;
+
+  // @ts-ignore
+  ctx.effects.revealCard({
+    card: cardToPush,
+    idx: objIndex,
+    zone: zoneNumber,
+    player: playerId,
+  });
 };
 
 const playAiCard = (

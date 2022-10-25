@@ -1,5 +1,6 @@
 import { Ctx, Game } from 'boardgame.io';
-import { GameState, PlayerID } from './interfaces';
+import { EffectsPlugin } from 'bgio-effects/plugin';
+import { Card, GameState, PlayerID } from './interfaces';
 import {
   drawCardPhase,
   handleZonePowerCalculationsPhase,
@@ -18,8 +19,26 @@ import stripSecrets from './utilities/strip-secrets';
 import { DefaultState } from './state';
 import getGameResult from './utilities/get-game-result';
 
+const effectsConfig = {
+  effects: {
+    revealCard: {
+      create: (value: any) => {
+        // console.log(value.card, value.idx);
+        return {
+          card: value.card,
+          idx: value.idx,
+          zone: value.zone,
+          player: value.player,
+        };
+      },
+      duration: 0.5
+    },
+  },
+};
+
 export const BcgPoc: Game<GameState> = {
   name: 'BcgPoc',
+  plugins: [EffectsPlugin(effectsConfig)],
 
   /**
    * This method uses the `stripSecrets` function to hide

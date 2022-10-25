@@ -1,5 +1,6 @@
 import React from 'react';
 import { Client as BoardgameClient } from 'boardgame.io/react';
+import { EffectsBoardWrapper } from 'bgio-effects/react';
 import { Local } from 'boardgame.io/multiplayer';
 import { MCTSBot } from 'boardgame.io/ai';
 import { BcgPoc } from './game';
@@ -20,7 +21,7 @@ const REDUX_DEVTOOLS =
 
 const Client = BoardgameClient({
   game: BcgPoc,
-  board: Board,
+  board: EffectsBoardWrapper(Board, { updateStateAfterEffects: true }),
   multiplayer: Local({ bots: { 1: MCTSBot }, persist: false, storageKey: 'bgio' }),
   numPlayers: 1,
   // loading: GameLoader,

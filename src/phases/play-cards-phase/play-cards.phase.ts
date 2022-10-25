@@ -1,5 +1,5 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { Card, GameState } from '../../interfaces';
+import { Card, GameState, Zone } from '../../interfaces';
 import {
   addDebugCardToHand,
   incrementActionPointsTotal,
@@ -32,6 +32,12 @@ const playCardsPhase: PhaseConfig = {
     resetDoneStateForBothPlayers(G); // .... reset turn done state
     setFirstRevealer(G); // ................ sets who reveals first
     addDebugCardToHand(G); // .............. handle debug card draw, if applicable
+
+    // updated zone references
+    G.Zones.forEach((z: Zone, i: number) => {
+      G.ZonesCardsReference[i]['0'] = z.sides['0'];
+      G.ZonesCardsReference[i]['1'] = z.sides['1'];
+    })
   },
   onEnd(G: GameState, ctx: Ctx) {
     unsetPlayableCardsInHand(G); // ......... set all cards to canPlay: false
