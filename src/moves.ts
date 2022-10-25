@@ -2,7 +2,7 @@ import { Ctx } from 'boardgame.io';
 import { ActivePlayers, INVALID_MOVE } from 'boardgame.io/core';
 import { add, subtract } from 'mathjs';
 import { Card, GameState, PlayerID } from './interfaces';
-import { ActionPoints, PlayedCards, PlayerTurnDone, SelectedCardData } from './state';
+import { ActionPoints, Counts, PlayedCards, PlayerTurnDone, SelectedCardData } from './state';
 import getCardPower from './utilities/get-card-power';
 
 const selectCard = (
@@ -74,6 +74,9 @@ const playCard = (
   // remove card from hand
   const newHand = player.hand.filter((c: Card) => c.uuid !== cardUuid);
   G.players[playerId].hand = newHand;
+
+  // recount cards in hand
+  Counts.decrementHand(G, playerId);
 
   // re-evaluate cards in hand
   if (G.players[playerId].hand.length !== 0)
@@ -164,6 +167,9 @@ const playAiCard = (
   // remove card from hand
   const newHand = player.hand.filter((c: Card) => c.uuid !== cardUuid);
   G.players['1'].hand = newHand;
+
+  // recount cards in hand
+  Counts.decrementHand(G, '1');
 
   // re-evaluate cards in hand
   G.players['1'].hand.forEach((c: Card) => {

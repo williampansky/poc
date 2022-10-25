@@ -51,12 +51,12 @@ const playCardsPhase: PhaseConfig = {
         '1': { stage: 'playCards' },
       },
     },
-    endIf(G: GameState, ctx: Ctx) {
-      return G.PlayerTurnDone['0'] === true && G.PlayerTurnDone['1'] === true;
-    },
-    onEnd(G: GameState, ctx: Ctx) {
-      ctx.events?.endPhase();
-    },
+    // endIf(G: GameState, ctx: Ctx) {
+    //   return G.PlayerTurnDone['0'] === true && G.PlayerTurnDone['1'] === true;
+    // },
+    // onEnd(G: GameState, ctx: Ctx) {
+    //   ctx.events?.endPhase();
+    // },
     stages: {
       playCards: {
         moves: {

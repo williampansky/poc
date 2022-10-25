@@ -20,13 +20,23 @@ export const Board = (props: GameProps) => {
 
   const {
     G,
-    G: { Config, players, turn },
+    G: { Config, players, turn, PlayerTurnDone },
     ctx,
     ctx: { phase },
     moves,
     events,
+    events: { endPhase },
     reset,
   } = props;
+
+  React.useEffect(() => {
+    if (phase === 'playCards') {
+      if (PlayerTurnDone['0'] === true && PlayerTurnDone['1'] === true) {
+        console.log('endPhase')
+        endPhase!();
+      }
+    }
+  }, [PlayerTurnDone, phase]);
 
   /**
    * Uses html.perspective CSS property, which is set to 100vh, to determine
@@ -230,6 +240,22 @@ export const Board = (props: GameProps) => {
               )}
             </div>
           </div>
+          <div style={{
+            padding: '0 0.15em',
+          }}>
+            <div style={{
+              display: 'flex',
+              flexFlow: 'row nowrap',
+              alignItems: 'center',
+              fontSize: 11,
+              color: 'white',
+              whiteSpace: 'nowrap'
+            }}>
+              <div>Hand: <strong>{G.Counts['1'].hand}</strong></div>
+              <div>&nbsp;|&nbsp;</div>
+              <div>Deck: <strong>{G.Counts['1'].deck}</strong></div>
+            </div>
+          </div>
         </div>
         <div
           style={{
@@ -380,6 +406,22 @@ export const Board = (props: GameProps) => {
                   );
                 }
               )}
+            </div>
+          </div>
+          <div style={{
+            padding: '0 0.15em',
+          }}>
+            <div style={{
+              display: 'flex',
+              flexFlow: 'row nowrap',
+              alignItems: 'center',
+              fontSize: 11,
+              color: 'white',
+              whiteSpace: 'nowrap'
+            }}>
+              <div>Hand: <strong>{G.Counts['0'].hand}</strong></div>
+              <div>&nbsp;|&nbsp;</div>
+              <div>Deck: <strong>{G.Counts['0'].deck}</strong></div>
             </div>
           </div>
           <div
