@@ -14,6 +14,7 @@ export interface GameProps extends BoardProps<GameState> {}
 
 export const Board = (props: GameProps) => {
   const [addressBarSize, setAddressBarSize] = useState<number>(0);
+  const [showGameOver, setShowGameOver] = useState<boolean>(false);
   const [cardModalDataObject, setCardModalDataObject] = useState<
     Card | undefined
   >(undefined);
@@ -22,7 +23,7 @@ export const Board = (props: GameProps) => {
     G,
     G: { Config, players, turn, PlayerTurnDone },
     ctx,
-    ctx: { phase },
+    ctx: { phase, gameover },
     moves,
     events,
     events: { endPhase },
@@ -37,6 +38,12 @@ export const Board = (props: GameProps) => {
       }
     }
   }, [PlayerTurnDone, phase]);
+
+  React.useEffect(() => {
+    if (gameover) {
+      setTimeout(() => setShowGameOver(true), 2000);
+    }
+  }, [gameover]);
 
   /**
    * Uses html.perspective CSS property, which is set to 100vh, to determine
@@ -107,7 +114,7 @@ export const Board = (props: GameProps) => {
           left: 0,
           zIndex: 999,
           background: 'rgba(0, 0, 0, 0.825)',
-          display: ctx.gameover ? 'flex' : 'none',
+          display: showGameOver ? 'flex' : 'none',
           flexFlow: 'column nowrap',
           alignItems: 'center',
           justifyContent: 'center',
