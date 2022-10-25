@@ -15,6 +15,7 @@ export interface GameProps extends BoardProps<GameState> {}
 export const Board = (props: GameProps) => {
   const [addressBarSize, setAddressBarSize] = useState<number>(0);
   const [showGameOver, setShowGameOver] = useState<boolean>(false);
+  const [endTurnDisabled, setEndTurnDisabled] = useState<boolean>(true);
   const [cardModalDataObject, setCardModalDataObject] = useState<
     Card | undefined
   >(undefined);
@@ -44,6 +45,21 @@ export const Board = (props: GameProps) => {
       setTimeout(() => setShowGameOver(true), 2000);
     }
   }, [gameover]);
+
+  React.useEffect(() => {
+    if (phase !== 'playCards') {
+      return setEndTurnDisabled(true);
+    }
+
+    if (PlayerTurnDone['0'] === true) {
+      return setEndTurnDisabled(true);
+    }
+
+    setTimeout(() => {
+      console.log('enable turn button');
+      return setEndTurnDisabled(false);
+    }, 2000);
+  }, [PlayerTurnDone, phase]);
 
   /**
    * Uses html.perspective CSS property, which is set to 100vh, to determine
@@ -439,10 +455,10 @@ export const Board = (props: GameProps) => {
           >
             <button
               onClick={onClick}
-              disabled={G.PlayerTurnDone['0'] === true || ctx.phase !== 'playCards'}
+              disabled={endTurnDisabled}
               style={{
                 background:
-                  G.PlayerTurnDone['0'] === false && ctx.phase === 'playCards'
+                  !endTurnDisabled
                     ? 'yellow'
                     : 'initial',
                 display: 'flex',
