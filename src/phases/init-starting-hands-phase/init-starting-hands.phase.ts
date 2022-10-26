@@ -1,5 +1,5 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import { drawCardFromPlayersDeck } from '../../utilities';
+import { drawCardFromPlayersDeck, logPhaseToConsole } from '../../utilities';
 import { GameState } from '../../interfaces';
 import CARD_DATABASE from '../../tempCardsDatabase';
 import createCardObject from '../../utilities/create-card-object';
@@ -8,9 +8,7 @@ import createRandomDeck from '../../utilities/create-random-deck';
 const initStartingHandsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
     const { random } = ctx;
-    if (G.Config.debugConfig.logPhaseToConsole) {
-      console.log(G.turn, ctx.phase);
-    }
+    logPhaseToConsole(G.turn, ctx.phase);
 
     // debug opponents side interactions of CARD_10
     if (G.Config.debugConfig.debugCardId !== '') {

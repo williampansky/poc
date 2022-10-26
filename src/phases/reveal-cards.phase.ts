@@ -1,17 +1,11 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
-import {
-  Card,
-  GameState,
-  Zone,
-  ZonesCardsReference,
-} from '../interfaces';
+import { Card, GameState, Zone, ZonesCardsReference } from '../interfaces';
 import { revealCard } from '../moves';
+import { logPhaseToConsole } from '../utilities';
 
 const revealCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    if (G.Config.debugConfig.logPhaseToConsole) {
-      console.log(G.turn, ctx.phase);
-    }
+    logPhaseToConsole(G.turn, ctx.phase);
 
     const first = G.FirstRevealer;
     const second = first === '0' ? '1' : '0'; // @todo

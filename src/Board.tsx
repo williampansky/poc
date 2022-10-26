@@ -22,7 +22,7 @@ export const Board = (props: GameProps) => {
 
   const {
     G,
-    G: { Config, players, turn, PlayerTurnDone },
+    G: { Config },
     ctx,
     ctx: { phase, gameover },
     moves,
@@ -31,35 +31,35 @@ export const Board = (props: GameProps) => {
     reset,
   } = props;
 
-  React.useEffect(() => {
-    if (phase === 'playCards') {
-      if (PlayerTurnDone['0'] === true && PlayerTurnDone['1'] === true) {
-        console.log('endPhase')
-        endPhase!();
-      }
-    }
-  }, [PlayerTurnDone, phase]);
+  // React.useEffect(() => {
+  //   if (phase === 'playCards') {
+  //     if (PlayerTurnDone['0'] === true && PlayerTurnDone['1'] === true) {
+  //       console.log('endPhase')
+  //       endPhase!();
+  //     }
+  //   }
+  // }, [PlayerTurnDone, phase]);
 
-  React.useEffect(() => {
-    if (gameover) {
-      setTimeout(() => setShowGameOver(true), 2000);
-    }
-  }, [gameover]);
+  // React.useEffect(() => {
+  //   if (gameover) {
+  //     setTimeout(() => setShowGameOver(true), 2000);
+  //   }
+  // }, [gameover]);
 
-  React.useEffect(() => {
-    if (phase !== 'playCards') {
-      return setEndTurnDisabled(true);
-    }
+  // React.useEffect(() => {
+  //   if (phase !== 'playCards') {
+  //     return setEndTurnDisabled(true);
+  //   }
 
-    if (PlayerTurnDone['0'] === true) {
-      return setEndTurnDisabled(true);
-    }
+  //   if (PlayerTurnDone['0'] === true) {
+  //     return setEndTurnDisabled(true);
+  //   }
 
-    setTimeout(() => {
-      console.log('enable turn button');
-      return setEndTurnDisabled(false);
-    }, 2000);
-  }, [PlayerTurnDone, phase]);
+  //   setTimeout(() => {
+  //     console.log('enable turn button');
+  //     return setEndTurnDisabled(false);
+  //   }, 2000);
+  // }, [PlayerTurnDone, phase]);
 
   /**
    * Uses html.perspective CSS property, which is set to 100vh, to determine
@@ -293,7 +293,7 @@ export const Board = (props: GameProps) => {
             padding: '0 1em',
           }}
         >
-          <div
+          {/* <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(8, 1fr)',
@@ -324,15 +324,11 @@ export const Board = (props: GameProps) => {
                         ? 'scale(120%)'
                         : 'scale(80%)',
                     transition: '200ms ease-out',
-                    // backgroundPosition: 'center center',
-                    // backgroundRepeat: 'no-repeat',
-                    // backgroundSize: 'cover',
-                    // backgroundImage: 'url(./TCG_vol09_back.png)'
                   }}
                 ></div>
               );
             })}
-          </div>
+          </div> */}
         </div>
         <div
           style={{

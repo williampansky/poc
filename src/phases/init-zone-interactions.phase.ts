@@ -1,11 +1,10 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
 import { GameState } from '../interfaces';
+import { logPhaseToConsole } from '../utilities';
 
 const initZoneInteractions: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    if (G.Config.debugConfig.logPhaseToConsole) {
-      console.log(G.turn, ctx.phase);
-    }
+    logPhaseToConsole(G.turn, ctx.phase);
 
     ctx.events?.endPhase();
   },

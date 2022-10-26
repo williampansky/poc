@@ -1,6 +1,7 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
 import { add } from 'mathjs';
 import { GameState } from '../../interfaces';
+import { logPhaseToConsole } from '../../utilities';
 
 /**
  * Increments the game turn (note: ***not*** `ctx.turn`).
@@ -8,7 +9,10 @@ import { GameState } from '../../interfaces';
 const incrementGameTurnPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
     if (G.Config.debugConfig.logPhaseToConsole) {
-      console.log(`${G.turn} => ${add(G.turn, 1)}`, ctx.phase);
+      logPhaseToConsole(G.turn, ctx.phase, {
+        key: 'TURNS',
+        value: `${G.turn} => ${add(G.turn, 1)}`
+      })
     }
 
     G.turn = add(G.turn, 1);
