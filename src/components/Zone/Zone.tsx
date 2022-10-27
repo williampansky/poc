@@ -1,5 +1,5 @@
 import { Ctx, MoveMap } from 'boardgame.io';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import {
   Card,
   GameState,
@@ -7,6 +7,7 @@ import {
 } from '../../interfaces';
 import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
 import { ZoneDropSlot } from '../ZoneDropSlot/ZoneDropSlot';
+import { usePrevious } from '../../hooks';
 
 interface ReactZone {
   G: GameState;
@@ -27,17 +28,29 @@ export const Zone = ({
   zoneNumber,
   onCardClick,
 }: ReactZone): ReactElement => {
+  const { powers } = zone;
   const { playCard } = moves;
 
-  // const handleZoneDropEvent = React.useCallback(
-  //   (e: any) => {
-  //     e.persist();
-  //     e.preventDefault();
-  //     console.log(e)
-  //     return moves.playCard('0', zoneNumber);
-  //   },
-  //   [playCard]
-  // );
+  const [zoneLeader, setZoneLeader] = useState<string | undefined>(undefined);
+  const [zonePowers, setZonePowers] = useState({ '0': 0, '1': 0 });
+  const prevZonePowers = usePrevious({ '0': 0, '1': 0 });
+
+  useEffect(() => {
+    setZonePowers({
+      '0': powers['0'],
+      '1': powers['1']
+    });
+  }, [powers]);
+
+  useEffect(() => {
+    if (powers['0'] > powers['1']) {
+      setZoneLeader('0')
+    } else if (powers['1'] > powers['0']) {
+      setZoneLeader('1')
+    } else {
+      setZoneLeader(undefined)
+    }
+  }, [powers]);
 
   const handleZoneDropEvent = (e: any) => {
     // e.preventDefault();
@@ -158,6 +171,22 @@ export const Zone = ({
           </div>
         )}
 
+        <div style={{
+          position: 'absolute',
+          top: 0, right: 0, bottom: 0, left: 0,
+          height: '100%', width: '100%',
+          borderTopWidth: '2px',
+          borderTopStyle: 'solid',
+          borderTopColor: 'yellow',
+          borderBottomWidth: '2px',
+          borderBottomStyle: 'solid',
+          borderBottomColor: 'transparent',
+          borderRadius: '50%',
+          opacity: zoneLeader ? '1' : '0',
+          transform: `scale(${zoneLeader ? '1' : '0'}) rotate(${zoneLeader === '1' ? '0deg' : '180deg'})`,
+          transition: '200ms ease-in-out',
+        }}></div>
+
         <div
           style={{
             fontSize: '1em',
@@ -180,7 +209,7 @@ export const Zone = ({
             boxSizing: 'content-box',
           }}
         >
-          {zone?.powers[1]}
+          {zonePowers['1']}
         </div>
         <div
           style={{
@@ -204,7 +233,7 @@ export const Zone = ({
             boxSizing: 'content-box',
           }}
         >
-          {zone?.powers[0]}
+          {zonePowers['0']}
         </div>
       </div>
       <div
@@ -222,7 +251,7 @@ export const Zone = ({
           G={G}
           moves={moves}
           isActive={
-            ctx.currentPlayer === '0' &&
+            ctx.phase === 'playCards' &&
             G.SelectedCardData['0'] !== undefined &&
             zone?.sides['0'].length !==
               G.Config.gameConfig.numberOfSlotsPerZone &&

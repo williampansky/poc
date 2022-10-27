@@ -293,7 +293,7 @@ export const Board = (props: GameProps) => {
             padding: '0 1em',
           }}
         >
-          {/* <div
+          <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(8, 1fr)',
@@ -301,7 +301,7 @@ export const Board = (props: GameProps) => {
               width: '100%',
             }}
           >
-            {[...Array.from(players[1].hand)]?.map((_, idx) => {
+            {[...Array.from(G.players[1].hand)]?.map((_, idx) => {
               return (
                 <div
                   key={idx}
@@ -328,7 +328,7 @@ export const Board = (props: GameProps) => {
                 ></div>
               );
             })}
-          </div> */}
+          </div>
         </div>
         <div
           style={{
