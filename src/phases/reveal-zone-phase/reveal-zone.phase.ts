@@ -16,14 +16,14 @@ const revealZonePhase: PhaseConfig = {
       logPhaseToConsole(G.turn, ctx.phase, { key: 'ZONE#', value: '1' });
       G.Zones[1].revealed = true;
       // initOnZoneRevealInteractions();
-      // ctx.events?.endPhase();
+      ctx.events?.endPhase();
     } else if (G.turn === 2 && !G.Zones[2].revealed) {
       logPhaseToConsole(G.turn, ctx.phase, { key: 'ZONE#', value: '2' });
       G.Zones[2].revealed = true;
       // initOnZoneRevealInteractions();
-      // ctx.events?.endPhase();
+      ctx.events?.endPhase();
     } else {
-      // ctx.events?.endPhase();
+      ctx.events?.endPhase();
     }
   },
 };

@@ -23,7 +23,7 @@ export const ZoneSlot = ({
   const [objData, setObjData] = useState<Card | undefined>(undefined);
   const [incoming, setIncoming] = useState<boolean>(false);
 
-  const zoneRef = G?.ZonesCardsReference[zoneNumber]['0'];
+  const zoneRef = G?.ZonesCardsReference[zoneNumber][playerId];
 
   // React.useEffect(() => {
   //   setTimeout(() => setObjData(data), 50);
@@ -40,13 +40,21 @@ export const ZoneSlot = ({
     'revealCard',
     (value: any) => {
       if (
-        value.idx === slotIndex &&
-        value.zone === zoneNumber &&
+        value.zoneNumber === zoneNumber &&
+        value.slotIndex === slotIndex &&
         value.player === playerId
       ) {
-        // console.log(value);
-        setObjData(value.card);
+        console.log(`
+   useEffectListener('revealCard', (value) => {
+               file: ZoneSlot.tsx
+         value.card: ${JSON.stringify(value.card)}
+   value.zoneNumber: ${value.zoneNumber}
+    value.slotIndex: ${value.slotIndex}
+       value.player: ${value.player}
+   })
+        `);
         setIncoming(false);
+        setObjData(value.card);
       }
       // setTimeout(() => setObjData(cardData), 50);
     },
@@ -198,7 +206,7 @@ export const ZoneSlot = ({
 
   return (
     <div
-      onClick={() => data && onClick(data)}
+      onClick={() => objData && onClick(objData)}
       style={{
         height: '3.5em',
         width: '2.75em',

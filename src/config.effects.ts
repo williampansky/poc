@@ -2,8 +2,8 @@ import { Card, PlayerID, Zone } from './interfaces';
 
 interface RevealCardEffects {
   card: Card;
-  slotIndex: number;
   zoneNumber: number;
+  slotIndex: number;
   player: PlayerID;
 }
 
@@ -26,11 +26,12 @@ export const effectsConfig = {
     revealCard: {
       duration: 0.5,
       create: ({ ...value }: RevealCardEffects) => {
+        const { card, zoneNumber, slotIndex, player } = value;
         return {
-          card: value.card,
-          slotIndex: value.slotIndex,
-          zoneNumber: value.zoneNumber,
-          player: value.player,
+          card,
+          zoneNumber,
+          slotIndex,
+          player,
         };
       },
     },

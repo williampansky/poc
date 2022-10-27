@@ -31,35 +31,35 @@ export const Board = (props: GameProps) => {
     reset,
   } = props;
 
-  // React.useEffect(() => {
-  //   if (phase === 'playCards') {
-  //     if (PlayerTurnDone['0'] === true && PlayerTurnDone['1'] === true) {
-  //       console.log('endPhase')
-  //       endPhase!();
-  //     }
-  //   }
-  // }, [PlayerTurnDone, phase]);
+  React.useEffect(() => {
+    if (phase === 'playCards') {
+      if (G.PlayerTurnDone['0'] === true && G.PlayerTurnDone['1'] === true) {
+        console.log('endPhase')
+        endPhase!();
+      }
+    }
+  }, [G.PlayerTurnDone, phase]);
 
-  // React.useEffect(() => {
-  //   if (gameover) {
-  //     setTimeout(() => setShowGameOver(true), 2000);
-  //   }
-  // }, [gameover]);
+  React.useEffect(() => {
+    if (gameover) {
+      setTimeout(() => setShowGameOver(true), 2000);
+    }
+  }, [gameover]);
 
-  // React.useEffect(() => {
-  //   if (phase !== 'playCards') {
-  //     return setEndTurnDisabled(true);
-  //   }
+  React.useEffect(() => {
+    if (phase !== 'playCards') {
+      return setEndTurnDisabled(true);
+    }
 
-  //   if (PlayerTurnDone['0'] === true) {
-  //     return setEndTurnDisabled(true);
-  //   }
+    if (G.PlayerTurnDone['0'] === true) {
+      return setEndTurnDisabled(true);
+    }
 
-  //   setTimeout(() => {
-  //     console.log('enable turn button');
-  //     return setEndTurnDisabled(false);
-  //   }, 2000);
-  // }, [PlayerTurnDone, phase]);
+    setTimeout(() => {
+      console.log('enable turn button');
+      return setEndTurnDisabled(false);
+    }, 2000);
+  }, [G.PlayerTurnDone, phase]);
 
   /**
    * Uses html.perspective CSS property, which is set to 100vh, to determine
