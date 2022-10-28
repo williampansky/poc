@@ -1,4 +1,4 @@
-import { Config } from '../../../interfaces';
+import { Config } from '../../../game.config';
 import { DefaultState } from '../../../state';
 import { mockCtx } from '../../../test-utils';
 import initStartingHandsPhase from '../init-starting-hands.phase';

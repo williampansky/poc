@@ -1,4 +1,5 @@
-import { Config, GameState, Zone, ZoneBase } from '../interfaces';
+import { Config } from '../game.config';
+import { GameState, Zone, ZoneBase } from '../interfaces';
 import tempZonesDatabase from '../tempZonesDatabase';
 import createZoneObject from '../utilities/create-zone-object';
 import getRandomNumberBetween from '../utilities/get-random-number-between';

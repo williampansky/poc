@@ -1,4 +1,5 @@
-import { Config, GameState, PlayerID } from "../interfaces";
+import { Config } from "../game.config";
+import { GameState, PlayerID } from "../interfaces";
 
 const Counts = {
   defaultState: {

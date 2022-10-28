@@ -1,4 +1,4 @@
-import { Config } from '../../interfaces';
+import { Config } from '../../game.config';
 import { Counts, DefaultState } from '../';
 import { mockGameState } from '../../test-utils';
 

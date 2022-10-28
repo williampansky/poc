@@ -1,4 +1,4 @@
-import { Config } from "../interfaces";
+import { Config } from "../game.config";
 import createZoneObject from "../utilities/create-zone-object";
 import ActionPoints from "./action-points.state";
 import Counts from "./counts.state";
