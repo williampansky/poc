@@ -182,9 +182,13 @@ export const Board = (props: GameProps) => {
 
       <main
         style={{
+          width: '100vw',
           maxWidth: '100vw',
+          minWidth: '100vw',
           filter: showGameOver ? 'blur(2px)' : 'none',
           height: `calc(100vh - ${addressBarSize}px)`,
+          maxHeight: `calc(100vh - ${addressBarSize}px)`,
+          minHeight: `calc(100vh - ${addressBarSize}px)`,
         }}
       >
         <CardInspectionModal
@@ -339,8 +343,13 @@ export const Board = (props: GameProps) => {
             justifyContent: 'center',
             margin: '0 auto',
             padding: '0 1em',
-            height: '100vh',
+            height: '100%',
+            maxHeight: '100%',
+            minHeight: '100%',
             width: '100%',
+            maxWidth: '100%',
+            minWidth: '100%',
+            overflow: 'hidden'
           }}
         >
           {G.Zones.map((zone: IZone, idx: number) => {
@@ -456,7 +465,7 @@ export const Board = (props: GameProps) => {
                 background:
                   !endTurnDisabled
                     ? 'yellow'
-                    : 'initial',
+                    : 'darkgray',
                 display: 'flex',
                 flexFlow: 'column nowrap',
                 alignItems: 'center',
@@ -469,7 +478,8 @@ export const Board = (props: GameProps) => {
                 minWidth: 95,
               }}
             >
-              End Turn {G.turn}/{Config.gameConfig.numberOfSingleTurnsPerGame}
+              {endTurnDisabled ? 'Waiting ' : 'End Turn '}
+              {G.turn}/{Config.gameConfig.numberOfSingleTurnsPerGame}
             </button>
           </div>
         </div>
