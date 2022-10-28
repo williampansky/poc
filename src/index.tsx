@@ -3,6 +3,8 @@ import { render } from 'react-dom';
 import './index.css';
 import GameWrapper from './GameWrapper';
 import reportWebVitals from './reportWebVitals';
+import { store } from './store'
+import { Provider } from 'react-redux'
 
 const root = document.getElementById('root') as HTMLElement;
 
@@ -11,7 +13,9 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
     const GameWrapper = require('./GameWrapper').default;
     render(
       <React.StrictMode>
-        <GameWrapper />
+        <Provider store={store}>
+          <GameWrapper />
+        </Provider>
       </React.StrictMode>,
       root
     );
@@ -20,7 +24,9 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
 
 render(
   <React.StrictMode>
-    <GameWrapper />
+    <Provider store={store}>
+      <GameWrapper />
+    </Provider>
   </React.StrictMode>,
   root
 );
