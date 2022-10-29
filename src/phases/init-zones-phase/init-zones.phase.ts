@@ -20,6 +20,9 @@ const initZonesPhase: PhaseConfig = {
 
     Zones.set(G, newZones);
 
+    // @ts-ignore
+    ctx.effects.effectsEnd();
+
     if (G.Config.debugConfig.logPhaseToConsole) {
       console.clear();
 

@@ -101,5 +101,6 @@ export interface GameState {
   SelectedCardIndex: SelectedCardIndex;
   turn: number;
   Zones: Zone[];
+  ZonesAreActive: Record<PlayerID, boolean>;
   ZonesCardsReference: Record<PlayerID, Card[]>[];
 }

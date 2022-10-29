@@ -5,8 +5,12 @@ import { Card, GameState, Zone as IZone } from './interfaces';
 import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
 import { CardInHand } from './components/Card/CardInHand';
-import { CardInspectionModal } from './components/Modals/CardInspectionModal';
+import { CardModal } from './features/card-modal/CardModal';
 import { PlayerHand } from './components/Hands/PlayerHand';
+import type { RootState } from './store'
+import { useSelector, useDispatch } from 'react-redux'
+import { Zones } from './features/zones/Zones.Wrapper';
+import { showCardModal } from './features/card-modal/card-modal.slice';
 
 const showDebug = false;
 
@@ -20,6 +24,9 @@ export const Board = (props: GameProps) => {
     Card | undefined
   >(undefined);
 
+  const dispatch = useDispatch();
+  const zones = useSelector((state: RootState) => state.zones)
+
   const {
     G,
     G: { Config },
@@ -29,6 +36,7 @@ export const Board = (props: GameProps) => {
     events,
     events: { endPhase },
     reset,
+    playerID
   } = props;
 
   React.useEffect(() => {
@@ -104,7 +112,8 @@ export const Board = (props: GameProps) => {
   };
 
   const onCardClick = (obj: Card ) => {
-    setCardModalDataObject(obj);
+    // setCardModalDataObject(obj);
+    dispatch(showCardModal(obj))
   };
 
   const onCardSelect = (playerId: string, uuid: string) => {
@@ -191,10 +200,7 @@ export const Board = (props: GameProps) => {
           minHeight: `calc(100vh - ${addressBarSize}px)`,
         }}
       >
-        <CardInspectionModal
-          data={cardModalDataObject}
-          onClick={() => setCardModalDataObject(undefined)}
-        />
+        <CardModal />
         <div
           style={{
             display: 'flex',
@@ -352,20 +358,22 @@ export const Board = (props: GameProps) => {
             overflow: 'hidden'
           }}
         >
-          {G.Zones.map((zone: IZone, idx: number) => {
+          <Zones player={playerID === '0' ? '0' : '1'} opponent={playerID === '0' ? '1' : '0'} />
+          {/* {zones.map((zone: IZone, idx: number) => {
             return (
               <Zone
-                G={G}
+                // G={G}
                 ctx={ctx}
                 moves={moves}
-                disabled={zone.disabled[0]}
-                zone={zone}
+                // disabled={zone.disabled[0]}
+                // zone={zone}
                 zoneNumber={idx}
                 key={idx}
                 onCardClick={onCardClick}
+                player={playerID === '0' ? '0' : '1'}
               />
             );
-          })}
+          })} */}
         </div>
         <PlayerHand
           G={G}

@@ -1,7 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { actionPointsSlice, zonesSlice, zonesRefSlice, cardModalSlice } from './features';
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    actionPoints: actionPointsSlice,
+    zones: zonesSlice,
+    zonesRef: zonesRefSlice,
+    cardModal: cardModalSlice,
+  },
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

@@ -1,28 +1,24 @@
 import { Ctx, MoveMap } from 'boardgame.io';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
 import { animated } from 'react-spring';
 import { GameState } from '../../interfaces';
 
 interface ReactZone {
-  G: GameState;
-  moves: any;
+  // G: GameState;
+  // moves: any;
   isActive: boolean;
-  playerId: string;
   zoneNumber: number;
-  onMouseUp: any;
+  // onMouseUp: any;
 }
 
 export const ZoneDropSlot = ({
-  G,
-  moves,
+  // G,
+  // moves,
   isActive,
-  playerId,
   zoneNumber,
-  onMouseUp,
+  // onMouseUp,
 }: ReactZone): ReactElement => {
-  const { playCard } = moves;
-  const [isOver, setIsOver] = React.useState<boolean>(false);
 
   return (
     <React.Fragment>
@@ -43,7 +39,7 @@ export const ZoneDropSlot = ({
           borderColor: 'red',
           transition: '150ms ease-in',
           zIndex: isActive ? 1 : -1,
-          opacity: G.SelectedCardData['0'] !== undefined ? (isActive ? 0.5 : 0) : 0,
+          opacity: isActive ? 0.5 : 0,
           willChange: 'border-style, opacity, pointer-events',
           overflow: 'hidden',
           display: 'flex',

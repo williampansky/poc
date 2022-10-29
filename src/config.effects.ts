@@ -14,6 +14,9 @@ interface RevealZoneEffects {
 
 export const effectsConfig = {
   effects: {
+    effectsEnd: {
+      duration: 0
+    },
     revealZone: {
       duration: 0.5,
       create: ({ ...value }: RevealZoneEffects) => {

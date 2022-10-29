@@ -7,6 +7,7 @@ import PlayedCards from "./played-cards.state";
 import PlayerTurnDone from "./player-turn-done.state";
 import SelectedCardData from "./selected-card-data.state";
 import SelectedCardIndex from "./selected-card-index.state";
+import Zones from "./zones.state";
 
 const DefaultState = {
   turn: 0,
@@ -35,17 +36,13 @@ const DefaultState = {
 
     SelectedCardData: SelectedCardData.defaultState,
     SelectedCardIndex: SelectedCardIndex.defaultState,
-
     PlayedCards: PlayedCards.defaultState,
+    Zones: Zones.defaultState,
 
-    Zones: [
-      ...Array.from(Array(Config.gameConfig.numberOfZones)).map(() => {
-        return createZoneObject({
-          id: '',
-          name: '',
-        });
-      }),
-    ],
+    ZonesAreActive: {
+      '0': false,
+      '1': false,
+    },
 
     ZonesCardsReference: [
       ...Array.from(Array(Config.gameConfig.numberOfZones)).map(() => {

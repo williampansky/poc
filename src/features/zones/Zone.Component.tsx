@@ -4,66 +4,48 @@ import {
   Card,
   GameState,
   Zone as ZoneProps,
+  ZonesCardsReference,
 } from '../../interfaces';
-import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
-import { ZoneDropSlot } from '../ZoneDropSlot/ZoneDropSlot';
+import { ZoneDropSlot } from '../../components/ZoneDropSlot/ZoneDropSlot';
 import { usePrevious } from '../../hooks';
 import type { RootState } from '../../store'
 import { useSelector, useDispatch } from 'react-redux'
+import { PlayerZoneSlot } from './ZoneSlot.Player';
+import { OpponentZoneSlot } from './ZoneSlot.Opponent';
 
 interface ReactZone {
   // G: GameState;
-  ctx: Ctx;
-  moves: any;
+  // ctx: Ctx;
+  // moves: any;
   // disabled: boolean;
-  // zone: ZoneProps;
+  zone: ZoneProps;
   zoneNumber: number;
+  zoneRef: ZonesCardsReference;
   player: string;
-  onCardClick: (obj: Card) => void;
+  opponent: string;
+  zonesAreActive: boolean;
+  // onCardClick: (obj: Card) => void;
 }
 
 export const Zone = ({
   // G,
-  ctx,
-  moves,
+  // ctx,
+  // moves,
   // disabled,
-  // zone,
+  zone,
   zoneNumber,
-  onCardClick,
+  zoneRef,
+  // onCardClick,
   player,
+  opponent,
+  zonesAreActive,
 }: ReactZone): ReactElement => {
-  // const { powers } = zone;
-  const { playCard } = moves;
+  const { powers } = zone;
+  // const { playCard } = moves;
 
-  const zones = useSelector((state: RootState) => state.zones);
-  const zone = zones[zoneNumber];
-  const powers = zones[zoneNumber]?.powers;
   const [zoneLeader, setZoneLeader] = useState<string | undefined>(undefined);
   const [zonePowers, setZonePowers] = useState({ '0': 0, '1': 0 });
   const prevZonePowers = usePrevious({ '0': 0, '1': 0 });
-
-  useEffect(() => {
-    setZonePowers({
-      '0': powers['0'],
-      '1': powers['1']
-    });
-  }, [powers]);
-
-  useEffect(() => {
-    if (powers['0'] > powers['1']) {
-      setZoneLeader('0')
-    } else if (powers['1'] > powers['0']) {
-      setZoneLeader('1')
-    } else {
-      setZoneLeader(undefined)
-    }
-  }, [powers]);
-
-  const handleZoneDropEvent = (e: any) => {
-    // e.preventDefault();
-    console.log(e);
-    return moves.playCard('0', zoneNumber);
-  };
 
   return (
     <div
@@ -105,13 +87,15 @@ export const Zone = ({
         })} */}
         {[...Array.from(Array(6))].map((_, idx: number) => {
           return (
-            <ZoneSlot
+            <OpponentZoneSlot
               key={idx}
-              // data={obj}
-              onClick={onCardClick}
+              data={zone.sides[opponent][idx]}
+              // onClick={onCardClick}
+              onClick={(val: any) => console.log(val)}
               zoneNumber={zoneNumber}
+              zoneRef={zoneRef}
               slotIndex={idx}
-              playerId={'1'}
+              opponent={opponent}
             />
           );
         })}
@@ -254,21 +238,12 @@ export const Zone = ({
           justifyContent: 'center',
         }}
       >
-        {/* <ZoneDropSlot
-          G={G}
-          moves={moves}
-          isActive={
-            ctx.phase === 'playCards' &&
-            G.SelectedCardData['0'] !== undefined &&
-            zone?.sides['0'].length !==
-              G.Config.gameConfig.numberOfSlotsPerZone &&
-            !zone?.disabled['0'] &&
-            G.ActionPoints['0'].current >= G.SelectedCardData['0']?.currentCost
-          }
-          playerId='0'
+        <ZoneDropSlot
+          // moves={moves}
           zoneNumber={zoneNumber}
-          onMouseUp={(e: any) => handleZoneDropEvent(e)}
-        /> */}
+          isActive={zonesAreActive}
+          // onMouseUp={(e: any) => handleZoneDropEvent(e)}
+        />
         <div
           style={{
             display: 'grid',
@@ -290,19 +265,20 @@ export const Zone = ({
               />
             );
           })} */}
-          {/* {[...Array.from(Array(6))].map((_, idx: number) => {
+          {[...Array.from(Array(6))].map((_, idx: number) => {
             return (
-              <ZoneSlot
-                G={G}
-                key={idx}
-                // data={obj}
-                onClick={onCardClick}
-                zoneNumber={zoneNumber}
-                slotIndex={idx}
-                playerId={'0'}
-              />
+              <PlayerZoneSlot
+              key={idx}
+              data={zone.sides[player][idx]}
+              // onClick={onCardClick}
+              onClick={(val: any) => console.log(val)}
+              zoneNumber={zoneNumber}
+              zoneRef={zoneRef}
+              slotIndex={idx}
+              player={player}
+            />
             );
-          })} */}
+          })}
           {/* {G.ZonesCardsReference[zoneNumber]['0']?.map(
             (obj: Card, idx: number) => {
               return !obj.revealed && zone.sides['0'][idx] === undefined ? (
