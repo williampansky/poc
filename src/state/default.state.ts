@@ -4,6 +4,7 @@ import ActionPoints from "./action-points.state";
 import Counts from "./counts.state";
 import FirstRevealer from "./first-revealer.state";
 import PlayedCards from "./played-cards.state";
+import PlayerNames from "./player-names.state";
 import PlayerTurnDone from "./player-turn-done.state";
 import SelectedCardData from "./selected-card-data.state";
 import SelectedCardIndex from "./selected-card-index.state";
@@ -19,21 +20,16 @@ const DefaultState = {
 
     players: {
       '0': {
-        name: 'Player',
         deck: [],
         hand: [],
-        actionPoints: 0,
-        actionPointsTotal: 0,
       },
       '1': {
-        name: 'Opponent',
         deck: [],
         hand: [],
-        actionPoints: 0,
-        actionPointsTotal: 0,
       },
     },
 
+    PlayerNames: PlayerNames.defaultState,
     SelectedCardData: SelectedCardData.defaultState,
     SelectedCardIndex: SelectedCardIndex.defaultState,
     PlayedCards: PlayedCards.defaultState,

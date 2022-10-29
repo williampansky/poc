@@ -41,14 +41,11 @@ export const PlayerZoneSlot = ({
   }, [data]);
 
   const getAnimationDirection = (zoneNumber: number): string => {
-    const scaleEnd = player === '1' ? 'scale(1, -1)' : 'scale(1)';
-    const scaleStart = player === '1' ? 'scale(5, -5)' : 'scale(5)';
-    const translateStart0 =
-      player === '1' ? 'translate(-50%, -50%)' : 'translate(-50%, 50%)';
-    const translateStart1 =
-      player === '1' ? 'translate(0, -100%)' : 'translate(0, 100%)';
-    const translateStart2 =
-      player === '1' ? 'translate(50%, -50%)' : 'translate(50%, 50%)';
+    const scaleEnd = 'scale(1)';
+    const scaleStart = 'scale(5)';
+    const translateStart0 = 'translate(-50%, 50%)';
+    const translateStart1 = 'translate(0, 100%)';
+    const translateStart2 = 'translate(50%, 50%)';
 
     switch (zoneNumber) {
       case 0:
@@ -151,35 +148,6 @@ export const PlayerZoneSlot = ({
         <div style={{ fontSize: '0.5em' }}>{zoneRef[player][slotIndex]?.name}</div>
       </div>
     </div>
-      // <div
-      //   onClick={onUnrevealedClick}
-      //   style={{
-      //     height: '3.5em',
-      //     width: '2.75em',
-      //     transition: '150ms ease-in',
-      //     opacity: '1',
-      //     // transform: getAnimationDirection(zoneNumber),
-      //     transitionDelay: '',
-      //     // filter: objData ? 'blur(0)' : 'blur(1px)'
-      //   }}
-      // >
-      //   <div
-      //     style={{
-      //       display: 'flex',
-      //       flexFlow: 'column nowrap',
-      //       alignItems: 'center',
-      //       justifyContent: 'center',
-      //       padding: '0.25em',
-      //       textAlign: 'center',
-      //       position: 'relative',
-      //       border: '1px solid black',
-      //       borderRadius: '0.25em',
-      //       background: '#ccc',
-      //       height: '100%',
-      //       width: '100%',
-      //     }}
-      //   ></div>
-      // </div>
     );
   }
 
@@ -190,7 +158,9 @@ export const PlayerZoneSlot = ({
         height: '3.5em',
         width: '2.75em',
         transition: '250ms ease-in',
+        position: objData ? 'relative' : 'relative',
         opacity: objData ? '1' : '0',
+        zIndex: objData ? 'auto' : '-1',
         transform: getAnimationDirection(zoneNumber),
         transitionDelay: objData?.revealed ? `${slotIndex * 100}ms` : '0ms',
         // filter: objData ? 'blur(0)' : 'blur(1px)'

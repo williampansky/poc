@@ -75,19 +75,14 @@ export interface Zone {
 export declare type ZonesCardsReference = Record<PlayerID, Card[]>;
 
 export interface Player {
-  name: string;
   deck: Card[];
   hand: Card[];
-  actionPoints: number;
-  actionPointsTotal: number;
 }
 
 export interface Counts {
   deck: number;
   hand: number;
 }
-
-
 
 export interface GameState {
   ActionPoints: ActionPoints;
@@ -96,6 +91,7 @@ export interface GameState {
   FirstRevealer: PlayerID;
   PlayedCards: Record<PlayerID, Card[]>;
   players: Record<PlayerID, Player>;
+  PlayerNames: Record<PlayerID, string>;
   PlayerTurnDone: Record<PlayerID, boolean>;
   SelectedCardData: Record<PlayerID, Card | undefined>;
   SelectedCardIndex: SelectedCardIndex;

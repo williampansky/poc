@@ -228,7 +228,7 @@ export const Board = (props: GameProps) => {
               color: 'white',
             }}
           >
-            {G.players[1].name}
+            {G.PlayerNames['1']}
           </div>
           <div style={{ width: '100%' }}>
             <div
@@ -311,7 +311,7 @@ export const Board = (props: GameProps) => {
               width: '100%',
             }}
           >
-            {[...Array.from(G.players[1].hand)]?.map((_, idx) => {
+            {[...Array.from(Array(G.Counts['1'].hand))]?.map((_, idx) => {
               return (
                 <div
                   key={idx}
@@ -401,6 +401,17 @@ export const Board = (props: GameProps) => {
             background: '#333',
           }}
         >
+          <div
+            style={{
+              paddingRight: '0.25em',
+              marginRight: 'auto',
+              fontSize: '11px',
+              whiteSpace: 'nowrap',
+              color: 'white',
+            }}
+          >
+            {G.PlayerNames['0']}
+          </div>
           <div style={{ width: '100%' }}>
             <div
               style={{

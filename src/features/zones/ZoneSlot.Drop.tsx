@@ -1,6 +1,6 @@
 import { Ctx, MoveMap } from 'boardgame.io';
 import React, { ReactElement, useEffect } from 'react';
-import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
+import { ZoneSlot } from '../../components/ZoneSlot/ZoneSlot';
 import { animated } from 'react-spring';
 import { GameState } from '../../interfaces';
 

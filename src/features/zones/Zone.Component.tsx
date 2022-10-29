@@ -6,7 +6,7 @@ import {
   Zone as ZoneProps,
   ZonesCardsReference,
 } from '../../interfaces';
-import { ZoneDropSlot } from '../../components/ZoneDropSlot/ZoneDropSlot';
+import { ZoneDropSlot } from './ZoneSlot.Drop';
 import { usePrevious } from '../../hooks';
 import type { RootState } from '../../store'
 import { useSelector, useDispatch } from 'react-redux'
@@ -46,6 +46,23 @@ export const Zone = ({
   const [zoneLeader, setZoneLeader] = useState<string | undefined>(undefined);
   const [zonePowers, setZonePowers] = useState({ '0': 0, '1': 0 });
   const prevZonePowers = usePrevious({ '0': 0, '1': 0 });
+
+  useEffect(() => {
+    setZonePowers({
+      '0': powers['0'],
+      '1': powers['1']
+    });
+  }, [powers]);
+
+  useEffect(() => {
+    if (powers['0'] > powers['1']) {
+      setZoneLeader('0')
+    } else if (powers['1'] > powers['0']) {
+      setZoneLeader('1')
+    } else {
+      setZoneLeader(undefined)
+    }
+  }, [powers]);
 
   return (
     <div
@@ -168,13 +185,13 @@ export const Zone = ({
           height: '100%', width: '100%',
           borderTopWidth: '2px',
           borderTopStyle: 'solid',
-          borderTopColor: 'yellow',
+          borderTopColor: zoneLeader === '1' ? 'yellow' : 'transparent',
           borderBottomWidth: '2px',
           borderBottomStyle: 'solid',
-          borderBottomColor: 'transparent',
+          borderBottomColor: zoneLeader === '0' ? 'yellow' : 'transparent',
           borderRadius: '50%',
           opacity: zoneLeader ? '1' : '0',
-          transform: `scale(${zoneLeader ? '1' : '0'}) rotate(${zoneLeader === '1' ? '0deg' : '180deg'})`,
+          // transform: `scale(${zoneLeader ? '1' : '0'}) rotate(${zoneLeader === '1' ? '0deg' : '180deg'})`,
           transition: '200ms ease-in-out',
         }}></div>
 
@@ -191,12 +208,14 @@ export const Zone = ({
             flexFlow: 'column nowrap',
             alignItems: 'center',
             justifyContent: 'center',
-            background: zone?.powers[1] > zone?.powers[0] ? 'yellow' : 'black',
-            color: zone?.powers[1] > zone?.powers[0] ? 'black' : 'white',
+            background: zoneLeader === '1' ? 'yellow' : 'black',
+            color: zoneLeader === '1' ? 'black' : 'white',
             borderRadius: '50%',
             height: '1.5em',
             width: '1.5em',
-            border: '2px solid white',
+            borderWidth: '2px',
+            borderStyle: 'solid',
+            borderColor: zoneLeader === '1' ? 'yellow' : 'white',
             boxSizing: 'content-box',
           }}
         >
@@ -215,12 +234,14 @@ export const Zone = ({
             flexFlow: 'column nowrap',
             alignItems: 'center',
             justifyContent: 'center',
-            background: zone?.powers[0] > zone?.powers[1] ? 'yellow' : 'black',
-            color: zone?.powers[0] > zone?.powers[1] ? 'black' : 'white',
+            background: zoneLeader === '0' ? 'yellow' : 'black',
+            color: zoneLeader === '0' ? 'black' : 'white',
             borderRadius: '50%',
             height: '1.5em',
             width: '1.5em',
-            border: '2px solid white',
+            borderWidth: '2px',
+            borderStyle: 'solid',
+            borderColor: zoneLeader === '0' ? 'yellow' : 'white',
             boxSizing: 'content-box',
           }}
         >

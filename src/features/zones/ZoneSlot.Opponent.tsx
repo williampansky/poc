@@ -96,7 +96,9 @@ export const OpponentZoneSlot = ({
         height: '3.5em',
         width: '2.75em',
         transition: '250ms ease-in',
+        position: objData ? 'relative' : 'relative',
         opacity: objData ? '1' : '0',
+        zIndex: objData ? 'auto' : '-1',
         transform: getAnimationDirection(zoneNumber),
         transitionDelay: objData?.revealed ? `${slotIndex * 100}ms` : '0ms',
         // filter: objData ? 'blur(0)' : 'blur(1px)'

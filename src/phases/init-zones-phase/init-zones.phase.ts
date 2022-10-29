@@ -1,6 +1,6 @@
 import { Ctx, PhaseConfig } from 'boardgame.io';
 import { GameState, Zone } from '../../interfaces';
-import { Zones } from '../../state';
+import { PlayerNames, Zones } from '../../state';
 import ZONE_DATABASE from '../../tempZonesDatabase';
 import { logPhaseToConsole } from '../../utilities';
 import createZoneObject from '../../utilities/create-zone-object';
@@ -19,6 +19,8 @@ const initZonesPhase: PhaseConfig = {
     }
 
     Zones.set(G, newZones);
+    PlayerNames.set(G, '0', 'Player');
+    PlayerNames.set(G, '1', 'Opponent');
 
     // @ts-ignore
     ctx.effects.effectsEnd();

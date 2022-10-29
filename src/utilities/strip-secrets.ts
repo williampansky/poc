@@ -13,7 +13,7 @@ import { GameState, PlayerID } from '../interfaces';
  */
 const stripSecrets = (G: GameState, ctx: Ctx, playerId: PlayerID) => ({
   ...G,
-  // players: { [playerId]: G.players[playerId] },
+  players: { [playerId]: G.players[playerId] },
   SelectedCardData: { [playerId]: G.SelectedCardData[playerId] },
 });
 
