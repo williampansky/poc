@@ -11,6 +11,8 @@ import type { RootState } from './store'
 import { useSelector, useDispatch } from 'react-redux'
 import { Zones } from './features/zones/components/Zones/Zones.Wrapper';
 import { showCardModal } from './features/card-modal/card-modal.slice';
+import { ActionPoints } from './features/action-points';
+import { setActionPoints } from './features/action-points/action-points.slice';
 
 const showDebug = false;
 
@@ -127,6 +129,10 @@ export const Board = (props: GameProps) => {
   const onCardSlotDrop = (playerId: string, zoneNumber: number) => {
     return moves.playCard(playerId, zoneNumber);
   };
+
+  React.useEffect(() => {
+    dispatch(setActionPoints(G.ActionPoints))
+  }, [G.ActionPoints]);
 
   return (
     <>
@@ -380,49 +386,7 @@ export const Board = (props: GameProps) => {
           >
             {G.PlayerNames['0']}
           </div>
-          <div style={{ width: '100%' }}>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${G.ActionPoints['0'].total}, 1fr)`,
-                gridGap: '0.15em',
-                width: '100%',
-              }}
-            >
-              {Array.from(Array(G.ActionPoints['0'].total)).map(
-                (_, idx) => {
-                  idx = idx + 1;
-                  return (
-                    <div
-                      key={idx}
-                      style={{
-                        display: 'flex',
-                        flexFlow: 'column nowrap',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        pointerEvents: 'none',
-                        userSelect: 'none',
-                        fontWeight:
-                          G.ActionPoints['0'].current >= idx
-                            ? 'bold'
-                            : 'normal',
-                        background:
-                          G.ActionPoints['0'].current >= idx
-                            ? 'lightgreen'
-                            : '#ccc',
-                        color:
-                          G.ActionPoints['0'].current >= idx
-                            ? '#052d05'
-                            : '#4e4e4e',
-                      }}
-                    >
-                      {idx}
-                    </div>
-                  );
-                }
-              )}
-            </div>
-          </div>
+          <ActionPoints player={playerID} />
           <div style={{
             padding: '0 0.15em',
           }}>
