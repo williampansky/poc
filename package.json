@@ -54,6 +54,7 @@
     ]
   },
   "devDependencies": {
-    "jest-matcher-one-of": "^1.0.2"
+    "jest-matcher-one-of": "^1.0.2",
+    "node-sass": "^7.0.3"
   }
 }

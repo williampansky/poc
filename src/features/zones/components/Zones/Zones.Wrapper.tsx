@@ -1,15 +1,16 @@
 import { Ctx, MoveMap } from 'boardgame.io';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Card, GameState, Zone as ZoneProps } from '../../interfaces';
+import { Card, GameState, Zone as ZoneProps } from '../../../../interfaces';
 // import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
 // import { ZoneDropSlot } from '../ZoneDropSlot/ZoneDropSlot';
-import { usePrevious } from '../../hooks';
-import type { RootState } from '../../store';
+import { usePrevious } from '../../../../hooks';
+import type { RootState } from '../../../../store';
 import { useSelector, useDispatch } from 'react-redux';
-import { Zone } from './Zone.Component';
+import { Zone } from '../Zone/Zone.Component';
 import { useLatestPropsOnEffect } from 'bgio-effects/react';
-import { initZone } from './zones.slice';
-import { updateZonesRef } from './zones-ref.slice';
+import { initZone } from '../../zones.slice';
+import { updateZonesRef } from '../../zones-ref.slice';
+import styles from './zones.wrapper.module.scss';
 
 interface ReactZones {
   // G: GameState;
@@ -50,7 +51,7 @@ export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
   // }, [G]);
 
   return (
-    <>
+    <div className={styles['wrapper']}>
       {zones.map((zone: ZoneProps, idx: number) => {
         return (
           <Zone
@@ -66,9 +67,10 @@ export const Zones = ({ player, opponent }: ReactZones): ReactElement => {
             // onCardClick={onCardClick}
             player={player}
             opponent={opponent}
+            turn={G.turn}
           />
         );
       })}
-    </>
+    </div>
   );
 };

@@ -1,0 +1,28 @@
+.component {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-top-width: 2px;
+  border-top-style: solid;
+  transition: 200ms ease-in-out;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-radius: 50%;
+  border-top-color: transparent;
+  
+  &[class*="leader"] {
+    opacity: 1;
+  }
+
+  &.leader-opponent {
+    border-top-color: yellow;
+  }
+
+  &.leader-player {
+    border-bottom-color: yellow;
+  }
+}

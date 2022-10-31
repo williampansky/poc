@@ -9,7 +9,7 @@ import { CardModal } from './features/card-modal/CardModal';
 import { PlayerHand } from './components/Hands/PlayerHand';
 import type { RootState } from './store'
 import { useSelector, useDispatch } from 'react-redux'
-import { Zones } from './features/zones/Zones.Wrapper';
+import { Zones } from './features/zones/components/Zones/Zones.Wrapper';
 import { showCardModal } from './features/card-modal/card-modal.slice';
 
 const showDebug = false;
@@ -340,41 +340,9 @@ export const Board = (props: GameProps) => {
             })}
           </div>
         </div>
-        <div
-          style={{
-            boxSizing: 'border-box',
-            display: 'flex',
-            flexFlow: 'row nowrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto',
-            padding: '0 1em',
-            height: '100%',
-            maxHeight: '100%',
-            minHeight: '100%',
-            width: '100%',
-            maxWidth: '100%',
-            minWidth: '100%',
-            overflow: 'hidden'
-          }}
-        >
-          <Zones player={playerID === '0' ? '0' : '1'} opponent={playerID === '0' ? '1' : '0'} />
-          {/* {zones.map((zone: IZone, idx: number) => {
-            return (
-              <Zone
-                // G={G}
-                ctx={ctx}
-                moves={moves}
-                // disabled={zone.disabled[0]}
-                // zone={zone}
-                zoneNumber={idx}
-                key={idx}
-                onCardClick={onCardClick}
-                player={playerID === '0' ? '0' : '1'}
-              />
-            );
-          })} */}
-        </div>
+
+        <Zones player={playerID === '0' ? '0' : '1'} opponent={playerID === '0' ? '1' : '0'} />
+
         <PlayerHand
           G={G}
           ctx={ctx}

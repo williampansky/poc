@@ -2,8 +2,8 @@ import { useEffectListener } from 'bgio-effects/react';
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Card, GameState, PlayerID } from '../../interfaces';
-import { showCardModal } from '../card-modal/card-modal.slice';
+import { Card, GameState, PlayerID } from '../../../../interfaces';
+import { showCardModal } from '../../../card-modal/card-modal.slice';
 
 interface ReactZoneSlot {
   G?: GameState;

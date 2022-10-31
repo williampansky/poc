@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Ctx } from 'boardgame.io';
 import React, { ReactElement } from 'react';
 import { Card, GameState } from '../../interfaces';

@@ -6,7 +6,7 @@ import {
   Zone as ZoneProps,
 } from '../../interfaces';
 import { ZoneSlot } from '../ZoneSlot/ZoneSlot';
-import { ZoneDropSlot } from '../../features/zones/ZoneSlot.Drop';
+import { ZoneDropSlot } from '../../features/zones/components/ZoneDropSlot/ZoneDropSlot';
 import { usePrevious } from '../../hooks';
 import type { RootState } from '../../store'
 import { useSelector, useDispatch } from 'react-redux'

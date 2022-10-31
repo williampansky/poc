@@ -31,18 +31,37 @@ export interface CardBase {
 
 export interface Card {
   __id: string;
+  artist?: string;
   baseCost: number;
   basePower: number;
   canPlay: boolean;
+  collectible?: boolean;
   currentCost: number;
   description?: string;
   displayPower: number;
+  elite?: boolean;
+  entourage?: string[];
+  flavorText?: string;
+  howToEarn?: string;
+  howToEarnGolden?: string;
+  imageBaseSrc?: string;
+  imageFlairSrc?: string;
+  imagePlaceholderSrc?: string;
+  isGolden?: boolean;
   mechanic?: string;
+  mechanics?: string[];
   name: string;
+  numberPrimary?: number;
+  numberRNG?: number;
+  numberSecondary?: number;
   powerOverride?: number; // use this power instead of base or latest stream
   powerStream: CardPowerStream[];
+  race?: string;
+  rarity?: string;
   revealed: boolean;
   revealedOnTurn: number;
+  set?: string;
+  sounds?: Record<string, string>;
   type: 'CARD' | 'MINION' | 'SPELL' | 'WEAPON';
   uuid: string;
   zonePowerAdjustment: number;

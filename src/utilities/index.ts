@@ -10,3 +10,4 @@ export { default as getSumOfAllZonesPower } from './get-sum-of-all-zones-power';
 export { default as getZoneWinsBySide } from './get-zone-wins-by-side';
 export { default as limitNumberWithinRange } from './limit-number-within-range';
 export { default as logPhaseToConsole } from './log-phase-to-console';
+export { default as classesArray } from './classes-array';
