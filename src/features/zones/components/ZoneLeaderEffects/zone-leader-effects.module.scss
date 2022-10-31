@@ -7,10 +7,17 @@
   height: 100%;
   width: 100%;
   border-width: 2px;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
   border-style: solid;
-  transition: 200ms ease-in-out;
-  border-radius: 50%;
+  border-top-style: solid;
+  border-bottom-style: solid;
   border-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  opacity: 0;
+  transition: 200ms ease-in-out;
   
   &[class*="leader"] {
     opacity: 1;
