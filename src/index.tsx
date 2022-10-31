@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
-import './index.css';
+// import './index.css';
+import './styles/index.scss';
 import GameWrapper from './GameWrapper';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store'

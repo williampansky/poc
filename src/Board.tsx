@@ -236,49 +236,6 @@ export const Board = (props: GameProps) => {
           >
             {G.PlayerNames['1']}
           </div>
-          <div style={{ width: '100%' }}>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${G.ActionPoints['1'].total}, 1fr)`,
-                gridGap: '0.15em',
-                width: '100%',
-              }}
-            >
-              {Array.from(Array(G.ActionPoints['1'].total)).map(
-                (_, idx) => {
-                  idx = idx + 1;
-                  return (
-                    <div
-                      key={idx}
-                      style={{
-                        display: 'flex',
-                        flexFlow: 'column nowrap',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        pointerEvents: 'none',
-                        userSelect: 'none',
-                        fontWeight:
-                          G.ActionPoints['1'].current >= idx
-                            ? 'bold'
-                            : 'normal',
-                        background:
-                          G.ActionPoints['1'].current >= idx
-                            ? 'lightgreen'
-                            : '#ccc',
-                        color:
-                          G.ActionPoints['1'].current >= idx
-                            ? '#052d05'
-                            : '#4e4e4e',
-                      }}
-                    >
-                      {idx}
-                    </div>
-                  );
-                }
-              )}
-            </div>
-          </div>
           <div style={{
             padding: '0 0.15em',
           }}>
