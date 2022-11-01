@@ -1,37 +1,33 @@
 import { Ctx } from 'boardgame.io';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardPowerStream, GameState } from '../../interfaces';
+import type { RootState } from '../../store';
+import { hideCardModal } from './card-modal.slice';
+import type { CardModal as ICardModal } from './card-modal.slice';
 
-interface CardInspectionProps {
-  data?: Card;
-  onClick: () => void;
-}
+export const CardModal = (): ReactElement | null => {
+  const dispatch = useDispatch();
+  const onClick = () => dispatch(hideCardModal(null));
+  const cardModalData = useSelector(
+    ({ cardModal }: RootState) => cardModal
+  ) as ICardModal;
 
-export const CardInspectionModal = ({
-  data,
-  onClick,
-}: CardInspectionProps): ReactElement => {
-  const [objData, setObjData] = useState<Card | undefined>(undefined);
-
-  React.useEffect(() => {
-    setTimeout(() => setObjData(data), 50);
-  }, [data]);
-
-  return (
+  return cardModalData ? (
     <div
       onClick={onClick}
       style={{
         height: '100%',
         width: '100%',
         transition: '150ms ease-in',
-        opacity: objData ? '1' : '0',
+        opacity: cardModalData ? '1' : '0',
         position: 'absolute',
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        zIndex: objData ? 999 : -1,
-        pointerEvents: objData ? 'auto' : 'none',
+        zIndex: cardModalData ? 999 : -1,
+        pointerEvents: cardModalData ? 'auto' : 'none',
         display: 'flex',
         flexFlow: 'column nowrap',
         alignItems: 'center',
@@ -54,7 +50,7 @@ export const CardInspectionModal = ({
           gridGap: '0.5em',
         }}
       >
-        {objData?.powerStream.map((s: CardPowerStream, i: number) => {
+        {cardModalData?.powerStream.map((s: CardPowerStream, i: number) => {
           return (
             <React.Fragment key={`stream_${i}`}>
               <div
@@ -102,7 +98,7 @@ export const CardInspectionModal = ({
           );
         })}
 
-        {objData?.zonePowerAdjustment && (
+        {cardModalData?.zonePowerAdjustment && (
           <div
             style={{
               display: 'flex',
@@ -128,7 +124,7 @@ export const CardInspectionModal = ({
                 marginBottom: 4,
               }}
             >
-              {objData?.zonePowerAdjustment}
+              {cardModalData?.zonePowerAdjustment}
             </div>
             <div style={{ color: 'white', fontSize: 9 }}>Zone Adjustment</div>
           </div>
@@ -146,7 +142,7 @@ export const CardInspectionModal = ({
           <div style={{ color: 'white', fontSize: 14 }}>{'<-'}</div>
         </div>
 
-        {objData?.basePower && (
+        {cardModalData?.basePower && (
           <div
             style={{
               display: 'flex',
@@ -172,7 +168,7 @@ export const CardInspectionModal = ({
                 marginBottom: 4,
               }}
             >
-              {objData?.basePower}
+              {cardModalData?.basePower}
             </div>
             <div style={{ color: 'white', fontSize: 9 }}>Base Power</div>
           </div>
@@ -195,7 +191,7 @@ export const CardInspectionModal = ({
           width: '60vw',
           maxHeight: `600px`,
           maxWidth: `400px`,
-          transform: objData ? 'scale(100%)' : 'scale(0%)',
+          transform: cardModalData ? 'scale(100%)' : 'scale(0%)',
           transition: '150ms ease-in',
         }}
       >
@@ -220,7 +216,7 @@ export const CardInspectionModal = ({
             borderRadius: '50%',
           }}
         >
-          {objData?.currentCost}
+          {cardModalData?.currentCost}
         </div>
         <div
           style={{
@@ -245,12 +241,12 @@ export const CardInspectionModal = ({
             whiteSpace: 'nowrap',
           }}
         >
-          {objData?.displayPower}
+          {cardModalData?.displayPower}
         </div>
-        <div style={{ fontSize: '1.5vh' }}>{objData?.__id}</div>
-        <div style={{ fontSize: '4vh' }}>{objData?.name}</div>
-        <div style={{ fontSize: '2vh' }}>{objData?.description}</div>
+        <div style={{ fontSize: '1.5vh' }}>{cardModalData?.__id}</div>
+        <div style={{ fontSize: '4vh' }}>{cardModalData?.name}</div>
+        <div style={{ fontSize: '2vh' }}>{cardModalData?.description}</div>
       </div>
     </div>
-  );
+  ) : null;
 };

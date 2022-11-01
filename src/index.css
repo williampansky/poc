@@ -3,7 +3,7 @@ html {
   min-height: 100vh;
   max-height: 100vh; */
   perspective: 100vh;
-  position: absolute;
+  position: fixed;
   overflow: hidden;
   /* top: 0;
   right: 0;
@@ -15,9 +15,16 @@ html, body, #root, .bgio-client {
   width: 100vw;
   min-width: 100vw;
   max-width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
   overflow: hidden;
   overscroll-behavior: none;
   background: #151515;
+}
+
+main {
+  overflow: hidden;
 }
 
 body {
@@ -36,6 +43,7 @@ body {
 *:after {
   box-sizing: border-box;
   user-select: none;
+  /* overflow: hidden; */
 }
 
 img {

@@ -18,23 +18,9 @@ import aiEnumeration from './ai';
 import stripSecrets from './utilities/strip-secrets';
 import { DefaultState } from './state';
 import getGameResult from './utilities/get-game-result';
+import { effectsConfig } from './config.effects';
 
-const effectsConfig = {
-  effects: {
-    revealCard: {
-      create: (value: any) => {
-        // console.log(value.card, value.idx);
-        return {
-          card: value.card,
-          idx: value.idx,
-          zone: value.zone,
-          player: value.player,
-        };
-      },
-      duration: 0.5
-    },
-  },
-};
+
 
 export const BcgPoc: Game<GameState> = {
   name: 'BcgPoc',

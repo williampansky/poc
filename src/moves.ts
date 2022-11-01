@@ -20,15 +20,24 @@ const selectCard = (
 
   if (G.SelectedCardData[playerId]?.uuid === cardMatch!.uuid) {
     SelectedCardData.reset(G, playerId);
+    G.ZonesAreActive[playerId] = false;
+    // @ts-ignore
+    ctx.effects.effectsEnd();
   } else {
     SelectedCardData.set(G, playerId, cardMatch!);
     G.SelectedCardIndex[playerId] = cardMatchIndex;
+    G.ZonesAreActive[playerId] = true;
+    // @ts-ignore
+    ctx.effects.effectsEnd();
   }
 };
 
 const deselectCard = (G: GameState, ctx: Ctx, playerId: PlayerID) => {
   SelectedCardData.reset(G, playerId);
   G.SelectedCardIndex[playerId] = undefined;
+  G.ZonesAreActive[playerId] = false;
+  // @ts-ignore
+  ctx.effects.effectsEnd();
 };
 
 const playCard = (
@@ -91,6 +100,10 @@ const playCard = (
   // unset selected card
   SelectedCardData.reset(G, playerId);
   G.SelectedCardIndex[playerId] = undefined;
+  G.ZonesAreActive[playerId] = false;
+
+  // @ts-ignore
+  ctx.effects.effectsEnd();
 };
 
 const revealCard = async (
@@ -112,11 +125,19 @@ const revealCard = async (
 
   G.Zones[zoneNumber].sides[playerId][objIndex] = cardToPush;
 
+  console.log(`
+      MOVE: revealCard()
+      CARD: [${cardToPush.__id}] ${cardToPush.name}
+     ZONE#: ${zoneNumber}
+     SLOT#: ${objIndex}
+    PLAYER: ${playerId}
+  `)
+
   // @ts-ignore
   ctx.effects.revealCard({
     card: cardToPush,
-    idx: objIndex,
-    zone: zoneNumber,
+    zoneNumber,
+    slotIndex: objIndex,
     player: playerId,
   });
 };

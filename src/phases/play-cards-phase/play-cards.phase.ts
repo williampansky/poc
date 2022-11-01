@@ -18,13 +18,11 @@ import {
   selectCard,
   setDone,
 } from '../../moves';
+import { logPhaseToConsole } from '../../utilities';
 
 const playCardsPhase: PhaseConfig = {
   onBegin(G: GameState, ctx: Ctx) {
-    if (G.Config.debugConfig.logPhaseToConsole) {
-      console.log(G.turn, ctx.phase);
-    }
-
+    logPhaseToConsole(G.turn, ctx.phase);
     incrementActionPointsTotal(G); // ...... set new total action points available
     setActionPointsToTotal(G); // .......... set current action points to new total
     setPlayableCardsInHand(G); // .......... check card playability

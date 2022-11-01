@@ -1,0 +1,38 @@
+$offset: 5px;
+
+.component {
+  position: absolute;
+  top: -#{$offset / 2};
+  right: -#{$offset / 2};
+  bottom: -#{$offset / 2};
+  left: -#{$offset / 2};
+  height: calc(100% + #{$offset});
+  width: calc(100% + #{$offset});
+  border-width: 2px;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-style: solid;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-color: inherit;
+  border-top-color: inherit;
+  border-bottom-color: inherit;
+  border-right-color: inherit;
+  border-left-color: inherit;
+  border-radius: 50%;
+  opacity: 1;
+  transition: 200ms ease-in-out;
+  pointer-events: none;
+
+  &.leader-opponent {
+    border-bottom-color: yellow;
+    border-top-color: inherit;
+    transform: rotate(180deg);
+  }
+
+  &.leader-player {
+    border-bottom-color: yellow;
+    border-top-color: inherit;
+    transform: rotate(0deg);
+  }
+}

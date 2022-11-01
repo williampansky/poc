@@ -1,0 +1,23 @@
+.component {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  user-select: none;
+  font-weight: initial;
+  background-color: transparent;
+  color: transparent;
+
+  &.empty {
+    font-weight: bold;
+    background-color: #ccc;
+    color: #4e4e4e;
+  }
+
+  &.filled {
+    font-weight: normal;
+    background-color: lightgreen;
+    color: #052d05;
+  }
+}

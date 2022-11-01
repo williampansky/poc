@@ -5,61 +5,49 @@ import { Card, GameState, Zone as IZone } from './interfaces';
 import { Zone } from './components/Zone/Zone';
 import { ZoneSlot } from './components/ZoneSlot/ZoneSlot';
 import { CardInHand } from './components/Card/CardInHand';
-import { CardInspectionModal } from './components/Modals/CardInspectionModal';
+import { CardModal } from './features/card-modal/CardModal';
 import { PlayerHand } from './components/Hands/PlayerHand';
+import type { RootState } from './store';
+import { useSelector, useDispatch } from 'react-redux';
+import { Zones } from './features/zones/components/Zones/Zones.Wrapper';
+import { showCardModal } from './features/card-modal/card-modal.slice';
+import { ActionPoints } from './features/action-points';
+import { setActionPoints } from './features/action-points/action-points.slice';
+import useEndTurnButton from './hooks/useEndTurnButton';
+import useEndPhase from './hooks/useEndPhase';
+import { EndTurnButton } from './components/EndTurnButton';
 
 const showDebug = false;
 
 export interface GameProps extends BoardProps<GameState> {}
 
 export const Board = (props: GameProps) => {
-  const [addressBarSize, setAddressBarSize] = useState<number>(0);
-  const [showGameOver, setShowGameOver] = useState<boolean>(false);
-  const [endTurnDisabled, setEndTurnDisabled] = useState<boolean>(true);
-  const [cardModalDataObject, setCardModalDataObject] = useState<
-    Card | undefined
-  >(undefined);
-
   const {
     G,
-    G: { Config, players, turn, PlayerTurnDone },
+    G: { Config },
     ctx,
     ctx: { phase, gameover },
     moves,
     events,
     events: { endPhase },
     reset,
+    playerID,
   } = props;
 
-  React.useEffect(() => {
-    if (phase === 'playCards') {
-      if (PlayerTurnDone['0'] === true && PlayerTurnDone['1'] === true) {
-        console.log('endPhase')
-        endPhase!();
-      }
-    }
-  }, [PlayerTurnDone, phase]);
+  // state
+  const [addressBarSize, setAddressBarSize] = useState<number>(0);
+  const [showGameOver, setShowGameOver] = useState<boolean>(false);
+
+  // hooks
+  const endTurnIsDisabled = useEndTurnButton(phase, G.PlayerTurnDone);
+  const dispatch = useDispatch();
+  useEndPhase(events, phase, G.PlayerTurnDone);
 
   React.useEffect(() => {
     if (gameover) {
       setTimeout(() => setShowGameOver(true), 2000);
     }
   }, [gameover]);
-
-  React.useEffect(() => {
-    if (phase !== 'playCards') {
-      return setEndTurnDisabled(true);
-    }
-
-    if (PlayerTurnDone['0'] === true) {
-      return setEndTurnDisabled(true);
-    }
-
-    setTimeout(() => {
-      console.log('enable turn button');
-      return setEndTurnDisabled(false);
-    }, 2000);
-  }, [PlayerTurnDone, phase]);
 
   /**
    * Uses html.perspective CSS property, which is set to 100vh, to determine
@@ -75,20 +63,12 @@ export const Board = (props: GameProps) => {
     }
   }, []);
 
-  // React.useEffect(() => {
-  //   console.log(turn, phase)
-  // }, [turn, phase])
-
   React.useLayoutEffect(() => {
     addressBarCallback();
   }, [addressBarCallback]);
 
-  const onClick = () => {
+  const onEndTurnButtonClick = () => {
     return moves.setDone('0');
-    // // @ts-ignore
-    // if (ctx.currentPlayer === '0') return events.endTurn({ next: '1' });
-    // // @ts-ignore
-    // if (ctx.currentPlayer === '1') return events.endTurn({ next: '0' });
   };
 
   const resetGame = () => {
@@ -103,8 +83,8 @@ export const Board = (props: GameProps) => {
     else return 'Defeat...';
   };
 
-  const onCardClick = (obj: Card ) => {
-    setCardModalDataObject(obj);
+  const onCardClick = (obj: Card) => {
+    dispatch(showCardModal(obj));
   };
 
   const onCardSelect = (playerId: string, uuid: string) => {
@@ -118,6 +98,10 @@ export const Board = (props: GameProps) => {
   const onCardSlotDrop = (playerId: string, zoneNumber: number) => {
     return moves.playCard(playerId, zoneNumber);
   };
+
+  React.useEffect(() => {
+    dispatch(setActionPoints(G.ActionPoints));
+  }, [G.ActionPoints]);
 
   return (
     <>
@@ -182,15 +166,16 @@ export const Board = (props: GameProps) => {
 
       <main
         style={{
+          width: '100vw',
           maxWidth: '100vw',
+          minWidth: '100vw',
           filter: showGameOver ? 'blur(2px)' : 'none',
           height: `calc(100vh - ${addressBarSize}px)`,
+          maxHeight: `calc(100vh - ${addressBarSize}px)`,
+          minHeight: `calc(100vh - ${addressBarSize}px)`,
         }}
       >
-        <CardInspectionModal
-          data={cardModalDataObject}
-          onClick={() => setCardModalDataObject(undefined)}
-        />
+        <CardModal />
         <div
           style={{
             display: 'flex',
@@ -218,65 +203,30 @@ export const Board = (props: GameProps) => {
               color: 'white',
             }}
           >
-            {G.players[1].name}
+            {G.PlayerNames['1']}
           </div>
-          <div style={{ width: '100%' }}>
+          <div
+            style={{
+              padding: '0 0.15em',
+            }}
+          >
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${G.ActionPoints['1'].total}, 1fr)`,
-                gridGap: '0.15em',
-                width: '100%',
+                display: 'flex',
+                flexFlow: 'row nowrap',
+                alignItems: 'center',
+                fontSize: 11,
+                color: 'white',
+                whiteSpace: 'nowrap',
               }}
             >
-              {Array.from(Array(G.ActionPoints['1'].total)).map(
-                (_, idx) => {
-                  idx = idx + 1;
-                  return (
-                    <div
-                      key={idx}
-                      style={{
-                        display: 'flex',
-                        flexFlow: 'column nowrap',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        pointerEvents: 'none',
-                        userSelect: 'none',
-                        fontWeight:
-                          G.ActionPoints['1'].current >= idx
-                            ? 'bold'
-                            : 'normal',
-                        background:
-                          G.ActionPoints['1'].current >= idx
-                            ? 'lightgreen'
-                            : '#ccc',
-                        color:
-                          G.ActionPoints['1'].current >= idx
-                            ? '#052d05'
-                            : '#4e4e4e',
-                      }}
-                    >
-                      {idx}
-                    </div>
-                  );
-                }
-              )}
-            </div>
-          </div>
-          <div style={{
-            padding: '0 0.15em',
-          }}>
-            <div style={{
-              display: 'flex',
-              flexFlow: 'row nowrap',
-              alignItems: 'center',
-              fontSize: 11,
-              color: 'white',
-              whiteSpace: 'nowrap'
-            }}>
-              <div>Hand: <strong>{G.Counts['1'].hand}</strong></div>
+              <div>
+                Hand: <strong>{G.Counts['1'].hand}</strong>
+              </div>
               <div>&nbsp;|&nbsp;</div>
-              <div>Deck: <strong>{G.Counts['1'].deck}</strong></div>
+              <div>
+                Deck: <strong>{G.Counts['1'].deck}</strong>
+              </div>
             </div>
           </div>
         </div>
@@ -301,7 +251,7 @@ export const Board = (props: GameProps) => {
               width: '100%',
             }}
           >
-            {[...Array.from(players[1].hand)]?.map((_, idx) => {
+            {[...Array.from(Array(G.Counts['1'].hand))]?.map((_, idx) => {
               return (
                 <div
                   key={idx}
@@ -324,44 +274,18 @@ export const Board = (props: GameProps) => {
                         ? 'scale(120%)'
                         : 'scale(80%)',
                     transition: '200ms ease-out',
-                    // backgroundPosition: 'center center',
-                    // backgroundRepeat: 'no-repeat',
-                    // backgroundSize: 'cover',
-                    // backgroundImage: 'url(./TCG_vol09_back.png)'
                   }}
                 ></div>
               );
             })}
           </div>
         </div>
-        <div
-          style={{
-            boxSizing: 'border-box',
-            display: 'flex',
-            flexFlow: 'row nowrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto',
-            padding: '0 1em',
-            height: '100vh',
-            width: '100%',
-          }}
-        >
-          {G.Zones.map((zone: IZone, idx: number) => {
-            return (
-              <Zone
-                G={G}
-                ctx={ctx}
-                moves={moves}
-                disabled={zone.disabled[0]}
-                zone={zone}
-                zoneNumber={idx}
-                key={idx}
-                onCardClick={onCardClick}
-              />
-            );
-          })}
-        </div>
+
+        <Zones
+          player={playerID === '0' ? '0' : '1'}
+          opponent={playerID === '0' ? '1' : '0'}
+        />
+
         <PlayerHand
           G={G}
           ctx={ctx}
@@ -370,6 +294,7 @@ export const Board = (props: GameProps) => {
           onCardDeselect={onCardDeselect}
           onCardSlotDrop={onCardSlotDrop}
         />
+        
         <div
           style={{
             display: 'flex',
@@ -388,63 +313,40 @@ export const Board = (props: GameProps) => {
             background: '#333',
           }}
         >
-          <div style={{ width: '100%' }}>
+          <div
+            style={{
+              paddingRight: '0.25em',
+              marginRight: 'auto',
+              fontSize: '11px',
+              whiteSpace: 'nowrap',
+              color: 'white',
+            }}
+          >
+            {G.PlayerNames['0']}
+          </div>
+          <ActionPoints player={playerID} />
+          <div
+            style={{
+              padding: '0 0.15em',
+            }}
+          >
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${G.ActionPoints['0'].total}, 1fr)`,
-                gridGap: '0.15em',
-                width: '100%',
+                display: 'flex',
+                flexFlow: 'row nowrap',
+                alignItems: 'center',
+                fontSize: 11,
+                color: 'white',
+                whiteSpace: 'nowrap',
               }}
             >
-              {Array.from(Array(G.ActionPoints['0'].total)).map(
-                (_, idx) => {
-                  idx = idx + 1;
-                  return (
-                    <div
-                      key={idx}
-                      style={{
-                        display: 'flex',
-                        flexFlow: 'column nowrap',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        pointerEvents: 'none',
-                        userSelect: 'none',
-                        fontWeight:
-                          G.ActionPoints['0'].current >= idx
-                            ? 'bold'
-                            : 'normal',
-                        background:
-                          G.ActionPoints['0'].current >= idx
-                            ? 'lightgreen'
-                            : '#ccc',
-                        color:
-                          G.ActionPoints['0'].current >= idx
-                            ? '#052d05'
-                            : '#4e4e4e',
-                      }}
-                    >
-                      {idx}
-                    </div>
-                  );
-                }
-              )}
-            </div>
-          </div>
-          <div style={{
-            padding: '0 0.15em',
-          }}>
-            <div style={{
-              display: 'flex',
-              flexFlow: 'row nowrap',
-              alignItems: 'center',
-              fontSize: 11,
-              color: 'white',
-              whiteSpace: 'nowrap'
-            }}>
-              <div>Hand: <strong>{G.Counts['0'].hand}</strong></div>
+              <div>
+                Hand: <strong>{G.Counts['0'].hand}</strong>
+              </div>
               <div>&nbsp;|&nbsp;</div>
-              <div>Deck: <strong>{G.Counts['0'].deck}</strong></div>
+              <div>
+                Deck: <strong>{G.Counts['0'].deck}</strong>
+              </div>
             </div>
           </div>
           <div
@@ -453,28 +355,12 @@ export const Board = (props: GameProps) => {
               marginLeft: 'auto',
             }}
           >
-            <button
-              onClick={onClick}
-              disabled={endTurnDisabled}
-              style={{
-                background:
-                  !endTurnDisabled
-                    ? 'yellow'
-                    : 'initial',
-                display: 'flex',
-                flexFlow: 'column nowrap',
-                alignItems: 'center',
-                justifyContent: 'center',
-                whiteSpace: 'nowrap',
-                fontSize: '0.75rem',
-                borderRadius: 0,
-                border: 0,
-                height: '17.5px',
-                minWidth: 95,
-              }}
-            >
-              End Turn {G.turn}/{Config.gameConfig.numberOfSingleTurnsPerGame}
-            </button>
+            <EndTurnButton
+              currentTurn={G.turn}
+              isDisabled={endTurnIsDisabled}
+              onClick={onEndTurnButtonClick}
+              turnsPerGame={Config.gameConfig.numberOfSingleTurnsPerGame}
+            />
           </div>
         </div>
       </main>
