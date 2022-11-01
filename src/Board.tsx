@@ -15,6 +15,7 @@ import { ActionPoints } from './features/action-points';
 import { setActionPoints } from './features/action-points/action-points.slice';
 import useEndTurnButton from './hooks/useEndTurnButton';
 import useEndPhase from './hooks/useEndPhase';
+import { EndTurnButton } from './components/EndTurnButton';
 
 const showDebug = false;
 
@@ -66,7 +67,7 @@ export const Board = (props: GameProps) => {
     addressBarCallback();
   }, [addressBarCallback]);
 
-  const onClick = () => {
+  const onEndTurnButtonClick = () => {
     return moves.setDone('0');
   };
 
@@ -293,6 +294,7 @@ export const Board = (props: GameProps) => {
           onCardDeselect={onCardDeselect}
           onCardSlotDrop={onCardSlotDrop}
         />
+        
         <div
           style={{
             display: 'flex',
@@ -353,26 +355,12 @@ export const Board = (props: GameProps) => {
               marginLeft: 'auto',
             }}
           >
-            <button
-              onClick={onClick}
-              disabled={endTurnIsDisabled}
-              style={{
-                background: !endTurnIsDisabled ? 'yellow' : 'darkgray',
-                display: 'flex',
-                flexFlow: 'column nowrap',
-                alignItems: 'center',
-                justifyContent: 'center',
-                whiteSpace: 'nowrap',
-                fontSize: '0.75rem',
-                borderRadius: 0,
-                border: 0,
-                height: '17.5px',
-                minWidth: 95,
-              }}
-            >
-              {endTurnIsDisabled ? 'Waiting ' : 'End Turn '}
-              {G.turn}/{Config.gameConfig.numberOfSingleTurnsPerGame}
-            </button>
+            <EndTurnButton
+              currentTurn={G.turn}
+              isDisabled={endTurnIsDisabled}
+              onClick={onEndTurnButtonClick}
+              turnsPerGame={Config.gameConfig.numberOfSingleTurnsPerGame}
+            />
           </div>
         </div>
       </main>
